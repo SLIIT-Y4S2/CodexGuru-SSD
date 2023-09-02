@@ -1,18 +1,65 @@
 import express from "express";
 import dotenv from "dotenv";
-import dbConnect from "./config/db.conf.js";
+import mongoose from "mongoose";
+import bodyParser from "body-parser";
+import cors from "cors";
+import multer from "multer";
+import helmet from "helmet";
+import morgan from "morgan";
+import path from "path";
+import { fileURLToPath } from "url";
 
+// import routes
+
+import authRoutes from "./routes/auth.js";
+import { verifyToken } from "./middleware/auth.js";
+
+/* CONFIGURATIONS */
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 dotenv.config();
-
 const app = express();
-const port = 3000;
+app.use(express.json());
+app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(morgan("common"));
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+app.use(cors());
+app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
+/* FILE STORAGE */
+// TODO: change this to upload to firebase
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/assets");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage });
+
+/* ROUTES */
+app.use("/api/auth", authRoutes);
+
+//TODO: testing routes
 app.get("/", (req, res) => {
-  res.send("Express + TypeScript Server");
+  res.send("Hello World! NO Authorization required");
 });
 
-await dbConnect();
-
-app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+app.get("/api/student", verifyToken, (req, res) => {
+  res.send(`Hello World!, Authorization required, ROLE: ${req.role}`);
 });
+
+// eslint-disable-next-line no-undef
+const PORT = process.env.PORT || 5000;
+mongoose // eslint-disable-next-line no-undef
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    app.listen(PORT, () => console.log(`Server running on port: ${PORT}`));
+  })
+  .catch((error) => console.log(`${error} did not connect`));
