@@ -1,3 +1,6 @@
+/**
+ * Model for Question
+ */
 import mongoose from "mongoose";
 
 const QuestionSchema = mongoose.Schema({

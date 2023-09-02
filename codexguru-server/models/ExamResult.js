@@ -1,3 +1,6 @@
+/**
+ * Model for ExamResult
+ */
 import mongoose from "mongoose";
 
 const ExamResultSchema = mongoose.Schema({

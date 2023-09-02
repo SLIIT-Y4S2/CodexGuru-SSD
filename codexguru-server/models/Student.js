@@ -1,8 +1,9 @@
-import mongoose from "mongoose";
-
 /**
+ * Model for Student
  * TODO - Needs to completed
  */
+import mongoose from "mongoose";
+
 const StudentSchema = mongoose.Schema({
     id: {
         type: String,
