@@ -39,6 +39,10 @@ const ExamSchema = mongoose.Schema({
         required: true,
         default: true
     },
+    questionsList: {
+        type: Array,
+        required: true
+    },
     passMark: {
         type: Number,
         required: true

@@ -9,6 +9,11 @@ const QuestionSchema = mongoose.Schema({
         required: true,
         unique: true,
     },
+    examCode: {
+        type: String,
+        required: true,
+        ref: "Exam"
+    },
     content: {
         type: String,
         required: true

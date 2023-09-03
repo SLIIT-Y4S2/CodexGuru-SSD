@@ -9,10 +9,10 @@ const getExams = async (req, res) => {
     try {
         const allExams = await Exam.find();
 
-        if (allQuestions.length === 0) {
+        if (allExams.length === 0) {
             res.status(201).json({
                 message: "No questions found",
-                questions: allQuestions
+                exams: allExams
             });
         } else if (allExams.length !== 0) {
             res.status(201).json({
@@ -34,13 +34,13 @@ const getExam = async (req, res) => {
     try {
         const exam = await Exam.find({ id: req.params.id });
 
-        if (exam) {
+        if (exam[0]) {
             res.status(200).json({
                 message: "Exam found",
                 exam: exam
             });
         } else {
-            res.status(204).json({
+            res.status(400).json({
                 message: "Exam not found",
             });
         }
