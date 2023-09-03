@@ -7,13 +7,13 @@ import questionController from "../controllers/QuestionController.js";
 const router = express.Router();
 
 // Handle GET request at "/all" URI
-router.get("/all", questionController.getQuestions);
+router.get("/", questionController.getQuestions);
 
 // Handle GET request at "/:id" URI
 router.get("/:id", questionController.getQuestion);
 
 // Handle POST request at "/new" URI
-router.post("/new", questionController.addQuestion);
+router.post("/", questionController.addQuestion);
 
 // Handle PUT request at "/:id" URI
 router.put("/:id", questionController.updateQuestion);
