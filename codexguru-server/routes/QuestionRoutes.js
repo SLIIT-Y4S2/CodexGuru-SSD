@@ -1,5 +1,5 @@
 /**
- * QuestionRoutes
+ * QuestionRoutes implementation
  */
 import express from "express";
 import questionController from "../controllers/QuestionController.js";

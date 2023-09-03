@@ -9,7 +9,12 @@ const getQuestions = async (req, res) => {
     try {
         const allQuestions = await Question.find();
 
-        if (allQuestions) {
+        if (allQuestions.length === 0) {
+            res.status(201).json({
+                message: "No questions found",
+                questions: allQuestions
+            });
+        } else if (allQuestions.length !== 0) {
             res.status(201).json({
                 message: "Questions found",
                 questions: allQuestions
@@ -127,12 +132,12 @@ const updateQuestion = async (req, res) => {
                     question: updatedQuestion
                 });
             } else {
-                res.status(200).json({
+                res.status(400).json({
                     message: "Question not found"
                 });
             }
         } else {
-            res.status(200).json({
+            res.status(400).json({
                 message: "Failed to update question"
             });
         }
@@ -157,7 +162,8 @@ const deleteQuestion = async (req, res) => {
             });;
         } else {
             res.status(400).json({
-                message: "Failed to delete question"
+                message: "Failed to delete question",
+                question: deletedQuestion
             });
         }
 
