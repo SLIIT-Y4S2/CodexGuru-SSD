@@ -13,6 +13,7 @@ import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import { verifyToken } from "./middleware/auth.js";
 import questionRoutes from "./routes/QuestionRoutes.js";
+import examRoutes from "./routes/ExamRoutes.js";
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -43,6 +44,7 @@ const upload = multer({ storage });
 /* ROUTES */
 app.use("/api/auth", authRoutes);
 app.use("/api/v1/questions", questionRoutes);
+app.use("/api/v1/exams", examRoutes);
 
 //TODO: testing routes
 app.get("/", (req, res) => {

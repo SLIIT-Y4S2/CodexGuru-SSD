@@ -14,10 +14,6 @@ const ExamSchema = mongoose.Schema({
         required: true,
         unique: true,
     },
-    password: {
-        type: String,
-        required: true
-    },
     title: {
         type: String,
         required: true
@@ -45,6 +41,10 @@ const ExamSchema = mongoose.Schema({
     },
     passMark: {
         type: Number,
+        required: true
+    },
+    password: {
+        type: String,
         required: true
     },
     createdDate: {
