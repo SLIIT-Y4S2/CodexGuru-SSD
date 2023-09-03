@@ -1,5 +1,6 @@
 import theme from "@/theme/themeConfig";
-import { Button, ConfigProvider } from "antd";
+import { ConfigProvider } from "antd";
+import LogoutButton from "@/components/LogoutButton";
 
 export default function Home() {
   return (
@@ -7,7 +8,7 @@ export default function Home() {
       <ConfigProvider theme={theme}>
         <div className="flex flex-col justify-center items-center  h-screen">
           Login TEST PASSWORD
-          <Button type="primary">Button</Button>
+          <LogoutButton />
         </div>
       </ConfigProvider>
     </main>
