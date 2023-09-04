@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Header from "@/components/Header";
 import Provider from "./Provider";
+import { ExamsProvider } from "./context/ExamsContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,10 +23,12 @@ export default function RootLayout({
       <body className={inter.className}>
         <Provider>
           <StyledComponentsRegistry>
-            <main>
-              <Header />
-              {children}
-            </main>
+            <ExamsProvider>
+              <main>
+                <Header />
+                {children}
+              </main>
+            </ExamsProvider>
           </StyledComponentsRegistry>
         </Provider>
       </body>

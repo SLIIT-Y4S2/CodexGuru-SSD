@@ -37,7 +37,7 @@ const getExam = async (req, res) => {
         if (exam[0]) {
             res.status(200).json({
                 message: "Exam found",
-                exam: exam
+                exams: exam
             });
         } else {
             res.status(400).json({
@@ -141,7 +141,7 @@ const updateExam = async (req, res) => {
             if (updatedExam) {
                 res.status(200).json({
                     message: "Exam updated successfully",
-                    exam: updatedExam
+                    exams: updatedExam
                 });
             } else {
                 res.status(400).json({
@@ -160,6 +160,49 @@ const updateExam = async (req, res) => {
     }
 
 };
+
+/* Function to update exam status */
+const updateExamStatus = async (req, res) => {
+    try {
+        const exam = await Exam.find({ id: req.params.id });
+
+        if (exam) {
+            const updatedExam = await Exam.findOneAndUpdate(
+                {
+                    id: req.params.id
+                },
+                {
+                    $set: {
+                        isActive: req.body.examStatus
+                    }
+                },
+                {
+                    new: true
+                }
+            );
+
+            if (updatedExam) {
+                res.status(200).json({
+                    message: "Exam status updated successfully",
+                    exams: updatedExam
+                });
+            } else {
+                res.status(400).json({
+                    message: "Exam not found"
+                });
+            }
+        } else {
+            res.status(400).json({
+                message: "Failed to update exam status"
+            });
+        }
+
+
+    } catch (error) {
+        console.log(error.message);
+    }
+
+}
 
 /* Function to delete an exam */
 const deleteExam = async (req, res) => {
@@ -189,7 +232,8 @@ const examController = {
     getExam,
     addExam,
     updateExam,
-    deleteExam
+    updateExamStatus,
+    deleteExam,
 };
 
 
