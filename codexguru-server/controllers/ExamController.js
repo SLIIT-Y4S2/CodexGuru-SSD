@@ -37,7 +37,7 @@ const getExam = async (req, res) => {
         if (exam[0]) {
             res.status(200).json({
                 message: "Exam found",
-                exam: exam
+                exams: exam
             });
         } else {
             res.status(400).json({

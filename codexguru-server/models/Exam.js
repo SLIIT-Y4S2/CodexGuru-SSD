@@ -32,7 +32,7 @@ const ExamSchema = mongoose.Schema({
     },
     isActive: {
         type: Boolean,
-        default: true
+        default: false
     },
     noOfQuestions: {
         type: Number,
