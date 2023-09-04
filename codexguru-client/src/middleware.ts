@@ -1,43 +1,41 @@
-import { User } from "./types/user";
+// Ref: https://next-auth.js.org/configuration/nextjs#advanced-usage
+import { withAuth, NextRequestWithAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
-const protectedRoutes: string[] = ["/", "/lab-session"];
+export default withAuth(
+  // `withAuth` augments your `Request` with the user's token.
+  function middleware(request: NextRequestWithAuth) {
+    console.log(request.nextUrl.pathname);
+    console.log(request.nextauth.token);
 
-export function middleware(request: NextRequest) {
-  const currentUser: string | undefined =
-    request.cookies.get("currentUser")?.value;
-
-  // if path is login and there is currentUser cookie, redirect to home
-  if (request.nextUrl.pathname == "/login" && currentUser) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
-  // if path is not login and there is no currentUser cookie, redirect to login
-  if (protectedRoutes.includes(request.nextUrl.pathname) && !currentUser) {
-    //TODO: add all the student paths here
-    request.cookies.delete("currentUser");
-    const response = NextResponse.redirect(new URL("/login", request.url));
-    response.cookies.delete("currentUser");
-    return response;
-  }
-  // if path starts with /admin and currentUser is not admin, redirect to login
-  if (request.nextUrl.pathname.startsWith("/admin") && currentUser) {
-    const user: User = JSON.parse(currentUser);
-    if (user.role !== "admin") {
-      request.cookies.delete("currentUser");
-      const response = NextResponse.redirect(new URL("/login", request.url));
-      response.cookies.delete("currentUser");
-      return response;
+    if (
+      request.nextUrl.pathname.startsWith("/instructor") &&
+      request.nextauth.token?.role !== "instructor"
+    ) {
+      return NextResponse.rewrite(new URL("/denied", request.url));
     }
-  }
-  // if path is /instructor and currentUser is not instructor, redirect to login
-  if (request.nextUrl.pathname.startsWith("/instructor") && currentUser) {
-    const user: User = JSON.parse(currentUser);
-    if (user.role !== "instructor") {
-      request.cookies.delete("currentUser");
-      const response = NextResponse.redirect(new URL("/login", request.url));
-      response.cookies.delete("currentUser");
-      return response;
+    if (
+      request.nextUrl.pathname.startsWith("/admin") &&
+      request.nextauth.token?.role !== "admin"
+    ) {
+      return NextResponse.rewrite(new URL("/denied", request.url));
     }
+
+    if (
+      request.nextUrl.pathname.startsWith("/client") &&
+      request.nextauth.token?.role !== "admin" &&
+      request.nextauth.token?.role !== "manager"
+    ) {
+      return NextResponse.rewrite(new URL("/denied", request.url));
+    }
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => !!token,
+    },
   }
-}
+);
+
+// Applies next-auth only to matching routes - can be regex
+// Ref: https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
+export const config = { matcher: ["/", "/instructor", "/admin"] };
