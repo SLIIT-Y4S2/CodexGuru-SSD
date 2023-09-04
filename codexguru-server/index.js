@@ -50,7 +50,11 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/student", verifyToken, (req, res) => {
-  res.send(`Hello World!, Authorization required, ROLE: ${req.role}`);
+  // res.send(`Hello World!, Authorization required, ROLE: ${req.role}`);
+  res.json({
+    message: "You made it to the secure route",
+    user: req.user,
+  });
 });
 
 // eslint-disable-next-line no-undef

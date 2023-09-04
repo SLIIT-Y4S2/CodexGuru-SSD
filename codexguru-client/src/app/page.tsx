@@ -1,14 +1,14 @@
-import theme from "@/theme/themeConfig";
 import { ConfigProvider } from "antd";
-import LogoutButton from "@/components/LogoutButton";
+import theme from "@/theme/themeConfig";
+import TestBackend from "@/components/TestBackend";
 
 export default function Home() {
   return (
     <div>
       <ConfigProvider theme={theme}>
         <div className="flex flex-col justify-center items-center  h-screen">
-          Login TEST PASSWORD
-          <LogoutButton />
+          This page needs login to access
+          <TestBackend />
         </div>
       </ConfigProvider>
     </div>
