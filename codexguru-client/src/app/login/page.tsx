@@ -1,8 +1,8 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Form, Input } from "antd";
-import { useLogin } from "@/hooks/auth/useLogin";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 
 type FieldType = {
   userRegNo?: string;
@@ -13,16 +13,25 @@ type FieldType = {
 const Login = () => {
   const { Item } = Form;
   const { Password } = Input;
-
-  const { login } = useLogin();
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session) {
+      if (session.user.role === "admin") router.push("/admin");
+      else if (session.user.role === "instructor") router.push("/instructor");
+      else router.push("/");
+    }
+  }, []);
 
   const onFinish = async (values: any) => {
     try {
-      const response = await login(values.userRegNo, values.password);
-      if (response.role === "admin") router.push("/admin");
-      else if (response.role === "instructor") router.push("/instructor");
-      else router.push("/");
+      signIn("credentials", {
+        userRegNo: values.userRegNo,
+        password: values.password,
+        callbackUrl: searchParams?.get("callbackUrl") || "/",
+      });
     } catch (error) {
       console.log(error);
     }
@@ -51,7 +60,6 @@ const Login = () => {
         >
           <Input />
         </Item>
-
         <Item<FieldType>
           label="Password"
           name="password"
@@ -59,7 +67,6 @@ const Login = () => {
         >
           <Password />
         </Item>
-
         <Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type="primary" htmlType="submit">
             Submit

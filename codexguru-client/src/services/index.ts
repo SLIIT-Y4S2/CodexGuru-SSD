@@ -1,3 +1,4 @@
-import { AuthService } from "./auth.service";
+import { TestServices } from "./test.service";
 
-export const authService = new AuthService("//localhost:5000/api/auth");
+export const testService = (token: string) =>
+  new TestServices("//localhost:5000/api", token);

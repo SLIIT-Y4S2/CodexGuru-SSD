@@ -40,7 +40,14 @@ export const login = async (req, res) => {
       process.env.JWT_SECRET // eslint-disable-line no-undef
     );
     delete user.password;
-    res.status(200).json({ token, user });
+    const userObj = {
+      id: user._id,
+      userRegNo: user.userRegNo,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role,
+    };
+    res.status(200).json({ token, ...userObj });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
