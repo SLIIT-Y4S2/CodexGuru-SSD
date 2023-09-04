@@ -15,6 +15,9 @@ router.get("/:id", examController.getExam);
 // Handle POST request at "/new" URI
 router.post("/", examController.addExam);
 
+// Handle POST request at "/new" URI to update an exam's status
+router.put("/:id", examController.updateExamStatus);
+
 // Handle PUT request at "/:id" URI
 router.put("/:id", examController.updateExam);
 

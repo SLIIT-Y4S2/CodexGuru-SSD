@@ -41,7 +41,7 @@ const ExamSchema = mongoose.Schema({
     },
     questionsList: {
         type: Array,
-        required: true
+        default: []
     },
     passMark: {
         type: Number,

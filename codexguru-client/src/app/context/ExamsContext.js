@@ -1,18 +1,11 @@
-import { React, createContext, useContext, useState, useEffect } from 'react';
+"use client";
 
-const initialState = {
-    data: []
-};
+import { React, createContext, useState } from 'react';
 
-export const ExamsContext = createContext(initialState);
+export const ExamsContext = createContext();
 
-export function MyExamsProvider({ children }) {
-    const [data, setData] = useState(initialState);
-
-    useEffect(() => {
-        // Fetch data from database when the component mounts
-        fetchData();
-    }, []);
+export function ExamsProvider({ children }) {
+    const [data, setData] = useState([]);
 
 
     /* Function to add new exam */
@@ -26,11 +19,15 @@ export function MyExamsProvider({ children }) {
                 body: JSON.stringify(exam),
             });
 
-            const data = await response.json();
+            if (response.ok) {
+                const data = await response.json();
 
-            const newExam = data.exam;
+                const newExam = data.exam;
 
-            setData((prevData) => [...prevData, newExam]);
+                setData((prevData) => [...prevData, newExam]);
+
+                alert("Exam creation successful");
+            }
 
         } catch (error) {
             console.log("Error : " + error.message);
@@ -43,9 +40,8 @@ export function MyExamsProvider({ children }) {
             const response = await fetch("http://localhost:5000/api/v1/exams");
             const data = await response.json();
 
-            const allExams = data.exams;
+            setData(data.exams);
 
-            setData(allExams);
         } catch (error) {
             console.error("Error : " + error.message);
         }
@@ -57,9 +53,8 @@ export function MyExamsProvider({ children }) {
             const response = await fetch(`http://localhost:5000/api/v1/exams/${examID}`);
             const data = await response.json();
 
-            const exam = await data.exams[0];
+            return await data.exams[0];
 
-            return await exam;
         } catch (error) {
             console.error("Error : " + error.message);
         }
@@ -74,6 +69,31 @@ export function MyExamsProvider({ children }) {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(exam),
+            });
+
+            const data = await response.json();
+
+            setData((prevData) => {
+                const index = prevData.findIndex((item) => item.id === updatedExam.id);
+                if (index !== -1) {
+                    prevData[index] = updatedExam;
+                }
+                return [...prevData];
+            });
+        } catch (error) {
+            console.error("Error : " + error.message);
+        }
+    };
+
+    /* Function to update an exam's status */
+    const updateExamStatus = async (examID, updatedExam, examStatus) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/v1/exams/${examID}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ examStatus: examStatus }),
             });
 
             const data = await response.json();
@@ -109,24 +129,11 @@ export function MyExamsProvider({ children }) {
         }
     };
 
-    const fetchData = async () => {
-        try {
-            // const response = await fetch("http://localhost:5000/api/v1/exams");
-            // const data = await response.json();
-            // setData(data);
-            await getAllExams();
-        } catch (error) {
-            console.log('Error fetching data:' + error.message);
-        }
-    };
 
     return (
-        <ExamsContext.Provider value={{ data, createExam, getAllExams, getExam, updateExam, deleteExam }}>
+        <ExamsContext.Provider value={{ data, createExam, getAllExams, getExam, updateExam, updateExamStatus, deleteExam }}>
             {children}
         </ExamsContext.Provider>
     );
 }
 
-// export function useExamsContext() {
-//     return useContext(ExamsContext);
-// }
