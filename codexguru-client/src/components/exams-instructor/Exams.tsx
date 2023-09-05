@@ -3,11 +3,12 @@
  */
 "use client";
 import React, { useContext, useEffect, useState } from "react";
-import { Tabs } from "antd";
-import { LaptopOutlined } from "@ant-design/icons";
+import { Button, Tabs } from "antd";
+import { LaptopOutlined, EditFilled, DeleteFilled } from "@ant-design/icons";
 import Link from "next/link";
 import { ExamsContext } from "@/app/context/ExamsContext";
 import ExamModal from "./ExamModal";
+import ConfirmModal from "./ConfirmModal";
 
 const Exams: React.FC = () => {
   const { data, getAllExams } = useContext(ExamsContext);
@@ -46,6 +47,12 @@ const Exams: React.FC = () => {
                   <div>{exam.code}</div>
                   <div>{exam.title}</div>
                   <ExamModal examData={exam} />
+                  <Link href={`/exams/edit/${exam.id}`}>
+                    <Button type="primary">
+                      <EditFilled />
+                    </Button>
+                  </Link>
+                  <ConfirmModal examID = {exam.id}/>
                 </div>{" "}
                 <br />
               </>

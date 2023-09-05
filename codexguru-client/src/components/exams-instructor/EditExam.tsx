@@ -1,15 +1,31 @@
 /**
- * NewExam form implementation
+ * EditExam form implementation
  */
 "use client";
-import React, { useContext } from "react";
-import { Button, Form, Input, InputNumber, Select } from "antd";
+import React, { useContext, useEffect, useState } from "react";
 import { ExamsContext } from "@/app/context/ExamsContext";
+import { Button, Form, Input, InputNumber, Select } from "antd";
 
-const EditExam: React.FC = () => {
-  const { data, updateExam } = useContext(ExamsContext);
+export default function EditExam() {
+  const { getExam, updateExam } = useContext(ExamsContext);
 
-  /* Set of states for the form inputs */
+  useEffect(() => {
+    async function fetchData() {
+      const exam = await getExam(window.location.pathname.split("/")[3]);
+
+      setModuleCode(exam.code);
+      setExamTitle(exam.title);
+      setDescription(exam.description);
+      setYear(exam.year);
+      setSemester(exam.semester);
+      setNoOfQuestions(exam.noOfQuestions);
+      setPassMark(exam.passMark);
+      setPassword(exam.password);
+    }
+
+    fetchData();
+  }, []);
+
   const [moduleCode, setModuleCode] = React.useState("");
   const [examTitle, setExamTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
@@ -23,7 +39,7 @@ const EditExam: React.FC = () => {
     <center>
       <Form
         onFinish={() =>
-          updateExam({
+          updateExam(Number(window.location.pathname.split("/")[3]), {
             code: moduleCode,
             title: examTitle,
             description: description,
@@ -39,6 +55,7 @@ const EditExam: React.FC = () => {
       >
         <Form.Item>
           <Input
+            value={moduleCode}
             placeholder="Module code"
             required
             onChange={(e) => setModuleCode(e.target.value)}
@@ -46,6 +63,7 @@ const EditExam: React.FC = () => {
         </Form.Item>
         <Form.Item hasFeedback validateStatus="success">
           <Input
+            value={examTitle}
             placeholder="Exam title"
             id="success"
             required
@@ -55,7 +73,8 @@ const EditExam: React.FC = () => {
 
         <Form.Item hasFeedback>
           <Input.TextArea
-            placeholder="Description. Enter any rules and information about the exam"
+            value={description}
+            placeholder="Enter any rules and information about the exam"
             id="success"
             allowClear
             autoSize
@@ -71,6 +90,7 @@ const EditExam: React.FC = () => {
             }}
           >
             <Select
+              value={year}
               defaultValue={1}
               style={{ width: "50%" }}
               options={[
@@ -84,13 +104,12 @@ const EditExam: React.FC = () => {
               }}
             />
             <Select
+              value={semester}
               defaultValue={1}
               style={{ width: "50%" }}
               options={[
                 { value: 1, label: "Semester 1" },
                 { value: 2, label: "Semester  2" },
-                { value: 3, label: "Semester 3" },
-                { value: 4, label: "Semester 4" },
               ]}
               onChange={(e: any) => {
                 setSemester(e);
@@ -101,6 +120,7 @@ const EditExam: React.FC = () => {
 
         <Form.Item hasFeedback validateStatus="">
           <InputNumber
+            value={noOfQuestions}
             placeholder="No of questions"
             min={1}
             id="success"
@@ -114,6 +134,7 @@ const EditExam: React.FC = () => {
         </Form.Item>
         <Form.Item hasFeedback validateStatus="">
           <InputNumber
+            value={passMark}
             placeholder="Pass mark"
             id="success"
             style={{ width: "100%" }}
@@ -125,6 +146,7 @@ const EditExam: React.FC = () => {
         </Form.Item>
         <Form.Item hasFeedback validateStatus="">
           <Input
+            value={password}
             placeholder="Exam password"
             required
             onChange={(e: any) => setPassword(e.target.value)}
@@ -132,11 +154,9 @@ const EditExam: React.FC = () => {
         </Form.Item>
 
         <Button type="primary" size="large" htmlType="submit">
-          ADD
+          SAVE
         </Button>
       </Form>
     </center>
   );
-};
-
-export default EditExam;
+}

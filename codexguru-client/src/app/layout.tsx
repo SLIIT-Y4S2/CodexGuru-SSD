@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import Header from "@/components/Header";
 import Provider from "./Provider";
 import { ExamsProvider } from "./context/ExamsContext";
+import { ExamQuestionsProvider } from "./context/ExamQuestionsContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,10 +25,12 @@ export default function RootLayout({
         <Provider>
           <StyledComponentsRegistry>
             <ExamsProvider>
-              <main>
-                <Header />
-                {children}
-              </main>
+              <ExamQuestionsProvider>
+                <main>
+                  <Header />
+                  {children}
+                </main>
+              </ExamQuestionsProvider>
             </ExamsProvider>
           </StyledComponentsRegistry>
         </Provider>
