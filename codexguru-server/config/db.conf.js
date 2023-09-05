@@ -1,5 +1,5 @@
-import mongoose, { connect } from "mongoose";
-// import dotenv from "dotenv";
+import mongoose from "mongoose";
+import process from "process";
 
 const dbConnect = () => {
   mongoose
