@@ -1,13 +1,13 @@
 /**
- * QuestionController implementation
+ * ExamQuestionController implementation
  */
 
-import Question from "../models/Question.js";
+import ExamQuestion from "../models/ExamQuestion.js";
 
 /* Function to get all questions */
 const getQuestions = async (req, res) => {
     try {
-        const allQuestions = await Question.find();
+        const allQuestions = await ExamQuestion.find();
 
         if (allQuestions.length === 0) {
             res.status(201).json({
@@ -32,12 +32,12 @@ const getQuestions = async (req, res) => {
 const getQuestion = async (req, res) => {
 
     try {
-        const question = await Question.find({ id: req.params.id });
+        const question = await ExamQuestion.find({ id: req.params.id });
 
         if (question) {
             res.status(200).json({
                 message: "Question found",
-                question: question
+                questions: question
             });
         } else {
             res.status(204).json({
@@ -61,7 +61,7 @@ const addQuestion = async (req, res) => {
         let newID;
 
         // Variable to hold the last document in the collection
-        let lastDoc = await Question.find().limit(1).sort({ $natural: -1 });
+        let lastDoc = await ExamQuestion.find().limit(1).sort({ $natural: -1 });
 
         if (lastDoc.length !== 0) {
             // Variable to hold the id of the last document in the collection
@@ -74,7 +74,7 @@ const addQuestion = async (req, res) => {
             newID = 0;
         }
 
-        const newQuestion = await new Question({
+        const newQuestion = await new ExamQuestion({
             id: newID,
             examCode,
             content,
@@ -88,7 +88,7 @@ const addQuestion = async (req, res) => {
         if (newQuestion) {
             res.status(201).json({
                 message: "Question added successfully",
-                question: newQuestion
+                questions: newQuestion
             });
         } else {
             res.status(400).json({
@@ -104,10 +104,10 @@ const addQuestion = async (req, res) => {
 /* Function to update a question */
 const updateQuestion = async (req, res) => {
     try {
-        const question = await Question.find({ id: req.params.id });
+        const question = await ExamQuestion.find({ id: req.params.id });
 
         if (question) {
-            const updatedQuestion = await Question.findOneAndUpdate(
+            const updatedQuestion = await ExamQuestion.findOneAndUpdate(
                 {
                     id: req.params.id
                 },
@@ -131,7 +131,7 @@ const updateQuestion = async (req, res) => {
             if (updatedQuestion) {
                 res.status(200).json({
                     message: "Question updated successfully",
-                    question: updatedQuestion
+                    questions: updatedQuestion
                 });
             } else {
                 res.status(400).json({
@@ -154,18 +154,18 @@ const updateQuestion = async (req, res) => {
 /* Function to delete a question */
 const deleteQuestion = async (req, res) => {
     try {
-        const deletedQuestion = await Question.findOneAndDelete({
+        const deletedQuestion = await ExamQuestion.findOneAndDelete({
             id: req.params.id,
         });
 
         if (deletedQuestion) {
             res.status(200).json({
-                message: "Question deleted successfully"
+                message: "Question deleted successfully",
+                questions: deletedQuestion
             });;
         } else {
             res.status(400).json({
                 message: "Failed to delete question",
-                question: deletedQuestion
             });
         }
 
@@ -174,7 +174,7 @@ const deleteQuestion = async (req, res) => {
     }
 };
 
-const questionController = {
+const examQuestionController = {
     getQuestions,
     getQuestion,
     addQuestion,
@@ -184,4 +184,4 @@ const questionController = {
 
 
 
-export default questionController;
+export default examQuestionController;

@@ -12,7 +12,7 @@ import { fileURLToPath } from "url";
 /* import routes */
 import authRoutes from "./routes/auth.js";
 import { verifyToken } from "./middleware/auth.js";
-import questionRoutes from "./routes/QuestionRoutes.js";
+import examQuestionRoutes from "./routes/ExamQuestionRoutes.js";
 import examRoutes from "./routes/ExamRoutes.js";
 import examResultRoutes from "./routes/ExamResultRoutes.js";
 import userRoutes from "./routes/UserRoutes.js";
@@ -45,7 +45,7 @@ const upload = multer({ storage });
 
 /* ROUTES */
 app.use("/api/auth", authRoutes);
-app.use("/api/v1/questions", questionRoutes);
+app.use("/api/v1/questions", examQuestionRoutes);
 app.use("/api/v1/exams", examRoutes);
 app.use("/api/v1/results", examResultRoutes);
 app.use("/api/v1/users/",userRoutes);

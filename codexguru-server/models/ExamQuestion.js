@@ -44,5 +44,5 @@ const QuestionSchema = mongoose.Schema({
     }
 });
 
-const Question = mongoose.model("Question", QuestionSchema);
-export default Question;
+const ExamQuestion = mongoose.model("ExamQuestion", QuestionSchema);
+export default ExamQuestion;
