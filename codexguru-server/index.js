@@ -15,6 +15,7 @@ import { verifyToken } from "./middleware/auth.js";
 import questionRoutes from "./routes/QuestionRoutes.js";
 import examRoutes from "./routes/ExamRoutes.js";
 import examResultRoutes from "./routes/ExamResultRoutes.js";
+import userRoutes from "./routes/UserRoutes.js";
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -47,6 +48,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/v1/questions", questionRoutes);
 app.use("/api/v1/exams", examRoutes);
 app.use("/api/v1/results", examResultRoutes);
+app.use("/api/v1/users/",userRoutes);
 
 //TODO: testing routes
 app.get("/", (req, res) => {
