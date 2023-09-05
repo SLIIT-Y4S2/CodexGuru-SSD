@@ -1,8 +1,9 @@
-import mongoose, { connect } from "mongoose";
+import mongoose from "mongoose";
+import process from "process";
 
 const dbConnect = () => {
   mongoose
-    .connect("mongodb://localhost:27017/codexguru", {
+    .connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
