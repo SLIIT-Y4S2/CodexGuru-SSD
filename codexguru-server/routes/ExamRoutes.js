@@ -18,8 +18,8 @@ router.post("/", examController.addExam);
 // Handle POST request at "/new" URI to update an exam's status
 router.put("/:id", examController.updateExamStatus);
 
-// Handle PUT request at "/:id" URI
-router.put("/:id", examController.updateExam);
+// Handle PUT request at "/update/:id" URI
+router.put("/update/:id", examController.updateExam);
 
 // Handle DELETE request at "/:id" URI
 router.delete("/:id", examController.deleteExam);

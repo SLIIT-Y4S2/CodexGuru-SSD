@@ -55,7 +55,7 @@ const NewExam: React.FC = () => {
 
         <Form.Item hasFeedback>
           <Input.TextArea
-            placeholder="Description. Enter any rules and information about the exam"
+            placeholder="Enter any rules and information about the exam"
             id="success"
             allowClear
             autoSize
@@ -89,8 +89,6 @@ const NewExam: React.FC = () => {
               options={[
                 { value: 1, label: "Semester 1" },
                 { value: 2, label: "Semester  2" },
-                { value: 3, label: "Semester 3" },
-                { value: 4, label: "Semester 4" },
               ]}
               onChange={(e: any) => {
                 setSemester(e);

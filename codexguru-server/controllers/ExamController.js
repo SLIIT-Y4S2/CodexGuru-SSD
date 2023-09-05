@@ -138,6 +138,8 @@ const updateExam = async (req, res) => {
                 }
             );
 
+            console.log(updatedExam);
+
             if (updatedExam) {
                 res.status(200).json({
                     message: "Exam updated successfully",
