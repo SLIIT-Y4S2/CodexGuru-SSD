@@ -1,34 +1,55 @@
 "use client";
 import React, { useContext } from "react";
-import { ForumContext } from "@/store/ForumProvider";
+import { ForumContext } from "@/context/ForumProvider";
 import { ForumContextType } from "@/types/ForumTypes";
 import AddComment from "./AddAnswer";
+import { useSession } from "next-auth/react";
+import DeleteQuestion from "./DeleteQuestion";
+import DeleteAnswer from "./DeleteAnswer";
+import UpdateQuestion from "./UpdateQuestion";
+import UpdateAnswer from "./UpdateAnswer";
 
 const QuestionView = () => {
-  const { questions, selectedQuestion, setSelectedQuestion } = useContext(
-    ForumContext
-  ) as ForumContextType;
-  if (!selectedQuestion || !questions) {
+  const {
+    questions,
+    selectedQuestionId,
+    setSelectedQuestionId,
+    deleteQuestion,
+  } = useContext(ForumContext) as ForumContextType;
+
+  const { data: session, status } = useSession();
+
+  if (!selectedQuestionId || !questions) {
     return <div></div>;
   }
-  const question = questions.find((q) => q._id === selectedQuestion);
-  if (!selectedQuestion || !question) {
+  const question = questions.find((q) => q._id === selectedQuestionId);
+  if (!selectedQuestionId || !question) {
     return <div>not selected</div>;
   }
+
+  if (status === "loading" || !session?.user) return <>loading</>;
   return (
-    <div className="flex flex-col p-5 bg-green-100">
+    <div className="">
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         onClick={() => {
-          setSelectedQuestion(undefined);
+          setSelectedQuestionId(undefined);
         }}
       >
         Back
       </button>
-      <h3>{question.title}</h3>
+      {question.author._id == session.user.id.toString() && (
+        <>
+          <DeleteQuestion questionId={question._id} />
+          <UpdateQuestion question={question} />
+        </>
+      )}
+      <h3 className="text-3xl">{question.title}</h3>
       <p>{question.description}</p>
       <div className="flex justify-end">
-        <span>{question.author.name}</span>
+        <span>
+          {question.author?.firstName} {question?.author.lastName}
+        </span>
       </div>
       <div className="flex flex-col ">
         {question.answers.map((answer, index) => (
@@ -38,11 +59,22 @@ const QuestionView = () => {
           >
             <p>{answer.description}</p>
             <div className="flex justify-end">
-              <span>{answer.author.name}</span>
+              {answer.author._id == session.user.id.toString() && (
+                <>
+                  <DeleteAnswer
+                    questionId={question._id}
+                    answerId={answer._id}
+                  />
+                  <UpdateAnswer questionId={question._id} answer={answer} />
+                </>
+              )}
+              <span>
+                {answer.author?.firstName} {answer.author?.lastName}
+              </span>
             </div>
           </div>
         ))}
-        <AddComment questionId={question.id} />
+        <AddComment questionId={question._id} />
       </div>
     </div>
   );

@@ -4,12 +4,18 @@ import React, { useContext } from "react";
 
 import { Form, Input, Button, Checkbox } from "antd";
 import { ForumContext } from "@/context/ForumProvider";
-import { ForumContextType, Question } from "@/types/ForumTypes";
+import { Answer, ForumContextType } from "@/types/ForumTypes";
 
-const AddQuestion = () => {
+const UpdateAnswer = ({
+  questionId,
+  answer,
+}: {
+  questionId: string;
+  answer: Answer;
+}) => {
   const { Item: FormItem } = Form;
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const { addQuestion } = useContext(ForumContext) as ForumContextType;
+  const { updateAnswer } = useContext(ForumContext) as ForumContextType;
   const handleOk = () => {
     setIsModalOpen(false);
   };
@@ -23,11 +29,10 @@ const AddQuestion = () => {
   };
 
   const onFinish = async (values: any) => {
-    const newQuestion = {
-      title: values.title,
+    const newAnswer = {
       description: values.description,
     };
-    await addQuestion(newQuestion);
+    await updateAnswer(questionId, answer._id, newAnswer);
     handleOk();
   };
   return (
@@ -36,7 +41,7 @@ const AddQuestion = () => {
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         onClick={showModal}
       >
-        Add Question
+        Edit Answer
       </button>
       {isModalOpen ? (
         <>
@@ -46,7 +51,7 @@ const AddQuestion = () => {
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 {/*header*/}
                 <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                  <h3 className="text-2xl font-semibold">Ask Question</h3>
+                  <h3 className="text-2xl font-semibold">Edit Answer</h3>
                   <button
                     className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                     onClick={handleCancel}
@@ -64,18 +69,6 @@ const AddQuestion = () => {
                   {/*body*/}
                   <div className="relative p-6 flex-auto">
                     <FormItem
-                      label="Title"
-                      name="title"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input your title!",
-                        },
-                      ]}
-                    >
-                      <Input />
-                    </FormItem>
-                    <FormItem
                       label="Description"
                       name="description"
                       rules={[
@@ -84,6 +77,7 @@ const AddQuestion = () => {
                           message: "Please input your description!",
                         },
                       ]}
+                      initialValue={answer.description}
                     >
                       <Input />
                     </FormItem>
@@ -116,4 +110,4 @@ const AddQuestion = () => {
   );
 };
 
-export default AddQuestion;
+export default UpdateAnswer;

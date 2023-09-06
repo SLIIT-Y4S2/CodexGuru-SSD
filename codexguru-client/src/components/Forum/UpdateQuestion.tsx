@@ -6,10 +6,10 @@ import { Form, Input, Button, Checkbox } from "antd";
 import { ForumContext } from "@/context/ForumProvider";
 import { ForumContextType, Question } from "@/types/ForumTypes";
 
-const AddQuestion = () => {
+const UpdateQuestion = ({ question }: { question: Question }) => {
   const { Item: FormItem } = Form;
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const { addQuestion } = useContext(ForumContext) as ForumContextType;
+  const { updateQuestion } = useContext(ForumContext) as ForumContextType;
   const handleOk = () => {
     setIsModalOpen(false);
   };
@@ -27,7 +27,7 @@ const AddQuestion = () => {
       title: values.title,
       description: values.description,
     };
-    await addQuestion(newQuestion);
+    await updateQuestion(question._id, newQuestion);
     handleOk();
   };
   return (
@@ -36,7 +36,7 @@ const AddQuestion = () => {
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         onClick={showModal}
       >
-        Add Question
+        Edit Question
       </button>
       {isModalOpen ? (
         <>
@@ -46,7 +46,7 @@ const AddQuestion = () => {
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 {/*header*/}
                 <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                  <h3 className="text-2xl font-semibold">Ask Question</h3>
+                  <h3 className="text-2xl font-semibold">Edit Question</h3>
                   <button
                     className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                     onClick={handleCancel}
@@ -72,6 +72,7 @@ const AddQuestion = () => {
                           message: "Please input your title!",
                         },
                       ]}
+                      initialValue={question.title}
                     >
                       <Input />
                     </FormItem>
@@ -84,6 +85,7 @@ const AddQuestion = () => {
                           message: "Please input your description!",
                         },
                       ]}
+                      initialValue={question.description}
                     >
                       <Input />
                     </FormItem>
@@ -116,4 +118,4 @@ const AddQuestion = () => {
   );
 };
 
-export default AddQuestion;
+export default UpdateQuestion;

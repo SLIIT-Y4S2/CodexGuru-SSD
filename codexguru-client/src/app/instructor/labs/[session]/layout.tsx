@@ -1,4 +1,4 @@
-import { ForumProvider } from "@/store/ForumProvider";
+import { ForumProvider } from "@/context/ForumProvider";
 
 export default function RootLayout({
   children,

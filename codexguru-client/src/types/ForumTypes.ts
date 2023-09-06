@@ -22,11 +22,31 @@ export interface Author {
   lastName: string;
 }
 export interface ForumContextType {
+  isLoading: boolean;
+  error: string | undefined;
   setLabId: React.Dispatch<React.SetStateAction<string | undefined>>;
   questions: Question[];
-  // setQuestions: React.Dispatch<React.SetStateAction<Question[]>>;
-  selectedQuestion: string | undefined;
-  setSelectedQuestion: React.Dispatch<React.SetStateAction<string | undefined>>;
-  postQuestion: (question: Question) => Promise<void>;
-  postAnswer: (id: string, answer: Answer) => Promise<void>;
+  selectedQuestionId: string | undefined;
+  setSelectedQuestionId: React.Dispatch<
+    React.SetStateAction<string | undefined>
+  >;
+  addQuestion: (question: {
+    title: string;
+    description: string;
+  }) => Promise<void>;
+  postAnswer: (
+    questionId: string,
+    answer: { description: string }
+  ) => Promise<void>;
+  deleteQuestion: (questionId: string) => Promise<void>;
+  deleteAnswer: (questionId: string, answerId: string) => Promise<void>;
+  updateQuestion: (
+    questionId: string,
+    question: { title: string; description: string }
+  ) => Promise<void>;
+  updateAnswer: (
+    questionId: string,
+    answerId: string,
+    answer: { description: string }
+  ) => Promise<void>;
 }
