@@ -16,6 +16,8 @@ import examQuestionRoutes from "./routes/ExamQuestionRoutes.js";
 import examRoutes from "./routes/ExamRoutes.js";
 import examResultRoutes from "./routes/ExamResultRoutes.js";
 import compilationRoutes from "./routes/compilationRoutes.js";
+import aiChatRoutes from "./routes/aiChatRoutes.js";
+
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -50,6 +52,7 @@ app.use("/api/v1/exams", examRoutes);
 app.use("/api/v1/results", examResultRoutes);
 /**api route  */
 app.use('/api/v1/compilations', compilationRoutes);
+app.use('/api/v1/ai-chat-responses', aiChatRoutes);
 
 //TODO: testing routes
 app.get("/", (req, res) => {
