@@ -1,4 +1,3 @@
-'use client'
 import COMMON from "@/CONSTANTS/Common";
 import PATHS from "@/CONSTANTS/Paths";
 import supportedLanuages from "@/CONSTANTS/supportedLanguages";
