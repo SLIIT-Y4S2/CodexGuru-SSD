@@ -3,7 +3,10 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Header from "@/components/Header";
-import Provider from "./Provider";
+
+// context imports
+import AuthProvider from "./AuthProvider";
+import { LabProvider } from "@/store/LabProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,14 +23,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Provider>
-          <StyledComponentsRegistry>
-            <main>
-              <Header />
-              {children}
-            </main>
-          </StyledComponentsRegistry>
-        </Provider>
+        <AuthProvider>
+          <LabProvider>
+            <StyledComponentsRegistry>
+              <main>
+                <Header />
+                <div className="mx-auto max-w-screen-xl px-2 py-2 md:px-8">
+                  {children}
+                </div>
+              </main>
+            </StyledComponentsRegistry>
+          </LabProvider>
+        </AuthProvider>
       </body>
     </html>
   );

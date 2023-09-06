@@ -10,7 +10,6 @@ export class TestServices {
       timeoutErrorMessage: "Time out!",
     });
     this.token = token;
-    console.log(this.token);
   }
   firstTest = () =>
     this.instance

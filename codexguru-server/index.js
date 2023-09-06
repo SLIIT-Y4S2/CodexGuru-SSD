@@ -9,10 +9,13 @@ import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
 
+/* import middleware */
+import { verifyToken } from "./middleware/auth.js";
 /* import routes */
 import authRoutes from "./routes/auth.js";
-import { verifyToken } from "./middleware/auth.js";
 import questionRoutes from "./routes/QuestionRoutes.js";
+import labSessionRoutes from "./routes/labSession.js";
+import forumRoutes from "./routes/forum.js";
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -43,6 +46,8 @@ const upload = multer({ storage });
 /* ROUTES */
 app.use("/api/auth", authRoutes);
 app.use("/api/v1/questions", questionRoutes);
+app.use("/api/labs", verifyToken, labSessionRoutes);
+app.use("/api/forum", verifyToken, forumRoutes);
 
 //TODO: testing routes
 app.get("/", (req, res) => {
@@ -50,7 +55,6 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/student", verifyToken, (req, res) => {
-  // res.send(`Hello World!, Authorization required, ROLE: ${req.role}`);
   res.json({
     message: "You made it to the secure route",
     user: req.user,
