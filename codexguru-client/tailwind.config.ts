@@ -30,7 +30,7 @@ const config: Config = {
         'custom-black': '#161616'
       },
       width: {
-        '160': '640px',
+        '160': '560px',
       }
     },
   },

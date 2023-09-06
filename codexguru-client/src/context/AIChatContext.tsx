@@ -1,75 +1,60 @@
+import PATHS from "@/CONSTANTS/Paths";
 import IAiChatContext from "@/interfaces/IAiChatContext";
 import IChildProps from "@/interfaces/IChildProps";
 import IMessage from "@/interfaces/IMessage";
+import axios from "axios";
 import { createContext, useState } from "react";
 
 export const AIChatContext = createContext<IAiChatContext | null>(null);
 
 const AIChatContextProvider = ({ children }: IChildProps) => {
 
+    const [currentMessage, setCurrentMessage] = useState<IMessage>({ text: '', isUser: false, timestamp: '', id: 0 } as IMessage);
+    const [messageList, setMessageList] = useState<IMessage[]>([]);
+    const [messageListLength, setMessageListLength] = useState<number>(0);
 
-    const messageList1 = [
-        {
-            id: 1,
-            text: "Hello!",
-            isUser: true,
-            timestamp: "2023-09-06T10:00:00",
-        },
-        {
-            id: 2,
-            text: "Hi there!",
-            isUser: false,
-            timestamp: "2023-09-06T10:05:00",
-        },
-        {
-            id: 3,
-            text: "How can I assist you?",
-            isUser: false,
-            timestamp: "2023-09-06T10:06:00",
-        },
-        {
-            id: 4,
-            text: "I have a question.",
-            isUser: true,
-            timestamp: "2023-09-06T10:10:00",
-        },
-        {
-            id: 5,
-            text: "Sure, what's your question?",
-            isUser: false,
-            timestamp: "2023-09-06T10:11:00",
-        },
-        {
-            id: 6,
-            text: "It's about a programming issue I'm facing.",
-            isUser: true,
-            timestamp: "2023-09-06T10:15:00",
-        },
-        // Add more messages as needed
-    ];
-
-
-
-
-    const [message, setMessage] = useState<string>('');
-    const [messageList, setMessageList] = useState<IMessage[]>(messageList1);
-
-    const setMessageHandler = (message: string) => {
-        setMessage(message);
+    const setMessageHandler = (message: IMessage) => {
+        setCurrentMessage(message);
     };
     const setMessageListHandler = (message: IMessage) => {
-        setMessageList([...messageList, message]);
+        setMessageListLength(prevState => prevState + 1);
+        setMessageList((prevState) => [...prevState, message]);
     };
 
-    const sendMessageHandler = () => {
+    const sendMessageHandler = (message: IMessage) => {
+        setMessageListHandler(message);
 
+        const reqMessages = [messageList.map((message) => {
+            return ({
+                isUser: message.isUser,
+                text: message.text,
+            })
+        })];
+
+        console.log(messageList);
+
+        axios
+            .post(PATHS.AI_CHAT_PATH,
+                { messages: reqMessages },
+            )
+            .then((res) => {
+                const newMessage: IMessage = {
+                    text: res.data.text,
+                    isUser: res.data.isUser,
+                    timestamp: res.data.currentTime,
+                    id: messageListLength + 1
+                }
+
+                setMessageListHandler(newMessage);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
     };
-
-
 
 
     return (
-        <AIChatContext.Provider value={{ message, messageList, sendMessageHandler, setMessageHandler, setMessageListHandler }}>
+        <AIChatContext.Provider value={{ currentMessage, messageList, messageListLength, sendMessageHandler, setMessageHandler, setMessageListHandler }}>
             {children}
         </AIChatContext.Provider>
     )

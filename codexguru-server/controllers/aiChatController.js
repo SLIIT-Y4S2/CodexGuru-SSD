@@ -6,28 +6,33 @@ import Common from "../CONSTANTS/COMMON.js";
 
 const getAiChatResponse = async (req, res) => {
 
-    const { isUser, text } = req.body;
-    console.log("isUser", isUser);
-    console.log("text", text);
+    //* get the messages from the request body
+    const { messages } = req.body;
 
-    if (isUser !== undefined && text !== undefined && isUser !== null && text !== null && text.trim() !== "") {
-        console.log("if _true");
-        const messages = [{ role: "system", content: Common.SYSTEM_PROMPT }];
+    //* check if the messages length is greater than 0 and not null
+    if (messages && messages.length > 0) {
+        //* create a message list with the system prompt
+        const messageList = [{ role: "system", content: Common.SYSTEM_PROMPT }];
 
-        if (isUser === true) {
-            messages.push({ role: "user", content: text });
-        }
-        else {
-            messages.push({ role: "assistant", content: text });
-        }
+        //* push the messages to the message list
+        messages[0].map((message) => {
 
-        const responseFromOpenAi = await openAiApiHandler(messages);
+            if (message.isUser === true) {
+                messageList.push({ role: "user", content: message.text });
+            }
+            else {
+                messageList.push({ role: "assistant", content: message.text });
+            }
+        });
 
-        messages.push({ role: "assistant", content: responseFromOpenAi.choices[0].message.content });
+        const responseFromOpenAi = await openAiApiHandler(messageList);
+
+        // messageList.push({ role: "assistant", content: responseFromOpenAi.choices[0].message.content });
 
         const responseFromServer = {
             currentTime: new Date().toISOString(),
-            message: responseFromOpenAi.choices[0].message.content,
+            isUser: false,
+            text: responseFromOpenAi.choices[0].message.content,
         }
 
         return res.status(HttpStatusCode.Created).send(responseFromServer);

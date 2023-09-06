@@ -1,9 +1,10 @@
 import IMessage from "./IMessage";
 
 export default interface IAiChatContext {
-    message: string;
-    setMessageHandler: (message: string) => void;
+    currentMessage: IMessage;
+    setMessageHandler: (message: IMessage) => void;
     messageList: IMessage[];
     setMessageListHandler: (message: IMessage) => void;
-    sendMessageHandler: () => void;
+    messageListLength: number;
+    sendMessageHandler: (message: IMessage) => void;
 }

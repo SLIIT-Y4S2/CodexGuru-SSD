@@ -4,41 +4,39 @@ import { Button, Input, Tooltip } from "antd";
 import { AIChatContext } from "@/context/AIChatContext";
 import IAiChatContext from "@/interfaces/IAiChatContext";
 import IMessage from "@/interfaces/IMessage";
+import TextArea from "antd/es/input/TextArea";
 const MessageInput: React.FC = () => {
     const [message, setMessage] = useState('');
     const aiChatCtx = useContext<IAiChatContext | null>(AIChatContext);
-    const { setMessageListHandler } = aiChatCtx!;
+    const { messageListLength, sendMessageHandler } = aiChatCtx!;
 
 
     const messageHandler = (message: string) => {
         if (message.trim() === '') return;
-        setMessage('');
         const newMessage: IMessage = {
             text: message,
             isUser: true,
             timestamp: new Date().toLocaleDateString(),
-            id: Math.floor(Math.random() * 100)
+            id: messageListLength + 1
         }
-        setMessageListHandler(newMessage)
+        setMessage('');
+        sendMessageHandler(newMessage);
     }
     return (
         <>
-            <Input
+            <TextArea
+                rows={1}
                 className="w-160"
                 placeholder="Enter your message here"
-                suffix={
-                    <Tooltip title="Send">
-                        <Button
-                            icon={
-                                <SendOutlined size={10} />
-                            }
-                            onClick={() => messageHandler(message)}
-                        />
-
-                    </Tooltip>
-                }
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                maxLength={2500}
+            />
+            <Button
+                icon={
+                    <SendOutlined size={10} />
+                }
+                onClick={() => messageHandler(message)}
             />
         </>
     )
