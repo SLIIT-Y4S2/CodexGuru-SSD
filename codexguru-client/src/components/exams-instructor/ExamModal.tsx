@@ -21,7 +21,7 @@ export default function ExamModal({ examData }) {
         onClick={() => {
           Modal.info({
             centered: true,
-            width: "1000px",
+            width: "1200px",
             title: caption,
             content: (
               <>
@@ -52,6 +52,10 @@ export default function ExamModal({ examData }) {
                   <div>
                     <p style={{ fontWeight: "bold" }}>Pass Mark</p>
                     <p>{examData.passMark}</p>
+                  </div>
+                  <div>
+                    <p style={{ fontWeight: "bold" }}>Duration</p>
+                    <p>{examData.duration}</p>
                   </div>
                   <div>
                     <p style={{ fontWeight: "bold" }}>Exam Password </p>

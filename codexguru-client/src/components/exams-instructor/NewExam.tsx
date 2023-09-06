@@ -3,8 +3,13 @@
  */
 "use client";
 import React, { useContext } from "react";
-import { Button, Form, Input, InputNumber, Select } from "antd";
+import { Button, Form, Input, InputNumber, Select, TimePicker } from "antd";
 import { ExamsContext } from "@/app/context/ExamsContext";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
 
 const NewExam: React.FC = () => {
   const { data, createExam } = useContext(ExamsContext);
@@ -13,11 +18,25 @@ const NewExam: React.FC = () => {
   const [moduleCode, setModuleCode] = React.useState("");
   const [examTitle, setExamTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
-  const [year, setYear] = React.useState("");
-  const [semester, setSemester] = React.useState("");
+  const [year, setYear] = React.useState(1);
+  const [semester, setSemester] = React.useState(1);
   const [noOfQuestions, setNoOfQuestions] = React.useState("");
   const [passMark, setPassMark] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [duration, setDuration] = React.useState("");
+
+  const [form] = Form.useForm();
+
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 8 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 16 },
+    },
+  };
 
   return (
     <center>
@@ -30,6 +49,7 @@ const NewExam: React.FC = () => {
             year: year,
             semester: semester,
             noOfQuestions: noOfQuestions,
+            duration: duration,
             passMark: passMark,
             password: password,
           })
@@ -126,6 +146,22 @@ const NewExam: React.FC = () => {
             placeholder="Exam password"
             required
             onChange={(e: any) => setPassword(e.target.value)}
+          />
+        </Form.Item>
+
+        <Form.Item>
+          <TimePicker
+            defaultValue={dayjs("00:00:00", "HH:mm:ss")}
+            onChange={(e) => {
+              // console.log(dayjs("4:15:05", "HH:mm:ss"));
+              const hrs = e.$H ? e.$H : "00";
+              const mins = e.$m ? e.$m : "00";
+              const secs = e.$s ? e.$s : "00";
+
+              setDuration(`${hrs}:${mins}:${secs}`);
+            }}
+            format="HH:mm:ss"
+            style={{ width: "100%" }}
           />
         </Form.Item>
 

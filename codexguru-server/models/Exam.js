@@ -39,6 +39,10 @@ const ExamSchema = mongoose.Schema({
         required: true,
         default: true
     },
+    duration: {
+        type: String,
+        required: true
+    },
     questionsList: {
         type: Array,
         default: []
