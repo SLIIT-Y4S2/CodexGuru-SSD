@@ -14,10 +14,6 @@ const ExamSchema = mongoose.Schema({
         required: true,
         unique: true,
     },
-    password: {
-        type: String,
-        required: true
-    },
     title: {
         type: String,
         required: true
@@ -36,15 +32,23 @@ const ExamSchema = mongoose.Schema({
     },
     isActive: {
         type: Boolean,
-        default: true
+        default: false
     },
     noOfQuestions: {
         type: Number,
         required: true,
         default: true
     },
+    questionsList: {
+        type: Array,
+        default: []
+    },
     passMark: {
         type: Number,
+        required: true
+    },
+    password: {
+        type: String,
         required: true
     },
     createdDate: {

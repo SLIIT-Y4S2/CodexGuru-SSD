@@ -7,6 +7,8 @@ import Header from "@/components/Header";
 // context imports
 import AuthProvider from "./AuthProvider";
 import { LabProvider } from "@/store/LabProvider";
+import { ExamsProvider } from "./context/ExamsContext";
+import { ExamQuestionsProvider } from "./context/ExamQuestionsContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,12 +28,14 @@ export default function RootLayout({
         <AuthProvider>
           <LabProvider>
             <StyledComponentsRegistry>
-              <main>
-                <Header />
-                <div className="mx-auto max-w-screen-xl px-2 py-2 md:px-8">
-                  {children}
-                </div>
-              </main>
+              <ExamsProvider>
+                <ExamQuestionsProvider>
+                  <main>
+                    <Header />
+                    {children}
+                  </main>
+                </ExamQuestionsProvider>
+              </ExamsProvider>
             </StyledComponentsRegistry>
           </LabProvider>
         </AuthProvider>

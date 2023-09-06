@@ -9,6 +9,11 @@ const QuestionSchema = mongoose.Schema({
         required: true,
         unique: true,
     },
+    examCode: {
+        type: String,
+        required: true,
+        ref: "Exam"
+    },
     content: {
         type: String,
         required: true
@@ -39,5 +44,5 @@ const QuestionSchema = mongoose.Schema({
     }
 });
 
-const Question = mongoose.model("Question", QuestionSchema);
-export default Question;
+const ExamQuestion = mongoose.model("ExamQuestion", QuestionSchema);
+export default ExamQuestion;
