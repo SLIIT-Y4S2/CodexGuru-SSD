@@ -55,7 +55,7 @@ const getQuestion = async (req, res) => {
 const addQuestion = async (req, res) => {
 
     try {
-        const { examCode, content, option1, option2, option3, option4, answer } = req.body;
+        const { examID, content, option1, option2, option3, option4, answer } = req.body;
 
         // Variable to hold the new id
         let newID;
@@ -76,7 +76,7 @@ const addQuestion = async (req, res) => {
 
         const newQuestion = await new ExamQuestion({
             id: newID,
-            examCode,
+            examID,
             content,
             option1,
             option2,
@@ -113,7 +113,7 @@ const updateQuestion = async (req, res) => {
                 },
                 {
                     $set: {
-                        examCode: req.body.examCode,
+                        examID: req.body.examID,
                         content: req.body.content,
                         imageURL: "",
                         option1: req.body.option1,

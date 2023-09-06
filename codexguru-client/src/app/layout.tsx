@@ -26,10 +26,11 @@ export default function RootLayout({
           <StyledComponentsRegistry>
             <ExamsProvider>
               <ExamQuestionsProvider>
-                <main>
-                  <Header />
-                  {children}
-                </main>
+    
+                  <main>
+                    <Header />
+                    {children}
+                  </main>
               </ExamQuestionsProvider>
             </ExamsProvider>
           </StyledComponentsRegistry>

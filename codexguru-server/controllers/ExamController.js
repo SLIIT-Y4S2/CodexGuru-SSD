@@ -62,6 +62,7 @@ const addExam = async (req, res) => {
             year,
             semester,
             noOfQuestions,
+            duration,
             passMark,
             password
         } = req.body;
@@ -91,6 +92,7 @@ const addExam = async (req, res) => {
             year,
             semester,
             noOfQuestions,
+            duration,
             passMark,
             password
         }).save();
@@ -129,6 +131,7 @@ const updateExam = async (req, res) => {
                         year: req.body.year,
                         semester: req.body.semester,
                         noOfQuestions: req.body.noOfQuestions,
+                        duration: req.body.duration,
                         passMark: req.body.passMark,
                         password: req.body.password
                     }

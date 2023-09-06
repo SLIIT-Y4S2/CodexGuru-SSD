@@ -4,7 +4,12 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import { ExamsContext } from "@/app/context/ExamsContext";
-import { Button, Form, Input, InputNumber, Select } from "antd";
+import { Button, Form, Input, InputNumber, Select, TimePicker } from "antd";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
 
 export default function EditExam() {
   const { getExam, updateExam } = useContext(ExamsContext);
@@ -21,6 +26,7 @@ export default function EditExam() {
       setNoOfQuestions(exam.noOfQuestions);
       setPassMark(exam.passMark);
       setPassword(exam.password);
+      setDuration(exam.duration);
     }
 
     fetchData();
@@ -34,6 +40,7 @@ export default function EditExam() {
   const [noOfQuestions, setNoOfQuestions] = React.useState("");
   const [passMark, setPassMark] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [duration, setDuration] = React.useState("");
 
   return (
     <center>
@@ -48,6 +55,7 @@ export default function EditExam() {
             noOfQuestions: noOfQuestions,
             passMark: passMark,
             password: password,
+            duration: duration,
           })
         }
         // {...formItemLayout}
@@ -150,6 +158,22 @@ export default function EditExam() {
             placeholder="Exam password"
             required
             onChange={(e: any) => setPassword(e.target.value)}
+          />
+        </Form.Item>
+
+        <Form.Item>
+          <TimePicker
+            value={dayjs(duration, "HH:mm:ss")}
+            onChange={(e) => {
+              // console.log(dayjs("4:15:05", "HH:mm:ss"));
+              const hrs = e.$H ? e.$H : "00";
+              const mins = e.$m ? e.$m : "00";
+              const secs = e.$s ? e.$s : "00";
+
+              setDuration(`${hrs}:${mins}:${secs}`);
+            }}
+            format="HH:mm:ss"
+            style={{ width: "100%" }}
           />
         </Form.Item>
 
