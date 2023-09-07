@@ -18,6 +18,11 @@ const CodeEditorContextProvider = ({ children }: IChildProps) => {
     const [theme, setTheme] = useState<string>(COMMON.DEFAULT_THEME);
     const [stdin, setStdin] = useState<string>('');
     const [output, setOutput] = useState<ICompileOutput | null>(null);
+    const [isCompiling, setIsCompiling] = useState<boolean>(false);
+
+    const setIsCompilingHandler = (isCompiling: boolean) => {
+        setIsCompiling(prevState => !prevState);
+    };
 
     //* set the language id
     const setLanguageHandler = (languageId: number) => {
@@ -42,29 +47,33 @@ const CodeEditorContextProvider = ({ children }: IChildProps) => {
 
     //* handle the compile request
     const handleCompile = () => {
-        //set request body
-        const bodyData: IReqBody = {
-            source_code: sourceCode,
-            language_id: languageId,
-            stdin: stdin,
+        //* check if the source code is not empty and language id is not null
+        if (sourceCode.trim() !== '' && languageId !== null) {
+            setIsCompilingHandler(true);
+            //* set request body
+            const bodyData: IReqBody = {
+                source_code: sourceCode,
+                language_id: languageId,
+                stdin: stdin,
+            }
+
+            axios
+                .post(
+                    PATHS.COMPLILER_PATH,
+                    bodyData
+                )
+                .then(async (res) => {
+                    setOutput(res.data);
+                    console.log(res.data);
+                    setIsCompilingHandler(false);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
-
-        axios
-            .post(
-                PATHS.COMPLILER_PATH,
-                bodyData
-            )
-            .then(async (res) => {
-                setOutput(res.data);
-                console.log(res.data);
-
-            })
-            .catch((err) => {
-                console.log(err);
-            });
     };
     return (
-        <CodeEditorContext.Provider value={{ theme, languageValue, languageName, languageId, stdin, output, setSourceCodeHandler, setLanguageHandler, setStdinHandler, setThemeHandler, handleCompile }}>
+        <CodeEditorContext.Provider value={{ isCompiling, theme, languageValue, languageName, languageId, stdin, output, setSourceCodeHandler, setLanguageHandler, setStdinHandler, setThemeHandler, handleCompile }}>
             {children}
         </CodeEditorContext.Provider>
     )

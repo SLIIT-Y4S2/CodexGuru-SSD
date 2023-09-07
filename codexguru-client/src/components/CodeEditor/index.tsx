@@ -1,6 +1,6 @@
 import LanguageDropdown from "./LanguageDropdown";
 import ThemeDropDown from "./ThemeDropDown";
-import CompileButton from "../common/CompileButton";
+import CompileButton from "./CompileButton";
 import OutputWindow from "./OutputWindow";
 import InputWindow from "./InputWindows";
 import CodeEditor from "./CodeEditor";

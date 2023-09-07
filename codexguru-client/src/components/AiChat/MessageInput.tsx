@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { SendOutlined } from "@ant-design/icons";
+import { PoweroffOutlined, SendOutlined } from "@ant-design/icons";
 import { Button, Input, Tooltip } from "antd";
 import { AIChatContext } from "@/context/AIChatContext";
 import IAiChatContext from "@/interfaces/IAiChatContext";
@@ -8,7 +8,7 @@ import TextArea from "antd/es/input/TextArea";
 const MessageInput: React.FC = () => {
     const [message, setMessage] = useState('');
     const aiChatCtx = useContext<IAiChatContext | null>(AIChatContext);
-    const { messageListLength, sendMessageHandler } = aiChatCtx!;
+    const { isWaitingForReply, messageListLength, sendMessageHandler } = aiChatCtx!;
 
 
     const messageHandler = (message: string) => {
@@ -32,12 +32,8 @@ const MessageInput: React.FC = () => {
                 onChange={(e) => setMessage(e.target.value)}
                 maxLength={2500}
             />
-            <Button
-                icon={
-                    <SendOutlined size={10} />
-                }
-                onClick={() => messageHandler(message)}
-            />
+            {isWaitingForReply ? <Button type="primary" icon={<PoweroffOutlined />} loading /> : <Button icon={<SendOutlined size={10} />} onClick={() => messageHandler(message)} />}
+
         </>
     )
 };

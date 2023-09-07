@@ -1,6 +1,7 @@
 import ICompileOutput from "./ICompileOutput";
 
 export default interface ICodeEditorContext {
+    isCompiling: boolean;
     languageId: number;
     languageName: string;
     languageValue: string;

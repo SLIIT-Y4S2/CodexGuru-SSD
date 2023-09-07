@@ -26,6 +26,7 @@ const LanguageDropdown: React.FC = () => {
             wrap
         >
             <Select
+                size='large'
                 defaultValue={items.filter((item) => item.value === 63)[0].label}
                 style={{ width: 120 }}
                 onChange={handleChange}

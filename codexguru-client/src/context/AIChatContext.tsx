@@ -1,3 +1,4 @@
+'use client';
 import PATHS from "@/CONSTANTS/Paths";
 import IAiChatContext from "@/interfaces/IAiChatContext";
 import IChildProps from "@/interfaces/IChildProps";
@@ -15,6 +16,13 @@ const AIChatContextProvider = ({ children }: IChildProps) => {
     const [messageList, setMessageList] = useState<IMessage[]>([]);
     const [messageListLength, setMessageListLength] = useState<number>(0);
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isWaitingForReply, setIsWaitingForReply] = useState<boolean>(false);
+
+    const setIsWaitingForReplyHandler = () => {
+        console.log(isWaitingForReply);
+        setIsWaitingForReply(prevState => !prevState);
+        console.log(isWaitingForReply);
+    };
 
     //* Drawer functions
     const showDrawer = () => {
@@ -32,12 +40,18 @@ const AIChatContextProvider = ({ children }: IChildProps) => {
 
     //* This function is used to set the message list and the length of the message list
     const setMessageListHandler = (message: IMessage) => {
+        setMessageHandler(message);
         setMessageListLength(prevState => prevState + 1);
         setMessageList((prevState) => [...prevState, message]);
     };
 
     //* This function is used to send the message to the backend
     const sendMessageHandler = (message: IMessage) => {
+
+        //* set the current message
+        setIsWaitingForReplyHandler();
+
+        //* add the current message to the message list
         setMessageListHandler(message);
 
         //* Request body for the AI Chat
@@ -47,6 +61,7 @@ const AIChatContextProvider = ({ children }: IChildProps) => {
                 text: message.text,
             })
         })];
+
 
         //* Axios post request to the backend
         axios
@@ -62,15 +77,20 @@ const AIChatContextProvider = ({ children }: IChildProps) => {
                 }
 
                 setMessageListHandler(newMessage);
+
             })
             .catch((err) => {
                 console.log(err);
             })
+            .finally(() => {
+                //* set the isWaitingForReply to false
+                setIsWaitingForReplyHandler();
+            });
     };
 
 
     return (
-        <AIChatContext.Provider value={{ isOpen, currentMessage, messageList, messageListLength, showDrawer, onClose, sendMessageHandler, setMessageHandler, setMessageListHandler }}>
+        <AIChatContext.Provider value={{ isWaitingForReply, isOpen, currentMessage, messageList, messageListLength, showDrawer, onClose, sendMessageHandler, setMessageHandler, setMessageListHandler }}>
             {children}
         </AIChatContext.Provider>
     )
