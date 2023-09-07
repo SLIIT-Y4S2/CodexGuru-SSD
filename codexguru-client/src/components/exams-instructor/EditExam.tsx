@@ -23,7 +23,6 @@ export default function EditExam() {
       setDescription(exam.description);
       setYear(exam.year);
       setSemester(exam.semester);
-      setNoOfQuestions(exam.noOfQuestions);
       setPassMark(exam.passMark);
       setPassword(exam.password);
       setDuration(exam.duration);
@@ -37,7 +36,6 @@ export default function EditExam() {
   const [description, setDescription] = React.useState("");
   const [year, setYear] = React.useState("");
   const [semester, setSemester] = React.useState("");
-  const [noOfQuestions, setNoOfQuestions] = React.useState("");
   const [passMark, setPassMark] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [duration, setDuration] = React.useState("");
@@ -52,7 +50,6 @@ export default function EditExam() {
             description: description,
             year: year,
             semester: semester,
-            noOfQuestions: noOfQuestions,
             passMark: passMark,
             password: password,
             duration: duration,
@@ -126,20 +123,6 @@ export default function EditExam() {
           </div>
         </Form.Item>
 
-        <Form.Item hasFeedback validateStatus="">
-          <InputNumber
-            value={noOfQuestions}
-            placeholder="No of questions"
-            min={1}
-            id="success"
-            style={{ width: "100%" }}
-            required
-            onChange={(e: any) => {
-              console.log(typeof e);
-              setNoOfQuestions(e);
-            }}
-          />
-        </Form.Item>
         <Form.Item hasFeedback validateStatus="">
           <InputNumber
             value={passMark}

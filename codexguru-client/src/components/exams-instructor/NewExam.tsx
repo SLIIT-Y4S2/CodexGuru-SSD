@@ -20,7 +20,6 @@ const NewExam: React.FC = () => {
   const [description, setDescription] = React.useState("");
   const [year, setYear] = React.useState(1);
   const [semester, setSemester] = React.useState(1);
-  const [noOfQuestions, setNoOfQuestions] = React.useState("");
   const [passMark, setPassMark] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [duration, setDuration] = React.useState("");
@@ -48,7 +47,6 @@ const NewExam: React.FC = () => {
             description: description,
             year: year,
             semester: semester,
-            noOfQuestions: noOfQuestions,
             duration: duration,
             passMark: passMark,
             password: password,
@@ -117,19 +115,6 @@ const NewExam: React.FC = () => {
           </div>
         </Form.Item>
 
-        <Form.Item hasFeedback validateStatus="">
-          <InputNumber
-            placeholder="No of questions"
-            min={1}
-            id="success"
-            style={{ width: "100%" }}
-            required
-            onChange={(e: any) => {
-              console.log(typeof e);
-              setNoOfQuestions(e);
-            }}
-          />
-        </Form.Item>
         <Form.Item hasFeedback validateStatus="">
           <InputNumber
             placeholder="Pass mark"
