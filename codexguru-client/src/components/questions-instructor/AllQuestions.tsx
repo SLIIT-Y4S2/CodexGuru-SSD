@@ -1,18 +1,21 @@
 "use client";
 
 import React, { useContext, useState, useEffect } from "react";
-import { ExamQuestionsContext } from "@/app/context/ExamQuestionsContext.js";
 import { Button, Collapse } from "antd";
-import { CheckOutlined } from "@ant-design/icons";
 import ConfirmModal from "./ConfirmModal";
 import Link from "next/link";
+import { ExamsContext } from "@/app/context/ExamsContext";
 
 export default function AllQuestions() {
-  const { data, getAllQuestions } = useContext(ExamQuestionsContext);
+  const { getExam } = useContext(ExamsContext);
+  const [questionsList, setQuestionsList] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
-      await getAllQuestions();
+      const foundExam = await getExam(window.location.pathname.split("/")[2]);
+      const relevantQuestions = await foundExam.questionsList;
+
+      setQuestionsList(relevantQuestions);
     }
 
     fetchData();
@@ -20,23 +23,25 @@ export default function AllQuestions() {
 
   let questions = [];
 
-  const filteredData = data.filter(
-    (question) => question.examID == window.location.pathname.split("/")[2]
-  );
-
-  for (let d of filteredData) {
+  for (let q of questionsList) {
     questions.push({
-      key: d.id.toString(),
-      label: d.id + 1 + ". " + d.content,
+      key: questionsList.indexOf(q).toString(),
+      label: questionsList.indexOf(q) + 1 + ". " + q.name,
       children: (
         <ul>
-          <li>{"a) " + d.option1 + (d.option1 === d.answer ? "✔" : "")}</li>
-          <li>{"b) " + d.option2 + (d.option2 === d.answer ? "✔" : "")}</li>
-          <li>{"c) " + d.option3 + (d.option3 === d.answer ? "✔" : "")}</li>
-          <li>{"d) " + d.option4 + (d.option4 === d.answer ? "✔" : "")}</li>
+          {q.list.map((choice) => (
+            <li>
+              {"-> " +
+                choice.option +
+                (choice.correctness === "true" ? " ✔" : "")}
+            </li>
+          ))}
           <br />
           <Button type="primary">EDIT</Button> &nbsp;&nbsp;&nbsp;
-          <ConfirmModal questionID={d.id} />
+          <ConfirmModal
+            examID={window.location.pathname.split("/")[2]}
+            questionID={questions.indexOf(q)}
+          />
         </ul>
       ),
     });

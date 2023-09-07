@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Button, Form, Input } from "antd";
 import Card from "antd/es/card/Card";
 import { ExamsContext } from "@/app/context/ExamsContext";
-import { verifyPassword } from "../../utils/Validate";
+import { verifyPassword } from "../../utils/OnlineExamUtil";
 import ExamTemplate from "@/components/exams-students/ExamTemplate";
 
 export async function getStaticPaths() {
@@ -56,9 +56,6 @@ export default function StartExamPage() {
   if (validPwd === true) {
     return <ExamTemplate />;
   }
-  //   } else {
-  //     alert("Password incorrect");
-  //   }
 
   return (
     <center>
@@ -71,23 +68,21 @@ export default function StartExamPage() {
         }}
       >
         <div>{description}</div> <br />
-        <Form onFinish={() => console.log("submitted")}>
-          <Form.Item>
-            <Input
-              type="password"
-              placeholder="Enter password"
-              onChange={(e) => setPwd(e.target.value)}
-              required
-            />
-          </Form.Item>
-          <Button
-            onClick={() => {
-              setValidPwd(verifyPassword(pwd, actualPwd));
-            }}
-          >
-            ATTEMPT
-          </Button>
-        </Form>
+        <Input
+          type="password"
+          placeholder="Enter password"
+          onChange={(e) => setPwd(e.target.value)}
+          required
+        />
+        <br />
+        <br />
+        <Button
+          onClick={() => {
+            setValidPwd(verifyPassword(pwd, actualPwd));
+          }}
+        >
+          ATTEMPT
+        </Button>
       </Card>
     </center>
   );

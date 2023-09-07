@@ -61,7 +61,6 @@ const addExam = async (req, res) => {
             description,
             year,
             semester,
-            noOfQuestions,
             duration,
             passMark,
             password
@@ -91,7 +90,6 @@ const addExam = async (req, res) => {
             description,
             year,
             semester,
-            noOfQuestions,
             duration,
             passMark,
             password
@@ -105,6 +103,100 @@ const addExam = async (req, res) => {
         } else {
             res.status(400).json({
                 message: "Failed to add exam"
+            });
+        }
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+/* Function to add questions to an exam*/
+const addQuestions = async (req, res) => {
+    try {
+        const exam = await Exam.find({ id: req.params.id });
+
+        if (exam) {
+            let newQuestionsList = exam[0].questionsList.concat(req.body.items);
+
+            let existingNoofQuestions = exam[0].noOfQuestions;
+
+            const updatedExam = await Exam.findOneAndUpdate(
+                {
+                    id: req.params.id
+                },
+                {
+                    $set: {
+                        questionsList: newQuestionsList,
+                        noOfQuestions: existingNoofQuestions + req.body.items.length
+                    }
+                },
+                {
+                    new: true
+                }
+            );
+
+            if (updatedExam) {
+                res.status(200).json({
+                    message: "Questions added successfully",
+                    exams: updatedExam
+                });
+            } else {
+                res.status(400).json({
+                    message: "Exam not found"
+                });
+            }
+        } else {
+            res.status(400).json({
+                message: "Failed to add questions"
+            });
+        }
+
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+/* Function to remove questions from an exam*/
+const removeQuestion = async (req, res) => {
+    try {
+        const exam = await Exam.find({ id: req.params.id });
+
+        if (exam) {
+
+            const questionToBeRemovedIndex = req.body.questionToBeRemovedIndex;
+
+            await exam[0].questionsList.splice(questionToBeRemovedIndex, 1);
+
+            const updatedExam = await Exam.findOneAndUpdate(
+                {
+                    id: req.params.id
+                },
+                {
+                    $set: {
+                        questionsList: exam[0].questionsList,
+                        noOfQuestions: exam[0].questionsList.length
+                    }
+                },
+                {
+                    new: true
+                }
+            );
+
+
+            if (updatedExam) {
+                res.status(200).json({
+                    message: "Question removed successfully",
+                    exams: updatedExam
+                });
+            } else {
+                res.status(400).json({
+                    message: "Exam not found"
+                });
+            }
+        } else {
+            res.status(400).json({
+                message: "Failed to remove question"
             });
         }
 
@@ -130,7 +222,6 @@ const updateExam = async (req, res) => {
                         description: req.body.description,
                         year: req.body.year,
                         semester: req.body.semester,
-                        noOfQuestions: req.body.noOfQuestions,
                         duration: req.body.duration,
                         passMark: req.body.passMark,
                         password: req.body.password
@@ -236,6 +327,8 @@ const examController = {
     getExams,
     getExam,
     addExam,
+    addQuestions,
+    removeQuestion,
     updateExam,
     updateExamStatus,
     deleteExam,
