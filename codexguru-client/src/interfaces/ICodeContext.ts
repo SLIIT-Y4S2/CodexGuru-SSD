@@ -1,6 +1,7 @@
 import ICompileOutput from "./ICompileOutput";
 
 export default interface ICodeEditorContext {
+    isCompiling: boolean;
     languageId: number;
     languageName: string;
     languageValue: string;
@@ -9,7 +10,7 @@ export default interface ICodeEditorContext {
     output: ICompileOutput | null;
     setLanguageHandler: (languageId: number) => void;
     setSourceCodeHandler: (sourceCode: string) => void;
-    setThemeHandler: (theme: string) => void;
+    setThemeHandler: (isLight: boolean) => void;
     setStdinHandler: (stdin: string) => void;
     handleCompile: () => void;
 }

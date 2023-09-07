@@ -1,6 +1,6 @@
 import LanguageDropdown from "./LanguageDropdown";
 import ThemeDropDown from "./ThemeDropDown";
-import CompileButton from "../common/CompileButton";
+import CompileButton from "./CompileButton";
 import OutputWindow from "./OutputWindow";
 import InputWindow from "./InputWindows";
 import CodeEditor from "./CodeEditor";
@@ -10,7 +10,7 @@ const CodeEditorWindow: React.FC = () => {
 
     return (
         <CodeEditorContextProvider>
-            <div className="mx-auto mt-20 absolute w-full px-20">
+            <div className="mx-auto mt-20 absolute w-11/12 px-20 top-0">
                 <div className="grid grid-row-3 grid-flow-col gap-4">
                     <div className="row-span-2">
                         <div className="grid grid-cols-3 gap-3 mb-5">
@@ -32,5 +32,3 @@ const CodeEditorWindow: React.FC = () => {
     );
 };
 export default CodeEditorWindow;
-
-

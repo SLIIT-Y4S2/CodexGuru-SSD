@@ -16,14 +16,14 @@ const OutputWindow = () => {
                 case 6:
                     setConsoleOutput(
                         <pre className="px-2 py-1 font-normal text-xs text-red-500">
-                            {atob(output!.compile_output)}
+                            {atob(output.compile_output) !== null ? atob(output.compile_output) : "null"}
                         </pre>
                     );
                     break;
                 case 3:
                     setConsoleOutput(
                         <pre className="px-2 py-1 font-normal text-xs text-green-500">
-                            {atob(output!.stdout) !== null ? `${atob(output!.stdout)}` : null}
+                            {atob(output.stdout) !== null ? `${atob(output.stdout)}` : null}
                         </pre>
                     );
                     break;
@@ -36,7 +36,7 @@ const OutputWindow = () => {
                     break;
                 default:
                     setConsoleOutput(<pre className="px-2 py-1 font-normal text-xs text-red-500">
-                        {atob(output!.stderr) !== null ? atob(output!.stderr) : null}
+                        {atob(output.stderr) !== null ? atob(output.stderr) : null}
                     </pre>
                     );
                     break;

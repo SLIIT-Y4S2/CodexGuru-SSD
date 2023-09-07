@@ -1,4 +1,3 @@
-'use client'
 import COMMON from "@/CONSTANTS/Common";
 import PATHS from "@/CONSTANTS/Paths";
 import supportedLanuages from "@/CONSTANTS/supportedLanguages";
@@ -19,53 +18,62 @@ const CodeEditorContextProvider = ({ children }: IChildProps) => {
     const [theme, setTheme] = useState<string>(COMMON.DEFAULT_THEME);
     const [stdin, setStdin] = useState<string>('');
     const [output, setOutput] = useState<ICompileOutput | null>(null);
+    const [isCompiling, setIsCompiling] = useState<boolean>(false);
 
-    //set the language id
+    const setIsCompilingHandler = (isCompiling: boolean) => {
+        setIsCompiling(prevState => !prevState);
+    };
+
+    //* set the language id
     const setLanguageHandler = (languageId: number) => {
         setLanguageName(supportedLanuages.filter((language) => language.id === languageId)[0].name);
         setLanguageValue(supportedLanuages.filter((language) => language.id === languageId)[0].value);
         setLanguageId(languageId);
     };
 
-    //set the source code
+    //* set the source code
     const setSourceCodeHandler = (sourceCode: string) => {
         setSourceCode(sourceCode);
     };
-    //set the stdin
+    //* set the stdin
     const setStdinHandler = (stdin: string) => {
         setStdin(stdin);
     };
 
-    //set the theme
-    const setThemeHandler = (themeVal: string) => {
-        setTheme(themeVal);
+    //* set the theme
+    const setThemeHandler = (isLight: boolean) => {
+        isLight ? setTheme(COMMON.LIGHT_THEME) : setTheme(COMMON.DEFAULT_THEME);
     };
 
-    //handle the compile request
+    //* handle the compile request
     const handleCompile = () => {
-        //set request body
-        const bodyData: IReqBody = {
-            source_code: sourceCode,
-            language_id: languageId,
-            stdin: stdin,
+        //* check if the source code is not empty and language id is not null
+        if (sourceCode.trim() !== '' && languageId !== null) {
+            setIsCompilingHandler(true);
+            //* set request body
+            const bodyData: IReqBody = {
+                source_code: sourceCode,
+                language_id: languageId,
+                stdin: stdin,
+            }
+
+            axios
+                .post(
+                    PATHS.COMPLILER_PATH,
+                    bodyData
+                )
+                .then(async (res) => {
+                    setOutput(res.data);
+                    console.log(res.data);
+                    setIsCompilingHandler(false);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
-
-        axios
-            .post(
-                PATHS.COMPLILER_PATH,
-                bodyData
-            )
-            .then(async (res) => {
-                setOutput(res.data);
-                console.log(res.data);
-
-            })
-            .catch((err) => {
-                console.log(err);
-            });
     };
     return (
-        <CodeEditorContext.Provider value={{ theme, languageValue, languageName, languageId, stdin, output, setSourceCodeHandler, setLanguageHandler, setStdinHandler, setThemeHandler, handleCompile }}>
+        <CodeEditorContext.Provider value={{ isCompiling, theme, languageValue, languageName, languageId, stdin, output, setSourceCodeHandler, setLanguageHandler, setStdinHandler, setThemeHandler, handleCompile }}>
             {children}
         </CodeEditorContext.Provider>
     )
