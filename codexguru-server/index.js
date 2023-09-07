@@ -9,10 +9,13 @@ import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
 
+/* import middleware */
+import { verifyToken } from "./middleware/auth.js";
 /* import routes */
 import authRoutes from "./routes/auth.js";
-import { verifyToken } from "./middleware/auth.js";
 import examQuestionRoutes from "./routes/ExamQuestionRoutes.js";
+import labSessionRoutes from "./routes/labSession.js";
+import forumRoutes from "./routes/forum.js";
 import examRoutes from "./routes/ExamRoutes.js";
 import examResultRoutes from "./routes/ExamResultRoutes.js";
 import compilationRoutes from "./routes/compilationRoutes.js";
@@ -53,6 +56,8 @@ app.use("/api/v1/results", examResultRoutes);
 /**api route  */
 app.use('/api/v1/compilations', compilationRoutes);
 app.use('/api/v1/ai-chat-responses', aiChatRoutes);
+app.use("/api/labs", verifyToken, labSessionRoutes);
+app.use("/api/forum", verifyToken, forumRoutes);
 
 //TODO: testing routes
 app.get("/", (req, res) => {
@@ -60,7 +65,6 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/student", verifyToken, (req, res) => {
-  // res.send(`Hello World!, Authorization required, ROLE: ${req.role}`);
   res.json({
     message: "You made it to the secure route",
     user: req.user,

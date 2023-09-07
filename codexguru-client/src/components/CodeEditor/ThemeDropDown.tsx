@@ -1,32 +1,25 @@
 'use client';
 import React, { useContext } from 'react';
-import { Select, Space } from 'antd';
+import { Select, Space, Switch } from 'antd';
 import ICodeEditorContext from '@/interfaces/ICodeContext';
 import { CodeEditorContext } from '@/context/CodeEditorContext';
-import COMMON from '@/CONSTANTS/Common';
+import SunIcon from './customIcons/SunIcon';
+import MoonIcon from './customIcons/MoonIcon';
 
 
 const ThemeDropDown: React.FC = () => {
-    const themes = [{ value: "vs-dark", label: "Dark" }, { value: "light", label: "Light" }]
-
     const codeEditorCtx = useContext<ICodeEditorContext | null>(CodeEditorContext);
-    const { setThemeHandler, theme } = codeEditorCtx!;
+    const { setThemeHandler } = codeEditorCtx!;
 
-    const handleChange = (value: string) => {
-        setThemeHandler(value);
-        console.log(
-            value
-        );
-        
+    const handleChange = (isLight: boolean) => {
+        setThemeHandler(isLight);
     }
     return (
-        <Space wrap>
-            <Select
-                defaultValue={COMMON.DEFAULT_THEME}
-                style={{ width: 120 }}
+        <Space>
+            <Switch
+                checkedChildren={<SunIcon width={20} />}
+                unCheckedChildren={<MoonIcon />}
                 onChange={handleChange}
-                options={themes}
-                value={theme}
             />
         </Space>
     )

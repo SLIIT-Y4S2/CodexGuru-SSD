@@ -19,28 +19,28 @@ const CodeEditorContextProvider = ({ children }: IChildProps) => {
     const [stdin, setStdin] = useState<string>('');
     const [output, setOutput] = useState<ICompileOutput | null>(null);
 
-    //set the language id
+    //* set the language id
     const setLanguageHandler = (languageId: number) => {
         setLanguageName(supportedLanuages.filter((language) => language.id === languageId)[0].name);
         setLanguageValue(supportedLanuages.filter((language) => language.id === languageId)[0].value);
         setLanguageId(languageId);
     };
 
-    //set the source code
+    //* set the source code
     const setSourceCodeHandler = (sourceCode: string) => {
         setSourceCode(sourceCode);
     };
-    //set the stdin
+    //* set the stdin
     const setStdinHandler = (stdin: string) => {
         setStdin(stdin);
     };
 
-    //set the theme
-    const setThemeHandler = (themeVal: string) => {
-        setTheme(themeVal);
+    //* set the theme
+    const setThemeHandler = (isLight: boolean) => {
+        isLight ? setTheme(COMMON.LIGHT_THEME) : setTheme(COMMON.DEFAULT_THEME);
     };
 
-    //handle the compile request
+    //* handle the compile request
     const handleCompile = () => {
         //set request body
         const bodyData: IReqBody = {

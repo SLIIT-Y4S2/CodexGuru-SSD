@@ -9,7 +9,7 @@ export default interface ICodeEditorContext {
     output: ICompileOutput | null;
     setLanguageHandler: (languageId: number) => void;
     setSourceCodeHandler: (sourceCode: string) => void;
-    setThemeHandler: (theme: string) => void;
+    setThemeHandler: (isLight: boolean) => void;
     setStdinHandler: (stdin: string) => void;
     handleCompile: () => void;
 }

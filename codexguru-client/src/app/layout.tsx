@@ -3,7 +3,10 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Header from "@/components/Header";
-import Provider from "./Provider";
+
+// context imports
+import AuthProvider from "./AuthProvider";
+import { LabProvider } from "@/store/LabProvider";
 import { ExamsProvider } from "./context/ExamsContext";
 import { ExamQuestionsProvider } from "./context/ExamQuestionsContext";
 
@@ -22,18 +25,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Provider>
-          <StyledComponentsRegistry>
-            <ExamsProvider>
-              <ExamQuestionsProvider>
-                <main>
-                  <Header />
-                  {children}
-                </main>
-              </ExamQuestionsProvider>
-            </ExamsProvider>
-          </StyledComponentsRegistry>
-        </Provider>
+        <AuthProvider>
+          <LabProvider>
+            <StyledComponentsRegistry>
+              <ExamsProvider>
+                <ExamQuestionsProvider>
+                  <main>
+                    <Header />
+                    {children}
+                  </main>
+                </ExamQuestionsProvider>
+              </ExamsProvider>
+            </StyledComponentsRegistry>
+          </LabProvider>
+        </AuthProvider>
       </body>
     </html>
   );

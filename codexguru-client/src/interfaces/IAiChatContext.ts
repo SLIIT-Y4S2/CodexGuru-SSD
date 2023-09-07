@@ -1,6 +1,9 @@
 import IMessage from "./IMessage";
 
 export default interface IAiChatContext {
+    isOpen: boolean;
+    showDrawer: () => void;
+    onClose: () => void;
     currentMessage: IMessage;
     setMessageHandler: (message: IMessage) => void;
     messageList: IMessage[];
@@ -8,3 +11,4 @@ export default interface IAiChatContext {
     messageListLength: number;
     sendMessageHandler: (message: IMessage) => void;
 }
+
