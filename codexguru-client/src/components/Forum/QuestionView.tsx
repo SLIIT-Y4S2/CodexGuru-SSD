@@ -2,7 +2,7 @@
 import React, { useContext } from "react";
 import { ForumContext } from "@/context/ForumProvider";
 import { ForumContextType } from "@/types/ForumTypes";
-import AddComment from "./AddAnswer";
+import AddAnswer from "./AddAnswer";
 import { useSession } from "next-auth/react";
 import DeleteQuestion from "./DeleteQuestion";
 import DeleteAnswer from "./DeleteAnswer";
@@ -59,7 +59,7 @@ const QuestionView = () => {
           >
             <p>{answer.description}</p>
             <div className="flex justify-end">
-              {answer.author._id == session.user.id.toString() && (
+              {answer.author?._id == session.user.id.toString() && (
                 <>
                   <DeleteAnswer
                     questionId={question._id}
@@ -74,7 +74,7 @@ const QuestionView = () => {
             </div>
           </div>
         ))}
-        <AddComment questionId={question._id} />
+        <AddAnswer questionId={question._id} />
       </div>
     </div>
   );
