@@ -28,6 +28,9 @@ const config: Config = {
         'custom-site-color': '#FFAE00',
         'custom-red': '#F02D00',
         'custom-black': '#161616'
+      },
+      width: {
+        '160': '560px',
       }
     },
   },

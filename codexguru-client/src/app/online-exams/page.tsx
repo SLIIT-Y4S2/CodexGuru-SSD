@@ -1,10 +1,15 @@
-import ExamTemplate from "@/components/exams-students/ExamTemplate";
-
 /**
  * OnlineExamsPage implementation for students
  */
-const OnlineExamsPage: React.FC = () => {
-  return <ExamTemplate />;
-};
+import ExamsDashboard from "@/components/exams-students/ExamsDashboard";
 
-export default OnlineExamsPage;
+export default function OnlineExamsPage() {
+  return (
+    <>
+      <center>
+        <div>Exams</div>
+      </center>
+      <ExamsDashboard />
+    </>
+  );
+}

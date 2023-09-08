@@ -18,7 +18,7 @@ const CodeEditor: React.FC = () => {
     }
 
 
-    function handleEditorDidMount(editor, monaco: Monaco) {
+    function handleEditorDidMount(editor: Object, monaco: Monaco) {
         // console.log("onMount: the editor instance:", editor);
         // console.log("onMount: the monaco instance:", monaco);
     }
@@ -29,7 +29,7 @@ const CodeEditor: React.FC = () => {
     }
 
     //* Do something when the editor has been mounted
-    function handleEditorValidation(markers) {
+    function handleEditorValidation(markers: Object) {
         // model markers
         // markers.forEach(marker => console.log('onValidate:', marker.message));
     }

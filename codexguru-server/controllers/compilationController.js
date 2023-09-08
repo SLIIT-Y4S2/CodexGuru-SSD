@@ -1,5 +1,5 @@
 import axios, { HttpStatusCode } from "axios";
-import PATHS from "../CONSTANTS/PATHS.js";
+import PATHS from "../CONSTANTS/Paths.js";
 
 /**
  * @description This function is used to get the compiled output from judege0 api and send it to the client
