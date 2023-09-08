@@ -1,6 +1,6 @@
 "use client";
 import Forum from "@/components/Forum";
-import { LabContext } from "@/store/LabProvider";
+import { LabContext } from "@/context/LabProvider";
 import { LabContextType } from "@/types/LabTypes";
 import React, { useContext } from "react";
 

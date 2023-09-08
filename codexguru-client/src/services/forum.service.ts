@@ -15,23 +15,42 @@ export class ForumServices {
       },
     };
   }
+
+  //get all questions
   getForum = (labId: string) =>
-    this.instance.get(`/forum/${labId}`, this.headerObj).then((res) => {
-      return res.data;
-    });
-  postQuestion = (data: any) =>
-    this.instance.post(`/forum/questions`, data, this.headerObj).then((res) => {
-      return res.data;
-    });
-  postAnswer = (id: string, data: any) =>
     this.instance
-      .post(`/forum/questions/${id}/answers`, data, this.headerObj)
+      .get(`/forum/${labId}`, this.headerObj)
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        throw new Error(err.message);
+      });
+
+  // create question
+  addQuestion = (
+    labId: string,
+    data: {
+      title: string;
+      description: string;
+    }
+  ) =>
+    this.instance
+      .post(`/forum/${labId}/addQuestion`, data, this.headerObj)
+      .then((res) => {
+        return res.data;
+      });
+
+  // create answer
+  postAnswer = (questionId: string, data: any) =>
+    this.instance
+      .post(`/forum/questions/${questionId}/addAnswer`, data, this.headerObj)
       .then((res) => {
         return res.data;
       });
   deleteQuestion = (id: string) =>
     this.instance
-      .delete(`/forum/questions/${id}`, this.headerObj)
+      .delete(`/forum/questions/${id}/deleteQuestion`, this.headerObj)
       .then((res) => {
         return res.data;
       });
@@ -42,13 +61,13 @@ export class ForumServices {
     );
   updateQuestion = (id: string, data: any) =>
     this.instance
-      .put(`/forum/questions/${id}`, data, this.headerObj)
+      .put(`/forum/questions/${id}/updateQuestion`, data, this.headerObj)
       .then((res) => {
         return res.data;
       });
-  updateAnswer = (id: string, answerId: string, data: any) =>
+  updateAnswer = (answerId: string, data: any) =>
     this.instance
-      .put(`/forum/questions/${id}/answers/${answerId}`, data, this.headerObj)
+      .put(`/forum/answers/${answerId}/updateAnswer`, data, this.headerObj)
       .then((res) => {
         return res.data;
       });

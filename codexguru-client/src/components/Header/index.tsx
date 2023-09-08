@@ -11,10 +11,22 @@ const Header = () => {
   const hideHeader = pathname === "/login";
   if (hideHeader) return null;
   return (
-    <div className="bg-black text-white flex justify-between">
-      Header
+    <div className="bg-black text-white flex justify-between items-center">
+      <Link
+        href={
+          session?.user.role == "admin"
+            ? "/admin"
+            : session?.user.role == "instructor"
+            ? "/instructor"
+            : "/"
+        }
+      >
+        <h1 className=" text-4xl font-bold p-2 cursor-pointer">CodexGuru</h1>
+      </Link>
       <div className="flex justify-center align-middle gap-2">
-        <p className="text-yellow-50">{session?.user?.role}</p>
+        <p className="text-yellow-50">
+          {session?.user?.firstName} {session?.user?.lastName}
+        </p>
         {!session && (
           <Link href="login">
             <button>Sign in</button>

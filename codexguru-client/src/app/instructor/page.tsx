@@ -1,6 +1,6 @@
 "use client";
 import React, { useContext } from "react";
-import { LabContext } from "@/store/LabProvider";
+import { LabContext } from "@/context/LabProvider";
 import { LabContextType } from "@/types/LabTypes";
 const Instructor = () => {
   const { labs } = useContext(LabContext) as LabContextType;

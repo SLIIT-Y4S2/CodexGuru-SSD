@@ -6,10 +6,11 @@ import Header from "@/components/Header";
 
 // context imports
 import AuthProvider from "./AuthProvider";
-import { LabProvider } from "@/store/LabProvider";
+import { LabProvider } from "@/context/LabProvider";
 import { ExamsProvider } from "./context/ExamsContext";
 import { ExamQuestionsProvider } from "./context/ExamQuestionsContext";
-
+import { ConfigProvider } from "antd";
+import theme from "@/theme/themeConfig";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -27,16 +28,18 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <LabProvider>
-            <StyledComponentsRegistry>
-              <ExamsProvider>
+            <ExamsProvider>
+              <StyledComponentsRegistry>
                 <ExamQuestionsProvider>
-                  <main>
-                    <Header />
-                    {children}
-                  </main>
+                  <ConfigProvider theme={theme}>
+                    <main>
+                      <Header />
+                      {children}
+                    </main>
+                  </ConfigProvider>
                 </ExamQuestionsProvider>
-              </ExamsProvider>
-            </StyledComponentsRegistry>
+              </StyledComponentsRegistry>
+            </ExamsProvider>
           </LabProvider>
         </AuthProvider>
       </body>

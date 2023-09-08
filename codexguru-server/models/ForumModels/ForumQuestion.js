@@ -25,6 +25,11 @@ ForumQuestionSchema.methods.addAnswer = function (answer) {
   return this.save();
 };
 
+ForumQuestionSchema.methods.deleteAnswer = function (answerId) {
+  this.answers.pull(answerId);
+  return this.save();
+};
+
 const ForumQuestion = mongoose.model("ForumQuestion", ForumQuestionSchema);
 
 export default ForumQuestion;

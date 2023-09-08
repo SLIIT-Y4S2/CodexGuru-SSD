@@ -12,6 +12,7 @@ ForumSchema.methods.addQuestion = function (question) {
   this.questions.push(question);
   this.save();
 };
+ForumSchema.populate;
 
 const Forum = mongoose.model("Forum", ForumSchema);
 
