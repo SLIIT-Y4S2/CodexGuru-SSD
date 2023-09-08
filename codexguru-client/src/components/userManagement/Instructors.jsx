@@ -7,7 +7,7 @@ import { message } from 'antd';
 
 const { Option } = Select;
 
-export default function UserList() {
+export default function Instructor() {
     const [allUsers, setAllUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [editModalVisible, setEditModalVisible] = useState(false);
@@ -15,12 +15,14 @@ export default function UserList() {
     const [form] = Form.useForm();
 
     useEffect(() => {
-        async function getAllUsers() {
+        async function getStudents() {
             try {
                 const res = await fetch("http://localhost:5000/api/v1/users/");
                 if (res.ok) {
                     const allUsers = await res.json();
-                    setAllUsers(allUsers);
+                    // Filter users with role "student"
+                    const students = allUsers.filter(user => user.role === "instructor");
+                    setAllUsers(students);
                     setLoading(false);
                 } else {
                     console.log("Error fetching data from the server");
@@ -29,9 +31,10 @@ export default function UserList() {
                 console.error("An error occurred:", error);
             }
         }
-
-        getAllUsers();
+    
+        getStudents();
     }, []);
+    
 
     const columns = [
         {
