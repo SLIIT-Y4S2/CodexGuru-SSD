@@ -22,7 +22,6 @@ import compilationRoutes from "./routes/compilationRoutes.js";
 import userRoutes from "./routes/UserRoutes.js";
 import aiChatRoutes from "./routes/aiChatRoutes.js";
 
-
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -54,9 +53,12 @@ app.use("/api/auth", authRoutes);
 app.use("/api/v1/questions", examQuestionRoutes);
 app.use("/api/v1/exams", examRoutes);
 app.use("/api/v1/results", examResultRoutes);
-app.use("/api/v1/users",userRoutes);
+app.use("/api/v1/users", userRoutes);
+app.use("/api/labs", verifyToken, labSessionRoutes);
+app.use("/api/forum", verifyToken, forumRoutes);
 /**api route  */
-app.use('/api/v1/compilations', compilationRoutes);
+app.use("/api/v1/compilations", compilationRoutes);
+app.use("/api/v1/ai-chat-responses", aiChatRoutes);
 
 //TODO: testing routes
 app.get("/", (req, res) => {
