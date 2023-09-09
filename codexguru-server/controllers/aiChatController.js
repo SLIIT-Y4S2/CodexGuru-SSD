@@ -2,7 +2,12 @@ import { HttpStatusCode } from "axios";
 import { openAiApiHandler } from "../config/openAI.util.js";
 import Common from "../CONSTANTS/COMMON.js";
 
-
+/**
+ * @description This function is used to get the ai chat response from openai api
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Response} res
+ */
 
 const getAiChatResponse = async (req, res) => {
 
