@@ -12,7 +12,7 @@ const AccountCreationForm = () => {
     setLoading(true);
 
     // Check if registration number has been confirmed as available
-    if (!registrationNumberExists) {
+    if (registrationNumberExists) {
       notification.error({
         message: 'Registration Number Not Checked',
         description: 'Please check the registration number before submitting the form.',
