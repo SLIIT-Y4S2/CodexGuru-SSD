@@ -38,14 +38,14 @@ const DeleteAnswer = ({
   };
   return (
     <Popconfirm
-      title="Delete the task"
-      description="Are you sure to delete this task?"
+      title="Delete the Answer"
+      description="Are you sure to delete this Answer?"
       onConfirm={deleteAnswerAsync}
       okText="Yes"
       cancelText="No"
     >
       <button
-        className=" hover:bg-gray-200 hover:text-yellow-400 font-bold py-2 px-4 rounded-full text-xl"
+        className=" hover:bg-gray-100 hover:text-red-500 text-gray-500 font-bold py-2 px-4 rounded-full text-xl"
         title="Delete Answer"
       >
         <DeleteFilled />

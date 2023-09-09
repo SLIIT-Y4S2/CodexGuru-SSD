@@ -3,8 +3,7 @@ import { ForumContext } from "@/context/ForumProvider";
 import { ForumContextType } from "@/types/ForumTypes";
 import { Form, Input } from "antd";
 import React, { useContext } from "react";
-// import { useEditor, EditorContent } from "@tiptap/react";
-// import StarterKit from "@tiptap/starter-kit";
+import MDEditor from "@uiw/react-md-editor";
 
 const AddAnswer = ({ questionId }: { questionId: string }) => {
   const { Item: FormItem } = Form;
@@ -32,9 +31,10 @@ const AddAnswer = ({ questionId }: { questionId: string }) => {
             rules={[
               { required: true, message: "Please input your answer first!" },
             ]}
+            data-color-mode="light"
           >
-            {/* <CustomInput /> */}
-            <Input.TextArea />
+            {/* <Input.TextArea /> */}
+            <MDEditor height={200} preview="edit" />
           </FormItem>
           <FormItem>
             <button

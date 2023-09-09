@@ -68,7 +68,11 @@ const Login = () => {
           <Password />
         </Item>
         <Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="bg-color-[#FFAE00]"
+          >
             Submit
           </Button>
         </Item>

@@ -27,6 +27,7 @@ const ForumDrawer = ({ labId }: { labId: string }) => {
         <button
           className="h-full bg-[#00B2BD] hover:bg-[#00949D]  rounded-none w-8"
           onClick={() => setIsOpen(true)}
+          title="Open Forum"
         >
           <CommentOutlined />
         </button>
