@@ -19,6 +19,7 @@ import forumRoutes from "./routes/forum.js";
 import examRoutes from "./routes/ExamRoutes.js";
 import examResultRoutes from "./routes/ExamResultRoutes.js";
 import compilationRoutes from "./routes/compilationRoutes.js";
+import userRoutes from "./routes/UserRoutes.js";
 import aiChatRoutes from "./routes/aiChatRoutes.js";
 
 
@@ -55,9 +56,6 @@ app.use("/api/v1/exams", examRoutes);
 app.use("/api/v1/results", examResultRoutes);
 /**api route  */
 app.use('/api/v1/compilations', compilationRoutes);
-app.use('/api/v1/ai-chat-responses', aiChatRoutes);
-app.use("/api/labs", verifyToken, labSessionRoutes);
-app.use("/api/forum", verifyToken, forumRoutes);
 
 //TODO: testing routes
 app.get("/", (req, res) => {
