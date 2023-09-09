@@ -6,6 +6,7 @@ import { Form, Input, Button, Checkbox } from "antd";
 import { ForumContext } from "@/context/ForumProvider";
 import { ForumContextType, Question } from "@/types/ForumTypes";
 import { EditFilled } from "@ant-design/icons";
+import MDEditor from "@uiw/react-md-editor";
 
 const UpdateQuestion = ({ question }: { question: Question }) => {
   const { Item: FormItem } = Form;
@@ -34,7 +35,7 @@ const UpdateQuestion = ({ question }: { question: Question }) => {
   return (
     <div>
       <button
-        className=" hover:bg-gray-100 hover:text-yellow-400 font-bold py-2 px-4 rounded-full text-xl"
+        className=" hover:bg-gray-100 hover:text-yellow-400 text-gray-500 font-bold py-2 px-4 rounded-full text-xl"
         onClick={showModal}
         title="Edit Question"
       >
@@ -88,8 +89,9 @@ const UpdateQuestion = ({ question }: { question: Question }) => {
                         },
                       ]}
                       initialValue={question.description}
+                      data-color-mode="light"
                     >
-                      <Input />
+                      <MDEditor height={200} preview="edit" />
                     </FormItem>
                   </div>
                   {/*footer*/}

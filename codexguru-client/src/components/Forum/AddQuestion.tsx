@@ -5,6 +5,7 @@ import React, { useContext } from "react";
 import { Form, Input, Button, Checkbox } from "antd";
 import { ForumContext } from "@/context/ForumProvider";
 import { ForumContextType, Question } from "@/types/ForumTypes";
+import MDEditor from "@uiw/react-md-editor";
 
 const AddQuestion = () => {
   const { Item: FormItem } = Form;
@@ -41,7 +42,7 @@ const AddQuestion = () => {
       {isModalOpen ? (
         <>
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+            <div className="relative w-auto my-6 mx-auto max-w-5sxl">
               {/*content*/}
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 {/*header*/}
@@ -84,8 +85,11 @@ const AddQuestion = () => {
                           message: "Please input your description!",
                         },
                       ]}
+                      data-color-mode="light"
                     >
-                      <Input />
+                      {/* <Input /> */}
+
+                      <MDEditor height={200} preview="edit" />
                     </FormItem>
                   </div>
                   {/*footer*/}

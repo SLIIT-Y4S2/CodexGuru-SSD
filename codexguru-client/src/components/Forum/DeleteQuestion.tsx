@@ -27,7 +27,7 @@ const DeleteQuestion = ({ questionId }: { questionId: string }) => {
   }
   return (
     <button
-      className=" hover:bg-gray-200 hover:text-red-400 font-bold py-2 px-4 rounded-full text-xl"
+      className=" hover:bg-gray-100 hover:text-red-500 text-gray-500 font-bold py-2 px-4 rounded-full text-xl"
       onClick={showConfirm}
       title="Delete Question"
     >

@@ -8,6 +8,7 @@ import DeleteQuestion from "./DeleteQuestion";
 import DeleteAnswer from "./DeleteAnswer";
 import UpdateQuestion from "./UpdateQuestion";
 import UpdateAnswer from "./UpdateAnswer";
+import MDEditor from "@uiw/react-md-editor";
 import {
   ArrowLeftOutlined,
   DeleteFilled,
@@ -66,7 +67,7 @@ const QuestionView = () => {
           // >
           //   <MoreOutlined />
           // </Dropdown>
-          <div className="flex gap-2">
+          <div className="flex">
             <DeleteQuestion questionId={question._id} />
             <UpdateQuestion question={question} />
           </div>
@@ -87,7 +88,11 @@ const QuestionView = () => {
         </p>
       </div>
 
-      <div className="my-4">{question.description}</div>
+      <div className="my-4" data-color-mode="light">
+        <MDEditor.Markdown source={question.description} />
+
+        {/* {question.description} */}
+      </div>
       <div className="flex justify-end">
         <span>
           <span className="text-gray-600">Asked by</span>{" "}
@@ -98,18 +103,22 @@ const QuestionView = () => {
         <h4 className="text-2xl"> Answers ({question.answers.length})</h4>
         <AddAnswer questionId={question._id} />
         {question.answers.map((answer, index) => (
-          <div className="flex flex-col border-2 my-1 p-2" key={index}>
-            <p>{answer.description}</p>
+          <div
+            className="flex flex-col border-2 my-1 p-2"
+            key={index}
+            data-color-mode="light"
+          >
+            {answer.author?._id == session.user.id.toString() && (
+              <div className="flex justify-end">
+                <DeleteAnswer questionId={question._id} answerId={answer._id} />
+                <UpdateAnswer questionId={question._id} answer={answer} />
+              </div>
+            )}
+            <div>
+              <MDEditor.Markdown source={answer.description} />
+              {/* {answer.description} */}
+            </div>
             <div className="flex justify-end">
-              {answer.author?._id == session.user.id.toString() && (
-                <>
-                  <DeleteAnswer
-                    questionId={question._id}
-                    answerId={answer._id}
-                  />
-                  <UpdateAnswer questionId={question._id} answer={answer} />
-                </>
-              )}
               <span>
                 {answer.author?.firstName} {answer.author?.lastName}
               </span>
