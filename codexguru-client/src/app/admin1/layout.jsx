@@ -6,12 +6,13 @@ import { useRouter } from 'next/navigation';
 import {
   DesktopOutlined,
   FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
+  DashboardOutlined,
   UserOutlined,
+  SettingOutlined,
+  EditOutlined
 } from '@ant-design/icons';
 
-import { Breadcrumb, ConfigProvider, Layout, Menu, theme } from 'antd';
+import { Breadcrumb, ConfigProvider, Layout, Menu, theme, Avatar } from 'antd';
 import UserList from '@/components/userManagement/UserList';
 
 
@@ -27,15 +28,15 @@ function getItem(label, key, icon, children) {
 
 
 const items = [
-  getItem('Dashboard', 1, <PieChartOutlined />),
-  getItem('Creat Account', 2, <DesktopOutlined />),
+  getItem('Dashboard', 1, <DashboardOutlined />),
+  getItem('Create Accounts', 2, <EditOutlined />),
   getItem('Users', 'sub1', <UserOutlined />, [
     getItem('Students', '3'),
-    getItem('Lab Instructors', '4'),
+    getItem('Instructors', '4'),
     getItem('Admins', '5'),
   ]),
   getItem('Reports', 'sub2', <FileOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-  getItem('Settings', '9', <FileOutlined />),
+  getItem('Settings', '9', <SettingOutlined />),
 ];
 
 
@@ -47,17 +48,30 @@ export default function DashboardLayout({ children }) {
   } = theme.useToken();
   const router = useRouter();
 
+  const [breadcrumb, setBreadcrumb] = useState("Dashboard")
+
   const handleMenuItemClick = (key) => {
 
     switch (key) {
       case '1':
         router.push('/admin1/dashboard');
+        setBreadcrumb("Dashboard");
         break;
       case '2':
         router.push('/admin1/createAccount');
+        setBreadcrumb("Create Account");
         break;
       case '3':
         router.push('/admin1/users/students');
+        setBreadcrumb("Students");
+        break;
+      case '4':
+        router.push('/admin1/users/labinstructors');
+        setBreadcrumb("Instructors");
+        break;
+      case '5':
+        router.push('/admin1/users/admins');
+        setBreadcrumb("Admin");
         break;
       default:
         console.log(key);
@@ -88,7 +102,9 @@ export default function DashboardLayout({ children }) {
               padding: 0,
               background: colorBgContainer,
             }}
+            
           />
+          {/* <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} /> */}
           <Content
             style={{
               margin: '0 16px',
@@ -99,8 +115,8 @@ export default function DashboardLayout({ children }) {
                 margin: '16px 0',
               }}
             >
-              <Breadcrumb.Item>User</Breadcrumb.Item>
-              <Breadcrumb.Item>Bill</Breadcrumb.Item>
+              <Breadcrumb.Item>Home</Breadcrumb.Item>
+              <Breadcrumb.Item>{breadcrumb}</Breadcrumb.Item>
             </Breadcrumb>
             <div
               style={{

@@ -164,12 +164,37 @@ const deleteUser = async (req, res) => {
 //   }
 // };
 
+
+
+/* Function to get a single user */
+const checkIndex = async (req, res) => {
+  const {userRegNo} = req.params;
+  console.log(userRegNo);
+  try {
+    const user = await User.find({ userRegNo: userRegNo });
+    console.log(user);
+    if (user[0]) {
+      res.status(200).json({
+        message: "User found",
+        user: user,
+      });
+    } else {
+      res.status(400).json({
+        message: "User not found",
+      });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 const userController = {
   getAllUsers,
   getuser,
   addUser,
   updateuser,
   deleteUser,
+  checkIndex,
 //   updatePassword,
 };
 

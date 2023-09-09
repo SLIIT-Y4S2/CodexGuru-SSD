@@ -1,5 +1,5 @@
 /**
- * ExamResultRoutes implementation
+ * User Routes implementation
  */
 import express from "express";
 import userController from "../controllers/UserController.js";
@@ -14,6 +14,9 @@ router.get("/", userController.getAllUsers);
 
 // Handle GET request at "/:id" URI
 router.get("/:id", userController.getuser);
+
+// Handle GET request at "/checkregistration/:userRegNo" URI
+router.get("/checkregistration/:userRegNo", userController.checkIndex);
 
 
 

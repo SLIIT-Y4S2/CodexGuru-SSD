@@ -6,13 +6,24 @@ const { Option } = Select;
 
 const AccountCreationForm = () => {
   const [loading, setLoading] = useState(false);
+  const [registrationNumberExists, setRegistrationNumberExists] = useState(false);
 
   const onFinish = async (values) => {
     setLoading(true);
 
-    // Simulate API call (replace with actual API call)
+    // Check if registration number has been confirmed as available
+    if (!registrationNumberExists) {
+      notification.error({
+        message: 'Registration Number Not Checked',
+        description: 'Please check the registration number before submitting the form.',
+      });
+      setLoading(false);
+      return;
+    }
+
+    // Proceed with form submission
     try {
-      // Replace the following with your actual API endpoint and request
+      
       const response = await fetch('http://localhost:5000/api/v1/users/', {
         method: 'POST',
         headers: {
@@ -44,19 +55,33 @@ const AccountCreationForm = () => {
     }
   };
 
-  const validateRegistrationNumber = (_, value) => {
+  const validateRegistrationNumber = async (_, value) => {
     // Check if registration number follows the specified pattern
     const pattern = /^[A-Za-z]{2}\d{1,8}$/;
     if (!pattern.test(value)) {
       return Promise.reject('Invalid registration number');
     }
-    return Promise.resolve();
-  };
 
-  const validatePassword = (_, value) => {
-    if (value.length < 5) {
-      return Promise.reject('Password must be at least 5 characters long');
+    // Check if registration number is already taken
+    try {
+      
+      const response = await fetch(`http://localhost:5000/api/v1/users/checkregistration/${value}`);
+
+      console.log(typeof response.status);
+      if (response.status === 200) {
+        // console.log(res.status);
+        setRegistrationNumberExists(true);
+        return Promise.reject('Registration number already in use');
+
+      } else {
+        setRegistrationNumberExists(false);
+        
+      }
+    } catch (error) {
+      console.error('API Error:', error);
+      return Promise.reject('Error checking registration number');
     }
+
     return Promise.resolve();
   };
 
@@ -66,7 +91,7 @@ const AccountCreationForm = () => {
       onFinish={onFinish}
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 16 }}
-      style={{height:450}}
+      style={{ height: 450 }}
     >
       <Form.Item
         name="userRegNo"
@@ -116,7 +141,8 @@ const AccountCreationForm = () => {
             message: 'Please enter your password!',
           },
           {
-            validator: validatePassword,
+            min: 5,
+            message: 'Password must be at least 5 characters long',
           },
         ]}
       >
@@ -138,7 +164,7 @@ const AccountCreationForm = () => {
         </Select>
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-        <Button style={{marginTop:50}}type="primary" htmlType="submit" loading={loading}>
+        <Button style={{ marginTop: 50 }} type="primary" htmlType="submit" loading={loading}>
           Create Account
         </Button>
       </Form.Item>

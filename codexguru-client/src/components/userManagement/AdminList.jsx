@@ -7,7 +7,7 @@ import { message } from 'antd';
 
 const { Option } = Select;
 
-export default function UserList() {
+export default function AdminList() {
     const [allUsers, setAllUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [editModalVisible, setEditModalVisible] = useState(false);
@@ -15,14 +15,14 @@ export default function UserList() {
     const [form] = Form.useForm();
 
     useEffect(() => {
-        async function getAllUsers() {
+        async function getAdmins() {
             try {
                 const res = await fetch("http://localhost:5000/api/v1/users/");
                 if (res.ok) {
                     const allUsers = await res.json();
-
-                    const students = allUsers.filter(user => user.role === "student");
-                    setAllUsers(students);
+                    // Filter users with role "admins"
+                    const admins = allUsers.filter(user => user.role === "admin");
+                    setAllUsers(admins);
                     setLoading(false);
                 } else {
                     console.log("Error fetching data from the server");
@@ -31,9 +31,10 @@ export default function UserList() {
                 console.error("An error occurred:", error);
             }
         }
-
-        getAllUsers();
+    
+        getAdmins();
     }, []);
+    
 
     const columns = [
         {
@@ -84,7 +85,7 @@ export default function UserList() {
 
     const handleDelete = async (_id) => {
         try {
-            
+            // Send a DELETE request to your MongoDB API endpoint with the _id
             const res = await fetch(`http://localhost:5000/api/v1/users/${_id}`, {
                 method: 'DELETE',
             });

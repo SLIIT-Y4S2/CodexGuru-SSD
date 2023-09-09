@@ -15,14 +15,14 @@ export default function Instructor() {
     const [form] = Form.useForm();
 
     useEffect(() => {
-        async function getStudents() {
+        async function getInstructors() {
             try {
                 const res = await fetch("http://localhost:5000/api/v1/users/");
                 if (res.ok) {
                     const allUsers = await res.json();
                     // Filter users with role "student"
-                    const students = allUsers.filter(user => user.role === "instructor");
-                    setAllUsers(students);
+                    const instructors = allUsers.filter(user => user.role === "instructor");
+                    setAllUsers(instructors);
                     setLoading(false);
                 } else {
                     console.log("Error fetching data from the server");
@@ -32,7 +32,7 @@ export default function Instructor() {
             }
         }
     
-        getStudents();
+        getInstructors();
     }, []);
     
 
@@ -197,8 +197,8 @@ export default function Instructor() {
                         label="Role"
                     >
                         <Select>
-                            <Option value="Student">Student</Option>
-                            <Option value="Lab Instructor">Lab Instructor</Option>
+                            <Option value="student">Student</Option>
+                            <Option value="instructor">Lab Instructor</Option>
                         </Select>
                     </Form.Item>
                 </Form>
