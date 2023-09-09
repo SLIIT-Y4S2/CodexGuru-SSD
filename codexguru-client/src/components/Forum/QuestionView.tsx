@@ -8,6 +8,13 @@ import DeleteQuestion from "./DeleteQuestion";
 import DeleteAnswer from "./DeleteAnswer";
 import UpdateQuestion from "./UpdateQuestion";
 import UpdateAnswer from "./UpdateAnswer";
+import {
+  ArrowLeftOutlined,
+  DeleteFilled,
+  MoreOutlined,
+} from "@ant-design/icons";
+import { Dropdown, MenuProps } from "antd";
+import { formatRelative } from "date-fns";
 
 const QuestionView = () => {
   const {
@@ -27,36 +34,71 @@ const QuestionView = () => {
     return <div>not selected</div>;
   }
 
+  // const menuItems: MenuProps["items"] = [
+  //   {
+  //     key: "1",
+  //     label: <DeleteQuestion questionId={question._id} />,
+  //   },
+  //   {
+  //     key: "2",
+  //     label: <UpdateQuestion question={question} />,
+  //   },
+  // ];
   if (status === "loading" || !session?.user) return <>loading</>;
   return (
     <div className="">
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={() => {
-          setSelectedQuestionId(undefined);
-        }}
-      >
-        Back
-      </button>
-      {question.author._id == session.user.id.toString() && (
-        <>
-          <DeleteQuestion questionId={question._id} />
-          <UpdateQuestion question={question} />
-        </>
-      )}
-      <h3 className="text-3xl">{question.title}</h3>
-      <p>{question.description}</p>
+      <div className="flex justify-between align-middle">
+        <button
+          className=" hover:bg-gray-100  font-bold py-2 px-4 rounded-full text-xl"
+          onClick={() => {
+            setSelectedQuestionId(undefined);
+          }}
+          title="Back to Questions"
+        >
+          <ArrowLeftOutlined />
+        </button>
+        {question.author._id == session.user.id.toString() && (
+          // <Dropdown
+          //   menu={{
+          //     items: menuItems,
+          //   }}
+          //   trigger={["click"]}
+          // >
+          //   <MoreOutlined />
+          // </Dropdown>
+          <div className="flex gap-2">
+            <DeleteQuestion questionId={question._id} />
+            <UpdateQuestion question={question} />
+          </div>
+        )}
+      </div>
+      <h3 className="text-4xl font-medium">{question.title}</h3>
+      <div className="flex gap-8">
+        <p>
+          <span className="text-gray-600">Asked</span>{" "}
+          {formatRelative(new Date(question.createdAt), new Date())}
+        </p>
+        <p>
+          <span className="text-gray-600">Modified</span>{" "}
+          {formatRelative(new Date(question.updatedAt), new Date())}
+        </p>
+        <p>
+          <span className="text-gray-600">Viewed</span> {question.views}
+        </p>
+      </div>
+
+      <div className="my-4">{question.description}</div>
       <div className="flex justify-end">
         <span>
+          <span className="text-gray-600">Asked by</span>{" "}
           {question.author?.firstName} {question?.author.lastName}
         </span>
       </div>
       <div className="flex flex-col ">
+        <h4 className="text-2xl"> Answers ({question.answers.length})</h4>
+        <AddAnswer questionId={question._id} />
         {question.answers.map((answer, index) => (
-          <div
-            className="flex flex-col bg-yellow-50 border-2 my-1 p-2"
-            key={index}
-          >
+          <div className="flex flex-col border-2 my-1 p-2" key={index}>
             <p>{answer.description}</p>
             <div className="flex justify-end">
               {answer.author?._id == session.user.id.toString() && (
@@ -74,7 +116,6 @@ const QuestionView = () => {
             </div>
           </div>
         ))}
-        <AddAnswer questionId={question._id} />
       </div>
     </div>
   );

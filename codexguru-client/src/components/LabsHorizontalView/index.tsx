@@ -9,7 +9,18 @@ const LabsHorizontalView = () => {
 
   return (
     <div className="my-4">
-      <h3 className="text-2xl font-bold">Labs</h3>
+      <div className="flex flex-between justify-between align-middle mb-4">
+        <Link href="/labs">
+          <h3 className="text-xl font-semibold">Join a lab session</h3>
+        </Link>
+        <Link
+          href="/labs"
+          className="text-blue-600 font-bold text-xl"
+          title="All Lab Sessions"
+        >
+          View All
+        </Link>
+      </div>
       <div className="flex flex-row gap-4 overflow-auto w-max ">
         {labs.map((lab) => (
           <Link href={`/labs/${lab._id}`} key={lab._id}>
