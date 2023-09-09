@@ -27,6 +27,8 @@ export function ExamsProvider({ children }) {
                 setData((prevData) => [...prevData, newExam]);
 
                 alert("Exam creation successful");
+
+                window.location.reload();
             }
 
         } catch (error) {
@@ -83,6 +85,7 @@ export function ExamsProvider({ children }) {
                 });
 
                 alert("Successfully added questions");
+                window.location.reload();
             } else {
                 alert("Failed to add questions");
             }
@@ -107,14 +110,16 @@ export function ExamsProvider({ children }) {
                 // const data = await response.json();
 
                 setData((prevData) => {
-                    const index = prevData.findIndex((item) => item.id === examID);
-                    if (index !== -1) {
-                        prevData[index].questionsList.splice(questionIndex, 1);
+                    const exam = prevData.filter((item) => item.id == examID);
+
+                    if (exam.questionsList) {
+                        exam.questionsList.findIndex((index) => index != questionIndex);
+
+                        return [...prevData];
                     }
-                    return [...prevData];
+
                 });
 
-                alert("Question removed successfully");
             } else {
                 alert("Failed to remove question");
             }
@@ -158,7 +163,7 @@ export function ExamsProvider({ children }) {
     };
 
     /* Function to update an exam's status */
-    const updateExamStatus = async (examID, updatedExam, examStatus) => {
+    const updateExamStatus = async (examID, examStatus) => {
         try {
             const response = await fetch(`http://localhost:5000/api/v1/exams/${examID}`, {
                 method: "PUT",
@@ -171,9 +176,9 @@ export function ExamsProvider({ children }) {
             const data = await response.json();
 
             setData((prevData) => {
-                const index = prevData.findIndex((item) => item.id === updatedExam.id);
+                const index = prevData.findIndex((item) => item.id === examID.id);
                 if (index !== -1) {
-                    prevData[index] = updatedExam;
+                    prevData[index] = data.exams;
                 }
                 return [...prevData];
             });
