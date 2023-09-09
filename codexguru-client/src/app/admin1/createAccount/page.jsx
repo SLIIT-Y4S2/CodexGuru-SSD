@@ -1,12 +1,22 @@
 "use client";
 import React, { useState } from 'react';
 import { Form, Input, Button, Select, notification } from 'antd';
-
+import { useForm } from 'antd/es/form/Form';
 const { Option } = Select;
 
 const AccountCreationForm = () => {
   const [loading, setLoading] = useState(false);
   const [registrationNumberExists, setRegistrationNumberExists] = useState(false);
+
+  const [form] = useForm();
+  
+  const [formValues, setFormValues] = useState({
+    userRegNo: '',
+    firstName: '',
+    lastName: '',
+    password: '',
+    role: '',
+  });
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -23,7 +33,6 @@ const AccountCreationForm = () => {
 
     // Proceed with form submission
     try {
-      
       const response = await fetch('http://localhost:5000/api/v1/users/', {
         method: 'POST',
         headers: {
@@ -36,8 +45,13 @@ const AccountCreationForm = () => {
         notification.success({
           message: 'Account Created',
           description: 'Account has been created successfully.',
+          duration: 10,
         });
-        window.location.reload();
+
+        // Reset form values after successful account creation
+        form.resetFields();
+
+        setLoading(false);
       } else {
         notification.error({
           message: 'Account Creation Failed',
@@ -64,18 +78,12 @@ const AccountCreationForm = () => {
 
     // Check if registration number is already taken
     try {
-      
       const response = await fetch(`http://localhost:5000/api/v1/users/checkregistration/${value}`);
-
-      console.log(typeof response.status);
       if (response.status === 200) {
-        // console.log(res.status);
         setRegistrationNumberExists(true);
         return Promise.reject('Registration number already in use');
-
       } else {
         setRegistrationNumberExists(false);
-        
       }
     } catch (error) {
       console.error('API Error:', error);
@@ -85,6 +93,14 @@ const AccountCreationForm = () => {
     return Promise.resolve();
   };
 
+  // Update form values when input fields change
+  const handleInputChange = (name, value) => {
+    setFormValues({
+      ...formValues,
+      [name]: value,
+    });
+  };
+
   return (
     <Form
       name="account-creation"
@@ -92,6 +108,7 @@ const AccountCreationForm = () => {
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 16 }}
       style={{ height: 450 }}
+      form={form}
     >
       <Form.Item
         name="userRegNo"
@@ -106,7 +123,7 @@ const AccountCreationForm = () => {
           },
         ]}
       >
-        <Input />
+        <Input value={formValues.userRegNo} onChange={(e) => handleInputChange('userRegNo', e.target.value)} />
       </Form.Item>
       <Form.Item
         name="firstName"
@@ -118,7 +135,7 @@ const AccountCreationForm = () => {
           },
         ]}
       >
-        <Input />
+        <Input value={formValues.firstName} onChange={(e) => handleInputChange('firstName', e.target.value)} />
       </Form.Item>
       <Form.Item
         name="lastName"
@@ -130,7 +147,7 @@ const AccountCreationForm = () => {
           },
         ]}
       >
-        <Input />
+        <Input value={formValues.lastName} onChange={(e) => handleInputChange('lastName', e.target.value)} />
       </Form.Item>
       <Form.Item
         name="password"
@@ -146,7 +163,7 @@ const AccountCreationForm = () => {
           },
         ]}
       >
-        <Input.Password />
+        <Input.Password value={formValues.password} onChange={(e) => handleInputChange('password', e.target.value)} />
       </Form.Item>
       <Form.Item
         name="role"
@@ -158,7 +175,11 @@ const AccountCreationForm = () => {
           },
         ]}
       >
-        <Select placeholder="Select a role">
+        <Select
+          placeholder="Select a role"
+          value={formValues.role}
+          onChange={(value) => handleInputChange('role', value)}
+        >
           <Option value="student">Student</Option>
           <Option value="instructor">Instructor</Option>
         </Select>

@@ -33,7 +33,7 @@ const items = [
   getItem('Users', 'sub1', <UserOutlined />, [
     getItem('Students', '3'),
     getItem('Instructors', '4'),
-    getItem('Admins', '5'),
+    // getItem('Admins', '5'),
   ]),
   getItem('Reports', 'sub2', <FileOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
   getItem('Settings', '9', <SettingOutlined />),
@@ -62,17 +62,17 @@ export default function DashboardLayout({ children }) {
         setBreadcrumb("Create Account");
         break;
       case '3':
-        router.push('/admin1/users/students');
+        router.push('/admin1/users/student');
         setBreadcrumb("Students");
         break;
       case '4':
-        router.push('/admin1/users/labinstructors');
+        router.push('/admin1/users/instructor');
         setBreadcrumb("Instructors");
         break;
-      case '5':
-        router.push('/admin1/users/admins');
-        setBreadcrumb("Admin");
-        break;
+      // case '5':
+      //   router.push('/admin1/users/admins');
+      //   setBreadcrumb("Admin");
+      //   break;
       default:
         console.log(key);
     }

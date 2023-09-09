@@ -7,7 +7,7 @@ import { message } from 'antd';
 
 const { Option } = Select;
 
-export default function UserList() {
+export default function UserList({userRole}) {
     const [allUsers, setAllUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [editModalVisible, setEditModalVisible] = useState(false);
@@ -21,7 +21,7 @@ export default function UserList() {
                 if (res.ok) {
                     const allUsers = await res.json();
 
-                    const students = allUsers.filter(user => user.role === "student");
+                    const students = allUsers.filter(user => user.role == userRole);
                     setAllUsers(students);
                     setLoading(false);
                 } else {
