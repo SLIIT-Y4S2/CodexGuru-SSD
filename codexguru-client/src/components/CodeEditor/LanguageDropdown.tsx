@@ -22,9 +22,7 @@ const LanguageDropdown: React.FC = () => {
         }
     }
     return (
-        <Space
-            wrap
-        >
+        <Space wrap>
             <Select
                 size='large'
                 defaultValue={items.filter((item) => item.value === 63)[0].label}
