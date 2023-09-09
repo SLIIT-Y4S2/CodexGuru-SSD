@@ -3,9 +3,14 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Header from "@/components/Header";
-import Provider from "./Provider";
-import { ExamsProvider } from "./context/ExamsContext";
 
+// context imports
+import AuthProvider from "./AuthProvider";
+import { LabProvider } from "@/context/LabProvider";
+import { ExamsProvider } from "./context/ExamsContext";
+import { ExamQuestionsProvider } from "./context/ExamQuestionsContext";
+import { ConfigProvider } from "antd";
+import theme from "@/theme/themeConfig";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,16 +26,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Provider>
-          <StyledComponentsRegistry>
+        <AuthProvider>
+          <LabProvider>
             <ExamsProvider>
-              <main>
-                <Header />
-                {children}
-              </main>
+              <StyledComponentsRegistry>
+                <ExamQuestionsProvider>
+                  <ConfigProvider theme={theme}>
+                    <main>
+                      <Header />
+                      {children}
+                    </main>
+                  </ConfigProvider>
+                </ExamQuestionsProvider>
+              </StyledComponentsRegistry>
             </ExamsProvider>
-          </StyledComponentsRegistry>
-        </Provider>
+          </LabProvider>
+        </AuthProvider>
       </body>
     </html>
   );

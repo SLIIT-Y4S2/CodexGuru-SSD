@@ -60,26 +60,98 @@ export function ExamsProvider({ children }) {
         }
     };
 
-    /* Function to update an exam */
-    const updateExam = async (examID, updatedExam) => {
+    /* Function to add questions to an exam */
+    const addQuestions = async (examID, questionsList) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/v1/exams/${examID}`, {
+            const response = await fetch(`http://localhost:5000/api/v1/exams/${examID}/questions`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(exam),
+                body: JSON.stringify(questionsList),
             });
 
-            const data = await response.json();
+            if (response.ok) {
+                // const data = await response.json();
 
-            setData((prevData) => {
-                const index = prevData.findIndex((item) => item.id === updatedExam.id);
-                if (index !== -1) {
-                    prevData[index] = updatedExam;
-                }
-                return [...prevData];
+                setData((prevData) => {
+                    const index = prevData.findIndex((item) => item.id === examID);
+                    if (index !== -1) {
+                        prevData[index].questionsList.concat(questionsList);
+                    }
+                    return [...prevData];
+                });
+
+                alert("Successfully added questions");
+            } else {
+                alert("Failed to add questions");
+            }
+
+        } catch (error) {
+            console.error("Error : " + error.message);
+        }
+    }
+
+    /* Function to remove a question from an exam */
+    const removeQuestion = async (examID, questionIndex) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/v1/exams/${examID}/questions/remove`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ questionToBeRemovedIndex: questionIndex }),
             });
+
+            if (response.ok) {
+                // const data = await response.json();
+
+                setData((prevData) => {
+                    const index = prevData.findIndex((item) => item.id === examID);
+                    if (index !== -1) {
+                        prevData[index].questionsList.splice(questionIndex, 1);
+                    }
+                    return [...prevData];
+                });
+
+                alert("Question removed successfully");
+            } else {
+                alert("Failed to remove question");
+            }
+
+        } catch (error) {
+            console.error("Error : " + error.message);
+        }
+    }
+
+
+    /* Function to update an exam */
+    const updateExam = async (examID, updatedExam) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/v1/exams/update/${examID}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(updatedExam),
+            });
+
+            if (response.ok) {
+                // const data = await response.json();
+
+                setData((prevData) => {
+                    const index = prevData.findIndex((item) => item.id === examID);
+                    if (index !== -1) {
+                        prevData[index] = updatedExam;
+                    }
+                    return [...prevData];
+                });
+
+                alert("Successfully updated exam");
+            } else {
+                alert("Exam updation failed!")
+            }
+
         } catch (error) {
             console.error("Error : " + error.message);
         }
@@ -131,7 +203,17 @@ export function ExamsProvider({ children }) {
 
 
     return (
-        <ExamsContext.Provider value={{ data, createExam, getAllExams, getExam, updateExam, updateExamStatus, deleteExam }}>
+        <ExamsContext.Provider value={{
+            data,
+            createExam,
+            getAllExams,
+            getExam,
+            addQuestions,
+            removeQuestion,
+            updateExam,
+            updateExamStatus,
+            deleteExam
+        }}>
             {children}
         </ExamsContext.Provider>
     );

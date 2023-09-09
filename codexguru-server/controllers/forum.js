@@ -1,0 +1,234 @@
+import Forum from "../models/ForumModels/Forum.js";
+import ForumQuestion from "../models/ForumModels/ForumQuestion.js";
+import ForumAnswer from "../models/ForumModels/ForumAnswer.js";
+
+/**
+ * @route   GET /api/forum/:labId
+ * @desc    Get all questions for a lab session
+ * @access  Private
+ * @param   labId
+ * @return  {Array} questions
+ * @errors  500 { error: "Server error" }
+ *          404 { error: "No forum found for this lab session" }
+ *         200 { questions: [{...}, {...}, ...] }
+ */
+export const getForumQuestions = async (req, res) => {
+  try {
+    const forum = await Forum.findOne({ labSession: req.params.labId })
+      .populate({
+        path: "questions",
+        populate: {
+          path: "author",
+          select: "firstName lastName",
+        },
+      })
+      .populate({
+        path: "questions",
+        populate: {
+          path: "answers",
+          populate: {
+            path: "author",
+            select: "firstName lastName",
+          },
+        },
+      });
+
+    if (!forum) throw new Error("No forum found for this lab session");
+    const customizedForum = { ...forum._doc };
+
+    res.status(200).json(customizedForum.questions);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/**
+ * @route   POST /api/forum/:labId/addQuestion
+ * @desc    Add a question to a lab session
+ * @access  Private
+ * @param   labId
+ * @return  {Object} question
+ * @errors  500 { error: "Server error" }
+ *         404 { error: "No forum found for this lab session" }
+ *        201 { question: {...} }
+ */
+
+export const addQuestion = async (req, res) => {
+  try {
+    const { title, description } = req.body;
+    const newQuestion = new ForumQuestion({
+      title,
+      description,
+      author: req.user,
+    });
+    const savedQuestion = await newQuestion.save();
+
+    const forum = await Forum.findOne({ labSession: req.params.labId });
+    if (!forum) throw new Error("No forum found for this lab session");
+
+    await forum.addQuestion(savedQuestion);
+    const populatedQuestion = await ForumQuestion.findById(
+      savedQuestion._id
+    ).populate({
+      path: "author",
+      select: "firstName lastName",
+    });
+
+    res.status(201).json(populatedQuestion);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/**
+ * @route   POST /api/forum/:questionId/addAnswer
+ * @desc    Add an answer to a question
+ * @access  Private
+ * @param   id
+ * @return  {Object} answer
+ * @errors  500 { error: "Server error" }
+ *        404 { error: "No question found for this id" }
+ */
+
+export const addAnswer = async (req, res) => {
+  try {
+    const { description } = req.body;
+    const newAnswer = new ForumAnswer({
+      description,
+      author: req.user,
+    });
+    const savedAnswer = await newAnswer.save();
+    await ForumQuestion.findById(req.params.questionId).then((question) => {
+      question.addAnswer(savedAnswer);
+    });
+    const populatedAnswer = await ForumAnswer.findById(
+      savedAnswer._id
+    ).populate({
+      path: "author",
+      select: "firstName lastName",
+    });
+    res.status(201).json(populatedAnswer);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/**
+ * @route   DELETE /api/forum/:questionId/deleteQuestion
+ * @desc    Delete a question
+ * @access  Private
+ * @param   questionId
+ * @return  {Object} question
+ *
+ */
+
+export const deleteQuestion = async (req, res) => {
+  try {
+    const question = await ForumQuestion.findById(req.params.questionId);
+    if (!question) throw new Error("No question found for this id");
+    // authenticate user is the author of the question
+    if (question.author.toString() !== req.user.toString())
+      throw new Error("You are not authorized to delete this question");
+    await question.deleteOne();
+    // delete all answers of this question
+    question.answers.forEach(async (answer) => {
+      await ForumAnswer.findByIdAndDelete(answer);
+    });
+
+    res.status(200).json(question);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/**
+ * @route   DELETE /api/forum/questions/:questionId/answers/:answerId
+ * @desc    Delete an answer
+ * @access  Private
+ * @param   answerId, questionId
+ * @return  {Object} answer
+ */
+
+export const deleteAnswer = async (req, res) => {
+  try {
+    const answer = await ForumAnswer.findById(req.params.answerId);
+    if (!answer) throw new Error("No answer found for this id");
+    // authenticate user is the author of the answer
+    if (answer.author.toString() !== req.user.toString())
+      throw new Error("You are not authorized to delete this answer");
+    await answer.deleteOne();
+    // delete answer from question
+    await ForumQuestion.findById(req.params.questionId).then((question) => {
+      question.deleteAnswer(answer);
+    });
+    res.status(200).json(answer);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/**
+ * @route   PUT /api/forum/questions/:questionId/updateQuestion
+ * @desc    Update a question
+ * @access  Private
+ * @param   questionId
+ * @return  {Object} question
+ */
+
+export const updateQuestion = async (req, res) => {
+  try {
+    const { title, description } = req.body;
+    const question = await ForumQuestion.findById(req.params.questionId);
+    if (!question) throw new Error("No question found for this id");
+    // authenticate user is the author of the question
+    if (question.author.toString() !== req.user.toString())
+      throw new Error("You are not authorized to update this question");
+    question.title = title;
+    question.description = description;
+    await question.save();
+    const populatedQuestion = await ForumQuestion.findById(question._id)
+      .populate({
+        path: "author",
+        select: "firstName lastName",
+      })
+      .populate({
+        path: "answers",
+        populate: {
+          path: "author",
+          select: "firstName lastName",
+        },
+      });
+    res.status(200).json(populatedQuestion);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/**
+ * @route   PUT /api/forum/answers/:answerId/updateAnswer
+ * @desc    Update an answer
+ * @access  Private
+ * @param   answerId
+ * @return  {Object} answer
+ */
+
+export const updateAnswer = async (req, res) => {
+  try {
+    const { description } = req.body;
+    const answer = await ForumAnswer.findById(req.params.answerId);
+    if (!answer) throw new Error("No answer found for this id");
+    // authenticate user is the author of the answer
+    if (answer.author.toString() !== req.user.toString())
+      throw new Error("You are not authorized to update this answer");
+    answer.description = description;
+    await answer.save();
+    const populatedAnswer = await ForumAnswer.findById(answer._id).populate({
+      path: "author",
+      select: "firstName lastName",
+    });
+
+    res.status(200).json(populatedAnswer);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

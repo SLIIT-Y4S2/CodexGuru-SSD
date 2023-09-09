@@ -1,7 +1,16 @@
+import ICompileOutput from "./ICompileOutput";
+
 export default interface ICodeEditorContext {
-    output: string;
-    setLanguageIdHandler: (languageId: number) => void;
+    isCompiling: boolean;
+    languageId: number;
+    languageName: string;
+    languageValue: string;
+    theme: string;
+    stdin: string;
+    output: ICompileOutput | null;
+    setLanguageHandler: (languageId: number) => void;
     setSourceCodeHandler: (sourceCode: string) => void;
-    setStdinHandler: (stdin: string[]) => void;
+    setThemeHandler: (isLight: boolean) => void;
+    setStdinHandler: (stdin: string) => void;
     handleCompile: () => void;
 }

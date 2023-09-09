@@ -1,16 +1,10 @@
-import { ConfigProvider } from "antd";
-import theme from "@/theme/themeConfig";
-import TestBackend from "@/components/TestBackend";
+import LabsHorizontalView from "@/components/LabsHorizontalView";
 
 export default function Home() {
   return (
-    <div>
-      <ConfigProvider theme={theme}>
-        <div className="flex flex-col justify-center items-center  h-screen">
-          This page needs login to access
-          <TestBackend />
-        </div>
-      </ConfigProvider>
+    <div className="mx-auto max-w-screen-xl p-3 flex flex-col gap-4 h-screen">
+      <p className="text-4xl">Student Landing Page</p>
+      <LabsHorizontalView />
     </div>
   );
 }

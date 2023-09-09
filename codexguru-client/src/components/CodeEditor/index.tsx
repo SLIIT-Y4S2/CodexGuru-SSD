@@ -1,47 +1,34 @@
-"use client"
-import { useContext } from "react";
-import Editor, { Monaco } from "@monaco-editor/react";
-import { CodeEditorContext } from "@/context/CodeEditorContext";
-import ICodeEditorContext from "@/interfaces/ICodeContext";
+import LanguageDropdown from "./LanguageDropdown";
+import ThemeDropDown from "./ThemeDropDown";
+import CompileButton from "./CompileButton";
+import OutputWindow from "./OutputWindow";
+import InputWindow from "./InputWindows";
+import CodeEditor from "./CodeEditor";
+import CodeEditorContextProvider from "@/context/CodeEditorContext";
 
-const CodeEditor: React.FC = () => {
-
-    const codeEditorCtx = useContext<ICodeEditorContext | null>(CodeEditorContext);
-    const { setSourceCodeHandler } = codeEditorCtx!;
-
-    function handleEditorChange(value: string, event) {
-        setSourceCodeHandler(value);
-    }
-
-    function handleEditorDidMount(editor: string, monaco: Monaco) {
-        console.log("onMount: the editor instance:", editor);
-        console.log("onMount: the monaco instance:", monaco);
-    }
-
-    function handleEditorWillMount(monaco: Monaco) {
-        console.log("beforeMount: the monaco instance:", monaco);
-    }
-
-    function handleEditorValidation(markers) {
-        // model markers
-        // markers.forEach(marker => console.log('onValidate:', marker.message));
-    }
+const CodeEditorWindow: React.FC = () => {
 
     return (
-        <div className="">
-            <Editor
-                theme="vs-dark"
-                height={"640px"}
-                width={"1440px"}
-                defaultLanguage="java"
-                defaultValue="// some comment"
-                onChange={handleEditorChange}
-                onMount={handleEditorDidMount}
-                beforeMount={handleEditorWillMount}
-                onValidate={handleEditorValidation}
-
-            />
-        </div>
+        <CodeEditorContextProvider>
+            <div className="mx-auto mt-20 absolute w-11/12 px-20 top-0">
+                <div className="grid grid-row-3 grid-flow-col gap-4">
+                    <div className="row-span-2">
+                        <div className="grid grid-cols-3 gap-3 mb-5">
+                            <LanguageDropdown />
+                            <ThemeDropDown />
+                            <CompileButton />
+                        </div>
+                        <CodeEditor />
+                    </div>
+                    <div className="row-span-1 col-span-10">
+                        <OutputWindow />
+                    </div>
+                    <div className="row-span-1 col-span-10">
+                        <InputWindow />
+                    </div>
+                </div>
+            </div>
+        </CodeEditorContextProvider>
     );
 };
-export default CodeEditor;
+export default CodeEditorWindow;

@@ -1,37 +1,58 @@
 /**
- * NewExam form implementation
+ * EditExam form implementation
  */
 "use client";
-import React, { useContext } from "react";
-import { Button, Form, Input, InputNumber, Select } from "antd";
+import React, { useContext, useEffect, useState } from "react";
 import { ExamsContext } from "@/app/context/ExamsContext";
+import { Button, Form, Input, InputNumber, Select, TimePicker } from "antd";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 
-const EditExam: React.FC = () => {
-  const { data, updateExam } = useContext(ExamsContext);
+dayjs.extend(customParseFormat);
 
-  /* Set of states for the form inputs */
+export default function EditExam() {
+  const { getExam, updateExam } = useContext(ExamsContext);
+
+  useEffect(() => {
+    async function fetchData() {
+      const exam = await getExam(window.location.pathname.split("/")[3]);
+
+      setModuleCode(exam.code);
+      setExamTitle(exam.title);
+      setDescription(exam.description);
+      setYear(exam.year);
+      setSemester(exam.semester);
+      setPassMark(exam.passMark);
+      setPassword(exam.password);
+      setDuration(exam.duration);
+    }
+
+    fetchData();
+  }, []);
+
   const [moduleCode, setModuleCode] = React.useState("");
   const [examTitle, setExamTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [year, setYear] = React.useState("");
   const [semester, setSemester] = React.useState("");
-  const [noOfQuestions, setNoOfQuestions] = React.useState("");
   const [passMark, setPassMark] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [duration, setDuration] = React.useState("");
 
   return (
     <center>
       <Form
         onFinish={() =>
-          updateExam({
+          updateExam(Number(window.location.pathname.split("/")[3]), {
             code: moduleCode,
             title: examTitle,
             description: description,
             year: year,
             semester: semester,
-            noOfQuestions: noOfQuestions,
             passMark: passMark,
             password: password,
+            duration: duration,
           })
         }
         // {...formItemLayout}
@@ -39,6 +60,7 @@ const EditExam: React.FC = () => {
       >
         <Form.Item>
           <Input
+            value={moduleCode}
             placeholder="Module code"
             required
             onChange={(e) => setModuleCode(e.target.value)}
@@ -46,6 +68,7 @@ const EditExam: React.FC = () => {
         </Form.Item>
         <Form.Item hasFeedback validateStatus="success">
           <Input
+            value={examTitle}
             placeholder="Exam title"
             id="success"
             required
@@ -55,7 +78,8 @@ const EditExam: React.FC = () => {
 
         <Form.Item hasFeedback>
           <Input.TextArea
-            placeholder="Description. Enter any rules and information about the exam"
+            value={description}
+            placeholder="Enter any rules and information about the exam"
             id="success"
             allowClear
             autoSize
@@ -71,6 +95,7 @@ const EditExam: React.FC = () => {
             }}
           >
             <Select
+              value={year}
               defaultValue={1}
               style={{ width: "50%" }}
               options={[
@@ -84,13 +109,12 @@ const EditExam: React.FC = () => {
               }}
             />
             <Select
+              value={semester}
               defaultValue={1}
               style={{ width: "50%" }}
               options={[
                 { value: 1, label: "Semester 1" },
                 { value: 2, label: "Semester  2" },
-                { value: 3, label: "Semester 3" },
-                { value: 4, label: "Semester 4" },
               ]}
               onChange={(e: any) => {
                 setSemester(e);
@@ -101,19 +125,7 @@ const EditExam: React.FC = () => {
 
         <Form.Item hasFeedback validateStatus="">
           <InputNumber
-            placeholder="No of questions"
-            min={1}
-            id="success"
-            style={{ width: "100%" }}
-            required
-            onChange={(e: any) => {
-              console.log(typeof e);
-              setNoOfQuestions(e);
-            }}
-          />
-        </Form.Item>
-        <Form.Item hasFeedback validateStatus="">
-          <InputNumber
+            value={passMark}
             placeholder="Pass mark"
             id="success"
             style={{ width: "100%" }}
@@ -125,18 +137,33 @@ const EditExam: React.FC = () => {
         </Form.Item>
         <Form.Item hasFeedback validateStatus="">
           <Input
+            value={password}
             placeholder="Exam password"
             required
             onChange={(e: any) => setPassword(e.target.value)}
           />
         </Form.Item>
 
+        <Form.Item>
+          <TimePicker
+            value={dayjs(duration, "HH:mm:ss")}
+            onChange={(e) => {
+              // console.log(dayjs("4:15:05", "HH:mm:ss"));
+              const hrs = e.$H ? e.$H : "00";
+              const mins = e.$m ? e.$m : "00";
+              const secs = e.$s ? e.$s : "00";
+
+              setDuration(`${hrs}:${mins}:${secs}`);
+            }}
+            format="HH:mm:ss"
+            style={{ width: "100%" }}
+          />
+        </Form.Item>
+
         <Button type="primary" size="large" htmlType="submit">
-          ADD
+          SAVE
         </Button>
       </Form>
     </center>
   );
-};
-
-export default EditExam;
+}
