@@ -1,12 +1,53 @@
 "use client";
 // src/components/Quiz.js
 import React, { useState, useEffect, useContext } from "react";
-import { quizData } from "./QuizData";
+import { formatQuestions } from "@/app/utils/OnlineExamUtil";
+import ExamSubmitModal from "./ExamSubmitModal";
+import { Alert, Button, List, Spin } from "antd";
+import { ExamsContext } from "@/app/context/ExamsContext";
 
-function ExamTemplate() {
+function ExamTemplate({ examQuestions, examDuration }) {
+  // Function to insert result
+  async function insertResult() {
+    try {
+      const res = await fetch("http://localhost:5000/api/v1/results", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          examID: window.location.pathname.split("/")[2],
+          studentID: 12,
+          questionsAttempted: userAnswers.length,
+          marks: score,
+          grade: "DUMMY",
+          status: score >= examData.passMark ? "Pass" : "Fail",
+        }),
+      });
+
+      if (res.ok) {
+        window.location.replace("/online-exams");
+      } else {
+        alert("There was an error");
+      }
+    } catch (error) {
+      console.log("Error : " + error.message);
+    }
+  }
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
-  const [time, setTime] = useState(10); // 5-minute timer in seconds
+  const [time, setTime] = useState(examDuration); // 5-minute timer in seconds
+
+  // State variable to hold data of the particular exam
+  const { getExam } = useContext(ExamsContext);
+
+  const examData = getExam(window.location.pathname.split("/")[2]);
+
+  // Invoke formatQuestions function
+  const quizData = formatQuestions(examQuestions);
+
+  console.log(quizData);
   const [userAnswers, setUserAnswers] = useState(
     new Array(quizData.length).fill(null)
   );
@@ -27,15 +68,23 @@ function ExamTemplate() {
   const moveToNextQuestion = () => {
     if (currentQuestionIndex < quizData.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedChoice(null); // Clear selected choice when moving to the next question
+      setSelectedChoice(userAnswers[currentQuestionIndex + 1]);
     } else {
       setQuizCompleted(true);
+    }
+  };
+
+  const moveToPreviousQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setSelectedChoice(userAnswers[currentQuestionIndex - 1]);
     }
   };
 
   // Function to calculate the score
   const calculateScore = () => {
     console.log("FINISH CLICKED");
+
     let correctAnswers = 0;
     for (let i = 0; i < quizData.length; i++) {
       if (userAnswers[i] == quizData[i].correctAnswer) {
@@ -49,9 +98,12 @@ function ExamTemplate() {
 
   // Function to format time as "mm:ss"
   const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
+    const hrs = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+    return `${hrs < 10 ? "0" : ""}${hrs}:${minutes < 10 ? "0" : ""}${minutes}:${
+      remainingSeconds < 10 ? "0" : ""
+    }${remainingSeconds}`;
   };
 
   // Timer logic
@@ -71,43 +123,127 @@ function ExamTemplate() {
   }, [time, quizCompleted]);
 
   if (quizCompleted) {
+    // TODO - Record the result in database
+    insertResult();
+
     return (
-      <div className="quiz">
-        <h1>Quiz Completed!</h1>
-        <p>
-          Your Score: {score}/{quizData.length}
-        </p>
-      </div>
+      // <center>
+      //   <div className="quiz" style={{ marginTop: "50px" }}>
+      //     <h1 style={{ color: "red" }}>DON'T CLOSE THIS WINDOW</h1> <br />
+      //     <p>
+      //       Exam completed. Your response has been recorded.
+      //       {/* Your Score: {score}/{quizData.length} */}
+      //     </p>{" "}
+      //     <br />
+      //     <p>Redirecting to homepage...</p>
+      //   </div>
+      // </center>
+
+      <Spin spinning={true}>
+        <center>
+          <Alert
+            style={{ marginTop: "50px", width: "fit-content" }}
+            message="Exam Completed"
+            description="Please do not close the window. Redirecting..."
+            type="warning"
+          />
+        </center>
+      </Spin>
     );
   }
 
   const currentQuestion = quizData[currentQuestionIndex];
 
   return (
-    <div className="quiz">
+    <div className="quiz" style={{ marginTop: "50px" }}>
       {/* <h1>Quiz App</h1> */}
-      <div className="timer">Time Remaining: {formatTime(time)}</div>
-      <h2>{currentQuestion.question}</h2>
-      <ul>
-        {currentQuestion.choices.map((choice, index) => (
-          <li key={index}>
-            <input
-              type="radio"
-              id={`choice-${index}`}
-              name="choices"
-              value={choice}
-              onChange={() => handleAnswerSelect(choice)}
-              checked={selectedChoice === choice}
-            />
-            <label htmlFor={`choice-${index}`}>{choice}</label>
-          </li>
-        ))}
-      </ul>
+      <div
+        className="timer"
+        style={{
+          marginLeft: "50px",
+          marginRight: "50px",
+          border: "1px solid #faad14",
+          background: "#faad14",
+          borderRadius: "15px",
+          padding: "10px",
+          color: "white",
+          textAlign: "center",
+        }}
+      >
+        Time Remaining: {formatTime(time)}
+      </div>{" "}
+      <br />
+      <div
+        style={{
+          marginLeft: "50px",
+          padding: "20px",
+          maxWidth: "50px",
+          border: "1px solid #faad14",
+          borderRadius: "10px",
+          maxWidth: "900px",
+        }}
+      >
+        <h2>
+          {"(Q" + (currentQuestionIndex + 1) + ") " + currentQuestion.question}
+        </h2>
+        <ul>
+          <br />
+          {currentQuestion.choices.map((choice, index) => (
+            <>
+              <List.Item key={index} style={{ gap: "10px", display: "flex" }}>
+                <input
+                  type="radio"
+                  id={`choice-${index}`}
+                  name="choices"
+                  value={choice}
+                  onChange={() => handleAnswerSelect(choice)}
+                  checked={selectedChoice === choice}
+                />
+                <label htmlFor={`choice-${index}`}>{choice}</label>
+              </List.Item>
+            </>
+          ))}
+        </ul>
+      </div>{" "}
+      <br />
+      <br />
+      <Button
+        onClick={moveToPreviousQuestion}
+        disabled={currentQuestionIndex === 0}
+        style={{
+          marginLeft: "50px",
+          float: "left",
+        }}
+        ghost
+        type="primary"
+      >
+        Previous
+      </Button>
       {currentQuestionIndex < quizData.length - 1 ? (
-        <button onClick={moveToNextQuestion}>Next</button>
+        <Button
+          onClick={moveToNextQuestion}
+          style={{
+            marginRight: "50px",
+            float: "right",
+          }}
+          ghost
+          type="primary"
+        >
+          Next
+        </Button>
       ) : (
         <>
-          <button onClick={calculateScore}>Finish</button>
+          <Button
+            onClick={calculateScore}
+            style={{
+              marginRight: "50px",
+              float: "right",
+            }}
+            ghost
+            type="primary"
+          >
+            Finish
+          </Button>
         </>
       )}
     </div>

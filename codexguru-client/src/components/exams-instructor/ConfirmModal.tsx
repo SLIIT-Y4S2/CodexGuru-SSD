@@ -11,9 +11,10 @@ export default function ConfirmModal({ examID }) {
   const { deleteExam } = useContext(ExamsContext);
   const showDeleteConfirm = () => {
     confirm({
-      title: "Are you sure you want to delete this exam?",
-      icon: <ExclamationCircleFilled />,
-      content: "This action is permanant. Are you sure?",
+      title: "Are you sure?",
+      icon: <ExclamationCircleFilled style={{ color: "#ff7875" }} />,
+      content:
+        "This action is permanant. Are you sure you want to delete this exam?",
       okText: "Yes",
       okType: "danger",
       cancelText: "No",
@@ -27,5 +28,9 @@ export default function ConfirmModal({ examID }) {
     });
   };
 
-  return <Button icon={<DeleteFilled />} onClick={showDeleteConfirm}></Button>;
+  return (
+    <Button icon={<DeleteFilled />} ghost danger onClick={showDeleteConfirm}>
+      Delete
+    </Button>
+  );
 }

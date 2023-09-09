@@ -2,7 +2,9 @@
  * ExamQuestionsPage implementation
  */
 
+import BreadCrumbs from "@/components/common/BreadCrumbs";
 import AllQuestions from "@/components/questions-instructor/AllQuestions";
+import Link from "next/link";
 
 export async function getStaticPaths() {
   let examPaths = [];
@@ -28,5 +30,25 @@ export async function getStaticPaths() {
 }
 
 export default function ExamQuestionsPage() {
-  return <AllQuestions />;
+  return (
+    <>
+      <div style={{ marginLeft: "50px", marginTop: "25px" }}>
+        <BreadCrumbs
+          linkList={[
+            {
+              title: <Link href="#">Dashboard</Link>,
+            },
+            {
+              title: <Link href="/exams">Exams</Link>,
+            },
+            {
+              title: " Questions",
+            },
+          ]}
+        />
+      </div>{" "}
+      <br />
+      <AllQuestions />
+    </>
+  );
 }

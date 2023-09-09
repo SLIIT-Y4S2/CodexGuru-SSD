@@ -1,10 +1,15 @@
 "use client";
 
 import React, { useContext, useState, useEffect } from "react";
-import { Button, Collapse } from "antd";
+import { Button, Collapse, FloatButton } from "antd";
 import ConfirmModal from "./ConfirmModal";
 import Link from "next/link";
 import { ExamsContext } from "@/app/context/ExamsContext";
+import {
+  CaretRightOutlined,
+  EditFilled,
+  PlusOutlined,
+} from "@ant-design/icons";
 
 export default function AllQuestions() {
   const { getExam } = useContext(ExamsContext);
@@ -31,13 +36,20 @@ export default function AllQuestions() {
         <ul>
           {q.list.map((choice) => (
             <li>
-              {"-> " +
-                choice.option +
-                (choice.correctness === "true" ? " ✔" : "")}
+              <CaretRightOutlined />
+              {choice.option + (choice.correctness === "true" ? " ✔" : "")}
             </li>
           ))}
           <br />
-          <Button type="primary">EDIT</Button> &nbsp;&nbsp;&nbsp;
+          <Button
+            icon={<EditFilled />}
+            type="primary"
+            ghost
+            style={{ color: "#faad14" }}
+          >
+            EDIT
+          </Button>{" "}
+          &nbsp;&nbsp;&nbsp;
           <ConfirmModal
             examID={window.location.pathname.split("/")[2]}
             questionID={questions.indexOf(q)}
@@ -49,26 +61,21 @@ export default function AllQuestions() {
 
   return (
     <>
-      <div
-        style={{
-          marginTop: "50px",
-        }}
-      >
-        <center>
-          <Link
-            href={`/exam-questions/new/${
-              window.location.pathname.split("/")[2]
-            }`}
-          >
-            <Button type="primary">ADD</Button>
-          </Link>
-        </center>
-        <br />
+      <div>
         {questions.length !== 0 ? (
-          <Collapse items={questions} />
+          <Collapse
+            items={questions}
+            style={{ marginLeft: "50px", marginRight: "50px" }}
+          />
         ) : (
-          <div>No questions found!</div>
+          <div style={{ marginLeft: "50px" }}>No questions found!</div>
         )}
+        <FloatButton
+          icon={<PlusOutlined />}
+          type="primary"
+          style={{ height: "50px", width: "50px" }}
+          href={`/exam-questions/new/${window.location.pathname.split("/")[2]}`}
+        />
       </div>
     </>
   );
