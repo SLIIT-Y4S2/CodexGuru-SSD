@@ -3,14 +3,16 @@ import { ForumContext } from "@/context/ForumProvider";
 import { ForumContextType } from "@/types/ForumTypes";
 import { Form, Input } from "antd";
 import React, { useContext } from "react";
+// import { useEditor, EditorContent } from "@tiptap/react";
+// import StarterKit from "@tiptap/starter-kit";
 
 const AddAnswer = ({ questionId }: { questionId: string }) => {
   const { Item: FormItem } = Form;
   const { postAnswer } = useContext(ForumContext) as ForumContextType;
   const [form] = Form.useForm();
+
   return (
     <div>
-      AddAnswer
       <div className="">
         <Form
           layout="vertical"
@@ -26,13 +28,13 @@ const AddAnswer = ({ questionId }: { questionId: string }) => {
           }}
         >
           <FormItem
-            label="answer"
             name="answer"
             rules={[
               { required: true, message: "Please input your answer first!" },
             ]}
           >
-            <Input type="text" />
+            {/* <CustomInput /> */}
+            <Input.TextArea />
           </FormItem>
           <FormItem>
             <button
@@ -49,3 +51,26 @@ const AddAnswer = ({ questionId }: { questionId: string }) => {
 };
 
 export default AddAnswer;
+
+// interface MyInputProps {
+//   value: number;
+//   onChange: (e: any) => void;
+// }
+// const CustomInput: FC<MyInputProps> = ({ value, onChange }: MyInputProps) => {
+//   const editor = useEditor({
+//     extensions: [StarterKit],
+//     content: "<p>Hello World! 🌎️</p>",
+//   });
+//   console.log("content", editor ? editor?.getText() : "");
+//   return (
+//     <>
+//       <EditorContent
+//         editor={editor}
+//         onChange={(e) => {
+//           onChange(e);
+//         }}
+//         value={value}
+//       />
+//     </>
+//   );
+// };

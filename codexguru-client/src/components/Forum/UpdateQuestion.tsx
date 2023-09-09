@@ -5,6 +5,7 @@ import React, { useContext } from "react";
 import { Form, Input, Button, Checkbox } from "antd";
 import { ForumContext } from "@/context/ForumProvider";
 import { ForumContextType, Question } from "@/types/ForumTypes";
+import { EditFilled } from "@ant-design/icons";
 
 const UpdateQuestion = ({ question }: { question: Question }) => {
   const { Item: FormItem } = Form;
@@ -33,10 +34,11 @@ const UpdateQuestion = ({ question }: { question: Question }) => {
   return (
     <div>
       <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        className=" hover:bg-gray-100 hover:text-yellow-400 font-bold py-2 px-4 rounded-full text-xl"
         onClick={showModal}
+        title="Edit Question"
       >
-        Edit Question
+        <EditFilled />
       </button>
       {isModalOpen ? (
         <>

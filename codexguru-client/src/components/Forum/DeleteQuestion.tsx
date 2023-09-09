@@ -1,6 +1,7 @@
 "use client";
 import { ForumContext } from "@/context/ForumProvider";
 import { ForumContextType } from "@/types/ForumTypes";
+import { DeleteFilled, EditFilled } from "@ant-design/icons";
 import { Form, Input, Modal } from "antd";
 import React, { useContext, useState } from "react";
 
@@ -25,14 +26,13 @@ const DeleteQuestion = ({ questionId }: { questionId: string }) => {
     });
   }
   return (
-    <>
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={showConfirm}
-      >
-        Delete
-      </button>
-    </>
+    <button
+      className=" hover:bg-gray-200 hover:text-red-400 font-bold py-2 px-4 rounded-full text-xl"
+      onClick={showConfirm}
+      title="Delete Question"
+    >
+      <DeleteFilled />
+    </button>
   );
 };
 
