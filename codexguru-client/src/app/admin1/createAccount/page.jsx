@@ -9,7 +9,7 @@ const AccountCreationForm = () => {
   const [registrationNumberExists, setRegistrationNumberExists] = useState(false);
 
   const [form] = useForm();
-  
+
   const [formValues, setFormValues] = useState({
     userRegNo: '',
     firstName: '',

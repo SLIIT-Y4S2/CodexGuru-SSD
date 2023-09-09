@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Table, Button, Popconfirm, Modal, Form, Input, Select } from 'antd';
+import { Table, Button, Popconfirm, Modal, Form, Input, Select, Spin } from 'antd';
 import { Empty } from 'antd';
 import { message } from 'antd';
 
@@ -153,7 +153,11 @@ export default function UserList({userRole}) {
 
     return (
         <>
-            {allUsers.length === 0 ? (
+            {loading ? (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
+                    <Spin tip="Loading..." />
+                </div>
+            ) : allUsers.length === 0 ? (
                 <Empty />
             ) : (
                 <Table
@@ -161,7 +165,6 @@ export default function UserList({userRole}) {
                     dataSource={allUsers}
                     loading={loading}
                     pagination={{ pageSize: 5 }}
-                // style={{ width: '80%', height: '400px' }}
                 />
             )}
             <Modal

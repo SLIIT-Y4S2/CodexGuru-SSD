@@ -54,6 +54,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/v1/questions", examQuestionRoutes);
 app.use("/api/v1/exams", examRoutes);
 app.use("/api/v1/results", examResultRoutes);
+app.use("/api/v1/users",userRoutes);
 /**api route  */
 app.use('/api/v1/compilations', compilationRoutes);
 
