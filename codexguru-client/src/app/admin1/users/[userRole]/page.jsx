@@ -4,7 +4,7 @@ import React from 'react'
 export default function page({params}) {
   return (
     <div>
-      {params.userRole}
+      {/* {params.userRole} */}
       <UserList userRole={params.userRole}/>
     </div>
   )
