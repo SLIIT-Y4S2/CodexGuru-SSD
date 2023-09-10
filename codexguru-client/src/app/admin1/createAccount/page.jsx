@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Form, Input, Button, Select, notification } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 const { Option } = Select;
@@ -112,7 +112,7 @@ const AccountCreationForm = () => {
     >
       <Form.Item
         name="userRegNo"
-        label="Student Registration Number"
+        label="Registration Number"
         rules={[
           {
             required: true,
@@ -185,7 +185,7 @@ const AccountCreationForm = () => {
         </Select>
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-        <Button style={{ marginTop: 50 }} type="primary" htmlType="submit" loading={loading}>
+        <Button style={{ marginTop: 50 }} className='bg-custom-site-color' type="primary" htmlType="submit" loading={loading}>
           Create Account
         </Button>
       </Form.Item>

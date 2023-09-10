@@ -19,7 +19,7 @@ const ForumQuestionRow = ({ question }: Params) => {
       }}
     >
       <h3 className="text-3xl">{question.title}</h3>
-      <p>{question.description}</p>
+      <p>{question.description.slice(0,80)}</p>
       <p>Answers({question.answers.length})</p>
       <div className="flex justify-end">
         <span>
