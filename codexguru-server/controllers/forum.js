@@ -232,3 +232,32 @@ export const updateAnswer = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+/**
+ * @route   PUT /api/forum/answers/:answerId/approveAnswer
+ * @desc    Approve an answer
+ * @access  Private
+ * @param   answerId
+ * @return  {Object} answer
+ */
+
+export const approveAnswer = async (req, res) => {
+  try {
+    const answer = await ForumAnswer.findById(req.params.answerId);
+    const { markedAsSolution } = req.body;
+    if (!answer) throw new Error("No answer found for this id");
+    // authenticate user is the author of the answer
+    if (req.role !== "instructor")
+      throw new Error("You are not authorized to approve this answer");
+    answer.markedAsSolution = !markedAsSolution;
+    await answer.save();
+    const populatedAnswer = await ForumAnswer.findById(answer._id).populate({
+      path: "author",
+      select: "firstName lastName",
+    });
+
+    res.status(200).json(populatedAnswer);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

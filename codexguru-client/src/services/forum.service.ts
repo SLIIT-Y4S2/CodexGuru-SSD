@@ -71,4 +71,15 @@ export class ForumServices {
       .then((res) => {
         return res.data;
       });
+
+  approveAnswer = (answerId: string, markedAsSolution: boolean) =>
+    this.instance
+      .put(
+        `/forum/answers/${answerId}/approveAnswer`,
+        { markedAsSolution },
+        this.headerObj
+      )
+      .then((res) => {
+        return res.data;
+      });
 }
