@@ -5,7 +5,6 @@ import { useContext } from "react";
 import { DeleteFilled, ExclamationCircleFilled } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 const { confirm } = Modal;
-import { ExamQuestionsContext } from "@/app/context/ExamQuestionsContext";
 import { ExamsContext } from "@/app/context/ExamsContext";
 
 export default function ConfirmModal({ examID, questionID }) {
@@ -13,9 +12,10 @@ export default function ConfirmModal({ examID, questionID }) {
 
   const showDeleteConfirm = () => {
     confirm({
-      title: "Are you sure you want to delete this question?",
-      icon: <ExclamationCircleFilled />,
-      content: "This action is permanant. Are you sure?",
+      title: "Are you sure you?",
+      icon: <ExclamationCircleFilled style={{ color: "#ff7875" }} />,
+      content:
+        "This action is permanant. Are you sure you want to delete this question?",
       okText: "Yes",
       okType: "danger",
       cancelText: "No",
@@ -29,5 +29,9 @@ export default function ConfirmModal({ examID, questionID }) {
     });
   };
 
-  return <Button icon={<DeleteFilled />} onClick={showDeleteConfirm}></Button>;
+  return (
+    <Button icon={<DeleteFilled />} ghost danger onClick={showDeleteConfirm}>
+      Delete
+    </Button>
+  );
 }

@@ -36,8 +36,13 @@ export default function StartExamPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [actualPwd, setActualPwd] = useState("");
+  const [validPwd, setValidPwd] = useState(false);
 
-  const [validPwd, setValidPwd] = useState(null);
+  // State variable to hold the exam questions
+  const [examQuestions, setExamQuestions] = useState([]);
+
+  // State variable to hold exam duartion in seconds
+  const [durationSecs, setDurationSecs] = useState(0);
 
   let exam;
 
@@ -48,26 +53,76 @@ export default function StartExamPage() {
       setTitle(exam.title);
       setDescription(exam.description);
       setActualPwd(exam.password);
+      setExamQuestions(exam.questionsList);
+
+      const totSecs =
+        exam.duration.split(":")[0] * 3600 +
+        exam.duration.split(":")[1] * 60 +
+        exam.duration.split(":")[2] * 1;
+
+      setDurationSecs(totSecs);
     }
 
     fetchData();
   }, []);
 
   if (validPwd === true) {
-    return <ExamTemplate />;
+    return (
+      <ExamTemplate examQuestions={examQuestions} examDuration={durationSecs} />
+    );
   }
 
   return (
-    <center>
+    <center
+      style={{
+        marginTop: "3%",
+      }}
+    >
       <Card
+        hoverable
         title={title}
         bordered={false}
-        style={{ width: 300 }}
         style={{
           width: "50%",
         }}
       >
-        <div>{description}</div> <br />
+        <div style={{ textAlign: "left" }}>{description}</div> <br />
+        <ol
+          style={{
+            fontWeight: "bold",
+            color: "red",
+            alignSelf: "start",
+            listStyleType: "number",
+            textAlign: "left",
+          }}
+        >
+          Important !
+          <li
+            style={{
+              fontWeight: "normal",
+              color: "red",
+            }}
+          >
+            There is only 1 attempt for the exam
+          </li>
+          <li
+            style={{
+              fontWeight: "normal",
+              color: "red",
+            }}
+          >
+            Do not refresh the browser as all your progress will be lost
+          </li>
+          <li
+            style={{
+              fontWeight: "normal",
+              color: "red",
+            }}
+          >
+            Your answers will be submitted automatically when the time exceeds
+          </li>
+        </ol>
+        <br /> <br />
         <Input
           type="password"
           placeholder="Enter password"
@@ -78,8 +133,14 @@ export default function StartExamPage() {
         <br />
         <Button
           onClick={() => {
-            setValidPwd(verifyPassword(pwd, actualPwd));
+            if (actualPwd !== pwd) {
+              alert("Password incorrect!");
+            } else {
+              setValidPwd(true);
+            }
           }}
+          ghost
+          type="primary"
         >
           ATTEMPT
         </Button>
