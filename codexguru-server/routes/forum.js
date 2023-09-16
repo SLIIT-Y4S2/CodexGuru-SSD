@@ -7,6 +7,7 @@ import {
   getForumQuestions,
   updateAnswer,
   updateQuestion,
+  approveAnswer,
 } from "../controllers/forum.js";
 
 const router = express.Router();
@@ -18,5 +19,6 @@ router.delete("/questions/:questionId/deleteQuestion", deleteQuestion);
 router.delete("/questions/:questionId/answers/:answerId", deleteAnswer);
 router.put("/questions/:questionId/updateQuestion", updateQuestion);
 router.put("/answers/:answerId/updateAnswer", updateAnswer);
+router.put("/answers/:answerId/approveAnswer", approveAnswer);
 
 export default router;

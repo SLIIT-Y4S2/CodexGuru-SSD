@@ -12,6 +12,7 @@ export interface Question {
 export interface Answer {
   _id: string;
   description: string;
+  markedAsSolution: boolean;
   createdAt: string;
   updatedAt: string;
   author: Author;
@@ -50,4 +51,5 @@ export interface ForumContextType {
     answerId: string,
     answer: { description: string }
   ) => Promise<void>;
+  approveAnswer: (answerId: string, markedAsSolution: boolean) => Promise<void>;
 }

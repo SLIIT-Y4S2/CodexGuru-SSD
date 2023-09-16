@@ -183,6 +183,38 @@ const ForumProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const approveAnswer = async (
+    // questionId: string,
+    answerId: string,
+    markedAsSolution: boolean
+  ) => {
+    if (session?.user.token === undefined) return;
+    try {
+      const response = await forumService(session.user.token).approveAnswer(
+        answerId,
+        markedAsSolution
+      );
+      setQuestions((prev) =>
+        prev.map((question) => {
+          if (question._id === selectedQuestionId) {
+            return {
+              ...question,
+              answers: question.answers.map((a) => {
+                if (a._id === response._id) {
+                  return response;
+                }
+                return a;
+              }),
+            };
+          }
+          return question;
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Provider
       value={{
@@ -198,6 +230,7 @@ const ForumProvider = ({ children }: { children: React.ReactNode }) => {
         deleteAnswer,
         updateQuestion,
         updateAnswer,
+        approveAnswer,
       }}
     >
       {children}

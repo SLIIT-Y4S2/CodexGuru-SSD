@@ -4,10 +4,10 @@ import { ForumContext } from "@/context/ForumProvider";
 import { ForumContextType } from "@/types/ForumTypes";
 import AddAnswer from "./AddAnswer";
 import { useSession } from "next-auth/react";
-import DeleteQuestion from "./DeleteQuestion";
-import DeleteAnswer from "./DeleteAnswer";
-import UpdateQuestion from "./UpdateQuestion";
-import UpdateAnswer from "./UpdateAnswer";
+// import DeleteQuestion from "./DeleteQuestion";
+// import DeleteAnswer from "./DeleteAnswer";
+// import UpdateQuestion from "./UpdateQuestion";
+// import UpdateAnswer from "./UpdateAnswer";
 import MDEditor from "@uiw/react-md-editor";
 import {
   ArrowLeftOutlined,
@@ -16,13 +16,14 @@ import {
 } from "@ant-design/icons";
 import { Dropdown, MenuProps } from "antd";
 import { formatRelative } from "date-fns";
+import { tr } from "date-fns/locale";
 
 const QuestionView = () => {
   const {
     questions,
     selectedQuestionId,
     setSelectedQuestionId,
-    deleteQuestion,
+    approveAnswer,
   } = useContext(ForumContext) as ForumContextType;
 
   const { data: session, status } = useSession();
@@ -58,20 +59,6 @@ const QuestionView = () => {
         >
           <ArrowLeftOutlined />
         </button>
-        {question.author._id == session.user.id.toString() && (
-          // <Dropdown
-          //   menu={{
-          //     items: menuItems,
-          //   }}
-          //   trigger={["click"]}
-          // >
-          //   <MoreOutlined />
-          // </Dropdown>
-          <div className="flex">
-            <DeleteQuestion questionId={question._id} />
-            <UpdateQuestion question={question} />
-          </div>
-        )}
       </div>
       <h3 className="text-4xl font-medium">{question.title}</h3>
       <div className="flex gap-8">
@@ -104,26 +91,34 @@ const QuestionView = () => {
         <AddAnswer questionId={question._id} />
         {question.answers.map((answer, index) => (
           <div
-            className="flex flex-col border-2 my-1 p-2"
             key={index}
+            className="flex flex-col border-2 my-1 p-2"
             data-color-mode="light"
           >
-            {answer.author?._id == session.user.id.toString() && (
-              <div className="flex justify-end">
-                <DeleteAnswer questionId={question._id} answerId={answer._id} />
-                <UpdateAnswer questionId={question._id} answer={answer} />
-              </div>
+            {answer.markedAsSolution ? (
+              <button
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded w-48"
+                onClick={() => {
+                  approveAnswer(answer._id, true);
+                }}
+              >
+                Remove Approve
+              </button>
+            ) : (
+              <button
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-1 rounded w-48"
+                onClick={() => {
+                  approveAnswer(answer._id, false);
+                }}
+              >
+                Approve
+              </button>
             )}
             <div>
               <MDEditor.Markdown source={answer.description} />
               {/* {answer.description} */}
             </div>
-            <div className="flex justify-between">
-              <div>
-                {answer.markedAsSolution && (
-                  <span className="text-green-500">Marked As Solution</span>
-                )}
-              </div>
+            <div className="flex justify-end">
               <span>
                 {answer.author?.firstName} {answer.author?.lastName}
               </span>

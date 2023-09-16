@@ -30,6 +30,8 @@ export default NextAuth({
             password: credentials?.password,
           }),
         });
+        if (res.status !== 200) return null;
+
         const user = await res.json();
 
         if (user) {

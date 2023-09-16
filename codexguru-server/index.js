@@ -61,9 +61,6 @@ app.use("/api/v1/compilations", compilationRoutes);
 app.use("/api/v1/ai-chat-responses", aiChatRoutes);
 
 //TODO: testing routes
-app.get("/", (req, res) => {
-  res.send("Hello World! NO Authorization required");
-});
 
 app.get("/api/student", verifyToken, (req, res) => {
   res.json({

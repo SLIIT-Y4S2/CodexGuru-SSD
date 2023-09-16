@@ -27,7 +27,7 @@ const Login = () => {
 
   const onFinish = async (values: any) => {
     try {
-      signIn("credentials", {
+      await signIn("credentials", {
         userRegNo: values.userRegNo,
         password: values.password,
         callbackUrl: searchParams?.get("callbackUrl") || "/",
@@ -76,6 +76,7 @@ const Login = () => {
             Submit
           </Button>
         </Item>
+        {searchParams?.get("error")}
       </Form>
     </div>
   );
