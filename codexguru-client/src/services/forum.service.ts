@@ -20,9 +20,7 @@ export class ForumServices {
   getForum = (labId: string) =>
     this.instance
       .get(`/forum/${labId}`, this.headerObj)
-      .then((res) => {
-        return res.data;
-      })
+      .then((res) => res.data)
       .catch((err) => {
         throw new Error(err.message);
       });
@@ -37,40 +35,48 @@ export class ForumServices {
   ) =>
     this.instance
       .post(`/forum/${labId}/addQuestion`, data, this.headerObj)
-      .then((res) => {
-        return res.data;
+      .then((res) => res.data)
+      .catch((err) => {
+        throw new Error(err.message);
       });
 
   // create answer
   postAnswer = (questionId: string, data: any) =>
     this.instance
       .post(`/forum/questions/${questionId}/addAnswer`, data, this.headerObj)
-      .then((res) => {
-        return res.data;
+      .then((res) => res.data)
+      .catch((err) => {
+        throw new Error(err.message);
       });
+
   deleteQuestion = (id: string) =>
     this.instance
       .delete(`/forum/questions/${id}/deleteQuestion`, this.headerObj)
-      .then((res) => {
-        return res.data;
+      .then((res) => res.data)
+      .catch((err) => {
+        throw new Error(err.message);
       });
+
   deleteAnswer = (id: string, answerId: string) =>
-    this.instance.delete(
-      `/forum/questions/${id}/answers/${answerId}`,
-      this.headerObj
-    );
+    this.instance
+      .delete(`/forum/questions/${id}/answers/${answerId}`, this.headerObj)
+      .then((res) => res.data)
+      .catch((err) => {
+        throw new Error(err.message);
+      });
+
   updateQuestion = (id: string, data: any) =>
     this.instance
       .put(`/forum/questions/${id}/updateQuestion`, data, this.headerObj)
-      .then((res) => {
-        return res.data;
+      .then((res) => res.data)
+      .catch((err) => {
+        throw new Error(err.message);
       });
+
   updateAnswer = (answerId: string, data: any) =>
     this.instance
       .put(`/forum/answers/${answerId}/updateAnswer`, data, this.headerObj)
-      .then((res) => {
-        return res.data;
-      });
+      .then((res) => res.data);
 
   approveAnswer = (answerId: string, markedAsSolution: boolean) =>
     this.instance
@@ -79,7 +85,26 @@ export class ForumServices {
         { markedAsSolution },
         this.headerObj
       )
-      .then((res) => {
-        return res.data;
+      .then((res) => res.data);
+
+  voteQuestion = (
+    questionId: string,
+    vote: "upvote" | "downvote" | "unvote"
+  ) => {
+    return this.instance
+      .put(`/forum/questions/${questionId}/${vote}`, {}, this.headerObj)
+      .then((res) => res.data)
+      .catch((err) => {
+        throw new Error(err.message);
       });
+  };
+
+  voteAnswer = (answerId: string, vote: "upvote" | "downvote" | "unvote") => {
+    return this.instance
+      .put(`/forum/answers/${answerId}/${vote}`, {}, this.headerObj)
+      .then((res) => res.data)
+      .catch((err) => {
+        throw new Error(err.message);
+      });
+  };
 }

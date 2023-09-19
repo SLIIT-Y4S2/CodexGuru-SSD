@@ -14,7 +14,7 @@ const ForumMain = ({ labId }: { labId: string }) => {
     setLabId(labId);
   }, [labId, setLabId]);
 
-  if (isLoading) return <div>loading</div>;
+  if (isLoading && questions.length == 0) return <div>loading</div>;
   if (error) return <div>{JSON.stringify(error)}</div>;
 
   return (

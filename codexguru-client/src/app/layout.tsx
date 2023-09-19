@@ -9,7 +9,7 @@ import AuthProvider from "./AuthProvider";
 import { LabProvider } from "@/context/LabProvider";
 import { ExamsProvider } from "./context/ExamsContext";
 import { ExamQuestionsProvider } from "./context/ExamQuestionsContext";
-import { ConfigProvider } from "antd";
+import { App, ConfigProvider } from "antd";
 import theme from "@/theme/themeConfig";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,22 +26,26 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>
-          <LabProvider>
-            <ExamsProvider>
-              <StyledComponentsRegistry>
-                <ExamQuestionsProvider>
-                  <ConfigProvider theme={theme}>
-                    <main>
-                      <Header />
-                      {children}
-                    </main>
-                  </ConfigProvider>
-                </ExamQuestionsProvider>
-              </StyledComponentsRegistry>
-            </ExamsProvider>
-          </LabProvider>
-        </AuthProvider>
+        <StyledComponentsRegistry>
+          <ConfigProvider theme={theme}>
+            <App>
+              <AuthProvider>
+                <LabProvider>
+                  <ExamsProvider>
+                    <ExamQuestionsProvider>
+                      <main>
+                        <Header />
+                        <div className="bg-[#f5f5f5] h-[calc(100vh-64px)] w-full overflow-auto">
+                          {children}
+                        </div>
+                      </main>
+                    </ExamQuestionsProvider>
+                  </ExamsProvider>
+                </LabProvider>
+              </AuthProvider>
+            </App>
+          </ConfigProvider>
+        </StyledComponentsRegistry>
       </body>
     </html>
   );

@@ -261,3 +261,121 @@ export const approveAnswer = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+/**
+ * @route   PUT /api/forum/questions/:questionId/upvote
+ * @desc    Upvote a question
+ * @access  Private
+ * @param   questionId
+ * @return  {Object} question
+ * @errors  500 { error: "Server error" }
+ *        404 { error: "No question found for this id" }
+ *       400 { error: "You cannot vote for your own question" }
+ *      400 { error: "You cannot vote twice for the same question" }
+ *    200 { question: {...} }
+ * @notes   vote = 1
+ *         vote = 0 to remove vote
+ *        vote = -1
+ */
+
+export const upvoteQuestion = async (req, res) => {
+  try {
+    const question = await ForumQuestion.findById(req.params.questionId);
+    await question.vote(req.user, 1);
+    res.status(200).json(question);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/**
+ * @route   PUT /api/forum/questions/:questionId/downvote
+ * @desc    Downvote a question
+ * @access  Private
+ * @param   questionId
+ * @return  {Object} question
+ */
+
+export const downvoteQuestion = async (req, res) => {
+  try {
+    const question = await ForumQuestion.findById(req.params.questionId);
+    await question.vote(req.user, -1);
+    res.status(200).json(question);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/**
+ * @route   PUT /api/forum/questions/:questionId/unvote
+ * @desc    Unvote a question
+ * @access  Private
+ * @param   questionId
+ * @return  {Object} question
+ */
+
+export const unvoteQuestion = async (req, res) => {
+  try {
+    const question = await ForumQuestion.findById(req.params.questionId);
+    await question.vote(req.user, 0);
+    res.status(200).json(question);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/**
+ * @route   PUT /api/forum/answers/:answerId/upvote
+ * @desc    Upvote an answer
+ * @access  Private
+ * @param   answerId
+ * @return  {Object} answer
+ */
+
+export const upvoteAnswer = async (req, res) => {
+  try {
+    const answer = await ForumAnswer.findById(req.params.answerId);
+    await answer.vote(req.user, 1);
+    res.status(200).json(answer);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/**
+ * @route   PUT /api/forum/answers/:answerId/downvote
+ * @desc    Downvote an answer
+ * @access  Private
+ * @param   answerId
+ * @return  {Object} answer
+ * @errors  500 { error: "Server error" }
+ */
+
+export const downvoteAnswer = async (req, res) => {
+  try {
+    const answer = await ForumAnswer.findById(req.params.answerId);
+    await answer.vote(req.user, -1);
+    res.status(200).json(answer);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/**
+ * @route   PUT /api/forum/answers/:answerId/unvote
+ * @desc    Unvote an answer
+ * @access  Private
+ * @param   answerId
+ * @return  {Object} answer
+ * @errors  500 { error: "Server error" }
+ */
+
+export const unvoteAnswer = async (req, res) => {
+  try {
+    const answer = await ForumAnswer.findById(req.params.answerId);
+    await answer.vote(req.user, 0);
+    res.status(200).json(answer);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

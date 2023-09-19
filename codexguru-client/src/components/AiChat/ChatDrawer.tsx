@@ -1,14 +1,11 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Button, Drawer } from "antd";
 import Chat from "./Chat";
 import MessageInput from "./MessageInput";
 import { RobotOutlined } from "@ant-design/icons";
-import IAiChatContext from "@/interfaces/IAiChatContext";
-import { AIChatContext } from "@/context/AIChatContext";
 
 const ChatDrawer: React.FC = () => {
-  const aiChatCtx = useContext<IAiChatContext | null>(AIChatContext);
-  const { isOpen, showDrawer, onClose } = aiChatCtx!;
+  const [isOpened, setIsOpened] = useState<boolean>(false);
 
   return (
     <>
@@ -16,25 +13,24 @@ const ChatDrawer: React.FC = () => {
         <Drawer
           title="CODEXGURU"
           placement="right"
-          onClose={onClose}
-          open={isOpen}
+          onClose={() => setIsOpened(false)}
+          open={isOpened}
           width={720}
         >
-          <div className="h-full grid grid-rows-3 grid-flow-col gap-4">
-            <div className="row-span-3 h-5/6 chat">
-              <Chat />
-              <div className="row-start-3 fixed  h-12 w-full mx-auto pt-6 pb-20 bg-white bottom-5 ">
-                <MessageInput />
-              </div>
-            </div>
+          <div className="flex flex-col justify-between h-full">
+            <Chat />
+            <MessageInput />
           </div>
         </Drawer>
       </div>
       <div className="h-1/2 top-0 right-0 absolute">
         <Button
           type="primary"
-          onClick={showDrawer}
-          className="h-full bg-[#FFAE00] rounded-none"
+          onClick={() => setIsOpened(true)}
+          style={{
+            height: "100%",
+            borderRadius: "1rem 0 0 1rem",
+          }}
           icon={<RobotOutlined />}
         />
       </div>

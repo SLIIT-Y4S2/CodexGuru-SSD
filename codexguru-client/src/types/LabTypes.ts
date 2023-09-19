@@ -10,4 +10,5 @@ export interface Lab {
 
 export interface LabContextType {
   labs: Lab[];
+  loading: boolean;
 }

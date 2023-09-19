@@ -4,9 +4,6 @@ import {
   CalculatorOutlined,
   CodeOutlined,
   HomeOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, MenuProps, theme } from "antd";
 import Link from "next/link";
