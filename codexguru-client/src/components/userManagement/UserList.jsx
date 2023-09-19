@@ -7,7 +7,7 @@ import { message } from 'antd';
 
 const { Option } = Select;
 
-export default function UserList({userRole}) {
+export default function UserList({ userRole }) {
     const [allUsers, setAllUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [editModalVisible, setEditModalVisible] = useState(false);
@@ -66,10 +66,11 @@ export default function UserList({userRole}) {
                         onConfirm={() => handleDelete(record._id)}
                         okText="Yes"
                         cancelText="No"
+                        okButtonProps={{className: "bg-custom-site-color"}}
                     >
                         <Button type="text" danger style={{ marginRight: 20 }}>Delete</Button>
                     </Popconfirm>
-                    <Button type="primary" onClick={() => handleEdit(record)}>Edit</Button>
+                    <Button type="primary" className="bg-custom-site-color" onClick={() => handleEdit(record)}>Edit</Button>
                 </span>
             ),
         },
@@ -84,31 +85,31 @@ export default function UserList({userRole}) {
 
     const handleDelete = async (_id) => {
         try {
-            
+
             const res = await fetch(`http://localhost:5000/api/v1/users/${_id}`, {
                 method: 'DELETE',
             });
-    
+
             if (res.ok) {
                 // If the delete request was successful, remove the user from the state
                 setAllUsers((prevUsers) => prevUsers.filter((user) => user._id !== _id));
-                
+
                 // Display a success message
                 message.success('User deleted successfully');
             } else {
                 console.error('Failed to delete user:', res.status, res.statusText);
-    
+
                 // Display an error message
                 message.error('Failed to delete user');
             }
         } catch (error) {
             console.error('An error occurred:', error);
-    
+
             // Display an error message
             message.error('An error occurred while deleting user');
         }
     };
-    
+
 
     const handleEditModalOk = () => {
         form.validateFields().then((values) => {
@@ -119,31 +120,31 @@ export default function UserList({userRole}) {
                 },
                 body: JSON.stringify(values),
             })
-            .then((response) => {
-                if (response.ok) {
-                    // Update the user's data in the state
-                    setAllUsers((prevUsers) =>
-                        prevUsers.map((user) =>
-                            user._id === editedUserData._id ? { ...user, ...values } : user
-                        )
-                    );
-                    setEditModalVisible(false);
-    
-                    // Display a success message
-                    message.success('User updated successfully');
-                } else {
-                    console.error('Failed to update user:', response.status, response.statusText);
-    
+                .then((response) => {
+                    if (response.ok) {
+                        // Update the user's data in the state
+                        setAllUsers((prevUsers) =>
+                            prevUsers.map((user) =>
+                                user._id === editedUserData._id ? { ...user, ...values } : user
+                            )
+                        );
+                        setEditModalVisible(false);
+
+                        // Display a success message
+                        message.success('User updated successfully');
+                    } else {
+                        console.error('Failed to update user:', response.status, response.statusText);
+
+                        // Display an error message
+                        message.error('Failed to update user');
+                    }
+                })
+                .catch((error) => {
+                    console.error('An error occurred:', error);
+
                     // Display an error message
-                    message.error('Failed to update user');
-                }
-            })
-            .catch((error) => {
-                console.error('An error occurred:', error);
-    
-                // Display an error message
-                message.error('An error occurred while updating user');
-            });
+                    message.error('An error occurred while updating user');
+                });
         });
     };
 
@@ -168,14 +169,15 @@ export default function UserList({userRole}) {
                 />
             )}
             <Modal
-            
+
                 title="Edit User"
                 visible={editModalVisible}
                 onOk={handleEditModalOk}
                 onCancel={handleEditModalCancel}
-                
+                okButtonProps={{ className: "bg-custom-site-color" }}
+
             >
-                <Form form={form} layout="vertical" style={{height:400}}>
+                <Form form={form} layout="vertical" style={{ height: 400 }}>
                     <Form.Item
                         name="userRegNo"
                         label="User Reg number"
