@@ -43,6 +43,7 @@ const DeleteAnswer = ({
       onConfirm={deleteAnswerAsync}
       okText="Yes"
       cancelText="No"
+      okButtonProps={{ className: "bg-custom-site-color" }}
     >
       <Button
         type="text"
