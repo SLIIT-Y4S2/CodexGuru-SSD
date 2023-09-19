@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext } from "react";
 import { Select, Space } from "antd";
-import supportedLanguages from "@/contants/supportedLanguages";
+import supportedLanguages from "@/constants/supportedLanguages";
 import ICodeEditorContext from "@/interfaces/ICodeContext";
 import { CodeEditorContext } from "@/context/CodeEditorContext";
 

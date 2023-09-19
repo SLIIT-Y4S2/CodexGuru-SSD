@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { Monaco } from "@monaco-editor/react";
 import { CodeEditorContext } from "@/context/CodeEditorContext";
 import ICodeEditorContext from "@/interfaces/ICodeContext";
-import COMMON from "@/contants/common";
+import COMMON from "@/constants/common";
 import dynamic from "next/dynamic";
 
 const Editor = dynamic(() => import("@monaco-editor/react"), { ssr: false });

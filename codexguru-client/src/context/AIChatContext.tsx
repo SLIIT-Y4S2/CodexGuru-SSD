@@ -1,5 +1,5 @@
 "use client";
-import PATHS from "@/contants/paths";
+import PATHS from "@/constants/paths";
 import IAiChatContext from "@/interfaces/IAiChatContext";
 import IChildProps from "@/interfaces/IChildProps";
 import IMessage from "@/interfaces/IMessage";
