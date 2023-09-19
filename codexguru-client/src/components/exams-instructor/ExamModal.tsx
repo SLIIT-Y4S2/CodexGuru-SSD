@@ -3,8 +3,14 @@
  */
 import React, { useContext, useState } from "react";
 import { Button, Modal, Switch } from "antd";
-import { EyeFilled } from "@ant-design/icons";
+import {
+  ArrowRightOutlined,
+  CloseOutlined,
+  EyeFilled,
+  InfoCircleFilled,
+} from "@ant-design/icons";
 import { ExamsContext } from "@/app/context/ExamsContext";
+import Link from "next/link";
 
 export default function ExamModal({ examData }) {
   const caption = examData.code + " - " + examData.title;
@@ -16,12 +22,13 @@ export default function ExamModal({ examData }) {
   return (
     <>
       <Button
-        type="primary"
-        // onClick={() => setOpen(true)}
         onClick={() => {
           Modal.info({
+            icon: <InfoCircleFilled style={{ color: "#faad14" }} />,
+            mask: true,
+            okType: "default",
             centered: true,
-            width: "1200px",
+            width: "fit-content",
             title: caption,
             content: (
               <>
@@ -29,59 +36,78 @@ export default function ExamModal({ examData }) {
                   <p style={{ fontWeight: "bold" }}>Status</p>
                   <Switch
                     defaultChecked={isActive}
-                    // defaultChecked={isActive}
-                    onChange={() => {
-                      setIsActive(!isActive);
+                    onChange={(e) => {
+                      setIsActive(e);
+                      updateExamStatus(examData.id, e);
                     }}
                   />
                 </div>
                 <br />
-                <div style={{ display: "flex", gap: "93px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "70px",
+                  }}
+                >
                   <div>
                     <p style={{ fontWeight: "bold" }}>Year</p>
-                    <p>{examData.year}</p>
+                    <p style={{ textAlign: "center" }}>{examData.year}</p>
                   </div>
                   <div>
                     <p style={{ fontWeight: "bold" }}>Semester</p>
-                    <p>{examData.semester}</p>
+                    <p style={{ textAlign: "center" }}>{examData.semester}</p>
                   </div>
                   <div>
                     <p style={{ fontWeight: "bold" }}>No.of questions</p>
-                    <p>{examData.noOfQuestions}</p>
+                    <p style={{ textAlign: "center" }}>
+                      {examData.noOfQuestions}
+                    </p>
                   </div>
                   <div>
                     <p style={{ fontWeight: "bold" }}>Pass Mark</p>
-                    <p>{examData.passMark}</p>
+                    <p style={{ textAlign: "center" }}>{examData.passMark}</p>
                   </div>
                   <div>
                     <p style={{ fontWeight: "bold" }}>Duration</p>
-                    <p>{examData.duration}</p>
+                    <p style={{ textAlign: "center" }}>{examData.duration}</p>
                   </div>
                   <div>
                     <p style={{ fontWeight: "bold" }}>Exam Password </p>
-                    <p>{examData.password}</p>
+                    <p style={{ textAlign: "center" }}>{examData.password}</p>
                   </div>
                   <div>
                     <p style={{ fontWeight: "bold" }}>Created Date</p>
-                    <p>{examData.createdDate.toString().split("T")[0]}</p>
+                    <p style={{ textAlign: "center" }}>
+                      {examData.createdDate.toString().split("T")[0]}
+                    </p>
                   </div>
                 </div>
                 <div>
-                  {" "}
                   <br />
-                  <p style={{ fontWeight: "bold" }}>Instructions</p>
-                  <p>{examData.description}</p>
-                </div>{" "}
+                  <div style={{ fontWeight: "bold" }}>Instructions</div>
+                  <div>{examData.description}</div>
+                </div>
+
+                <br />
+                <Button
+                  icon={<ArrowRightOutlined />}
+                  type="primary"
+                  ghost
+                  href={`/exam-questions/${examData.id}`}
+                >
+                  See Questions
+                </Button>
               </>
             ),
-            onOk() {
-              updateExamStatus(examData.id, examData, !isActive);
-            },
+            // onOk() {},
           });
         }}
-        style={{ justifyContent: "center" }}
+        icon={<EyeFilled />}
+        ghost
+        type="primary"
       >
-        <EyeFilled height={100} width={100} />
+        View
       </Button>
     </>
   );

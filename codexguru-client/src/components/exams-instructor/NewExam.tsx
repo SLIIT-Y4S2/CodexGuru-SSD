@@ -3,11 +3,20 @@
  */
 "use client";
 import React, { useContext } from "react";
-import { Button, Form, Input, InputNumber, Select, TimePicker } from "antd";
+import {
+  Button,
+  Card,
+  Form,
+  Input,
+  InputNumber,
+  Select,
+  TimePicker,
+} from "antd";
 import { ExamsContext } from "@/app/context/ExamsContext";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import Meta from "antd/es/card/Meta";
 
 dayjs.extend(customParseFormat);
 
@@ -38,123 +47,142 @@ const NewExam: React.FC = () => {
   };
 
   return (
-    <center>
-      <Form
-        onFinish={() =>
-          createExam({
-            code: moduleCode,
-            title: examTitle,
-            description: description,
-            year: year,
-            semester: semester,
-            duration: duration,
-            passMark: passMark,
-            password: password,
-          })
-        }
-        // {...formItemLayout}
-        style={{ maxWidth: 600, marginTop: "50px" }}
-      >
-        <Form.Item>
-          <Input
-            placeholder="Module code"
-            required
-            onChange={(e) => setModuleCode(e.target.value)}
-          />
-        </Form.Item>
-        <Form.Item hasFeedback validateStatus="success">
-          <Input
-            placeholder="Exam title"
-            id="success"
-            required
-            onChange={(e) => setExamTitle(e.target.value)}
-          />
-        </Form.Item>
-
-        <Form.Item hasFeedback>
-          <Input.TextArea
-            placeholder="Enter any rules and information about the exam"
-            id="success"
-            allowClear
-            autoSize
-            required
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </Form.Item>
-        <Form.Item>
-          <div
-            style={{
-              display: "flex",
-              gap: "50px",
+    <>
+      <center>
+        <Card
+          hoverable
+          style={{
+            width: "50%",
+            border: "1px solid #ffd666",
+          }}
+        >
+          <Form
+            onFinish={() => {
+              createExam({
+                code: moduleCode,
+                title: examTitle,
+                description: description,
+                year: year,
+                semester: semester,
+                duration: duration,
+                passMark: passMark,
+                password: password,
+              });
             }}
+            style={{ maxWidth: "fit-content", marginTop: "20px" }}
           >
-            <Select
-              defaultValue={1}
-              style={{ width: "50%" }}
-              options={[
-                { value: 1, label: "Year 1" },
-                { value: 2, label: "Year 2" },
-                { value: 3, label: "Year 3" },
-                { value: 4, label: "Year 4" },
-              ]}
-              onChange={(e: any) => {
-                setYear(e);
-              }}
-            />
-            <Select
-              defaultValue={1}
-              style={{ width: "50%" }}
-              options={[
-                { value: 1, label: "Semester 1" },
-                { value: 2, label: "Semester  2" },
-              ]}
-              onChange={(e: any) => {
-                setSemester(e);
-              }}
-            />
-          </div>
-        </Form.Item>
+            <div style={{ display: "flex", gap: "20px" }}>
+              <Form.Item>
+                <Input
+                  placeholder="Module code"
+                  required
+                  onChange={(e) => setModuleCode(e.target.value)}
+                />
+              </Form.Item>
+              <Form.Item hasFeedback>
+                <Input
+                  placeholder="Exam title"
+                  required
+                  onChange={(e) => setExamTitle(e.target.value)}
+                />
+              </Form.Item>
 
-        <Form.Item hasFeedback validateStatus="">
-          <InputNumber
-            placeholder="Pass mark"
-            id="success"
-            style={{ width: "100%" }}
-            required
-            onChange={(e: any) => {
-              setPassMark(e);
-            }}
-          />
-        </Form.Item>
-        <Form.Item hasFeedback validateStatus="">
-          <Input
-            placeholder="Exam password"
-            required
-            onChange={(e: any) => setPassword(e.target.value)}
-          />
-        </Form.Item>
+              <Form.Item className="w-[205px]">
+                <TimePicker
+                  defaultValue={dayjs("00:00:00", "HH:mm:ss")}
+                  onChange={(e) => {
+                    const hrs = e.$H ? e.$H : "00";
+                    const mins = e.$m ? e.$m : "00";
+                    const secs = e.$s ? e.$s : "00";
 
-        <Form.Item>
-          <TimePicker
-            defaultValue={dayjs("00:00:00", "HH:mm:ss")}
-            onChange={(e) => {
-              // console.log(dayjs("4:15:05", "HH:mm:ss"));
-              const hrs = e.$H ? e.$H : "00";
-              const mins = e.$m ? e.$m : "00";
-              const secs = e.$s ? e.$s : "00";
+                    setDuration(`${hrs}:${mins}:${secs}`);
+                  }}
+                  format="HH:mm:ss"
+                  style={{ width: "100%" }}
+                  allowClear={false}
+                  placeholder="Duration"
+                />
+              </Form.Item>
+            </div>
 
-              setDuration(`${hrs}:${mins}:${secs}`);
-            }}
-            format="HH:mm:ss"
-            style={{ width: "100%" }}
-          />
-        </Form.Item>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "25px" }}>
+                <Form.Item className="w-[90px]">
+                  <Select
+                    defaultValue={1}
+                    options={[
+                      { value: 1, label: "Y1" },
+                      { value: 2, label: "Y2" },
+                      { value: 3, label: "Y3" },
+                      { value: 4, label: "Y4" },
+                    ]}
+                    onChange={(e: any) => {
+                      setYear(e);
+                    }}
+                  />
+                </Form.Item>
+                <Form.Item className="w-[90px]">
+                  <Select
+                    defaultValue={1}
+                    options={[
+                      { value: 1, label: "S1" },
+                      { value: 2, label: "S2" },
+                    ]}
+                    onChange={(e: any) => {
+                      setSemester(e);
+                    }}
+                  />
+                </Form.Item>
+              </div>
 
-        <Button type="primary" size="large" htmlType="submit">
-          ADD
-        </Button>
-      </Form>
-    </center>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "20px",
+                }}
+              >
+                <Form.Item hasFeedback validateStatus="" className="w-[206px]">
+                  <Input
+                    placeholder="Exam password"
+                    required
+                    onChange={(e: any) => setPassword(e.target.value)}
+                  />
+                </Form.Item>
+                <Form.Item hasFeedback validateStatus="" className="w-[206px]">
+                  <InputNumber
+                    placeholder="Pass mark"
+                    id="success"
+                    style={{ width: "100%" }}
+                    required
+                    onChange={(e: any) => {
+                      setPassMark(e);
+                    }}
+                  />
+                </Form.Item>
+              </div>
+            </div>
+
+            <Form.Item hasFeedback>
+              <Input.TextArea
+                placeholder="Enter any rules and information about the exam"
+                id="success"
+                allowClear
+                autoSize
+                required
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </Form.Item>
+
+            <Button type="primary" ghost size="large" htmlType="submit">
+              ADD
+            </Button>
+          </Form>
+        </Card>
+      </center>
+
+      <center></center>
+    </>
   );
 };
 

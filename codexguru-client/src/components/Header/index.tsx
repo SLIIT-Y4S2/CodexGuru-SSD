@@ -3,6 +3,7 @@ import React from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { Button } from "antd";
 
 const Header = () => {
   const { data: session } = useSession();
@@ -23,16 +24,18 @@ const Header = () => {
       >
         <h1 className=" text-4xl font-bold p-2 cursor-pointer">CodexGuru</h1>
       </Link>
-      <div className="flex justify-center align-middle gap-2">
+      <div className="flex justify-center items-center gap-2">
         <p className="text-yellow-50">
           {session?.user?.firstName} {session?.user?.lastName}
         </p>
         {!session && (
           <Link href="login">
-            <button>Sign in</button>
+            <Button type="primary">Sign in</Button>
           </Link>
         )}
-        <button onClick={() => signOut()}>Sign out</button>
+        <Button type="primary" onClick={() => signOut()}>
+          Sign out
+        </Button>
       </div>
     </div>
   );

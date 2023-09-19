@@ -12,9 +12,44 @@ export function validateQuesForm(quesObjs) {
 
     for (const question of questionsArray) {
         if (question.hasOwnProperty("list") === false) {
-            formStatus = false;
+            return false;
         }
     }
 
     return formStatus;
+}
+// Function to format the exam questions
+export function formatQuestions(questionsList) {
+    let choices = [];
+    let correctAnswer;
+    let question;
+    let quizData = [];
+
+    let tempChoices = [];
+
+    for (const q of questionsList) {
+        question = q.name;
+
+        for (let choice of q.list) {
+            // Store the choices of each question in "choices" array
+            tempChoices.push(choice.option);
+
+            if (choice.correctness === "true") {
+                correctAnswer = choice.option;
+            }
+        }
+
+        // Push the formatted question data to "quizData" array
+        quizData.push({
+            question,
+            choices: choices.concat(tempChoices),
+            correctAnswer
+        })
+
+        // Clear tempChoices;
+        tempChoices = [];
+    }
+
+    // Return quizData
+    return quizData;
 }
