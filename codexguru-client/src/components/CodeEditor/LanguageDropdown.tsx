@@ -1,9 +1,9 @@
 'use client';
 import React, { useContext } from 'react';
 import { Select, Space } from 'antd';
-import supportedLanuages from '@/CONSTANTS/supportedLanuages';
 import ICodeEditorContext from '@/interfaces/ICodeContext';
 import { CodeEditorContext } from '@/context/CodeEditorContext';
+import supportedLanguages from '@/constants/supportedLanguages';
 
 const items = supportedLanguages.map((language) => {
   return { value: language.id, label: language.name };

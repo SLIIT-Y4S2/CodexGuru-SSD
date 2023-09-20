@@ -1,5 +1,5 @@
 'use client';
-import PATHS from "@/CONSTANTS/paths";
+import PATHS from '@/constants/paths';
 import IAiChatContext from "@/interfaces/IAiChatContext";
 import IChildProps from "@/interfaces/IChildProps";
 import IMessage from "@/interfaces/IMessage";
@@ -24,6 +24,8 @@ const AIChatContextProvider = ({ children }: IChildProps) => {
 
     //* This function is used to set the message list and the length of the message list
     const setMessageListHandler = (message: IMessage) => {
+        console.log(message);
+
 
         setMessageListLength((prevState) => prevState + 1);
 
@@ -45,7 +47,6 @@ const AIChatContextProvider = ({ children }: IChildProps) => {
 
     useEffect(() => {
         const sendMessageHandler = () => {
-
             //* set the current message
             setIsWaitingForReplyHandler();
             setIsError(false);
