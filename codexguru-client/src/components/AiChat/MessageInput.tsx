@@ -8,11 +8,13 @@ import TextArea from "antd/es/input/TextArea";
 const MessageInput: React.FC = () => {
     const [message, setMessage] = useState('');
     const aiChatCtx = useContext<IAiChatContext | null>(AIChatContext);
-    const { isWaitingForReply, messageListLength, sendMessageHandler } = aiChatCtx!;
+    const { isWaitingForReply, messageListLength, setMessageListHandler } = aiChatCtx!;
 
 
-    const messageHandler = (message: string) => {
-        if (message.trim() === '') return;
+    const messageHandler = () => {
+        if (message.trim() === '') {
+            return;
+        }
         const newMessage: IMessage = {
             text: message,
             isUser: true,
@@ -20,19 +22,27 @@ const MessageInput: React.FC = () => {
             id: messageListLength + 1
         }
         setMessage('');
-        sendMessageHandler(newMessage);
+        setMessageListHandler(newMessage);
     }
     return (
         <>
             <TextArea
+                placeholder="Autosize height based on content lines"
+                autoSize
+                className="w-160"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                maxLength={2500}
+            />
+            {/* <TextArea
                 rows={1}
                 className="w-160"
                 placeholder="Enter your message here"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 maxLength={2500}
-            />
-            {isWaitingForReply ? <Button type="primary" icon={<PoweroffOutlined />} loading /> : <Button icon={<SendOutlined size={10} />} onClick={() => messageHandler(message)} />}
+            /> */}
+            {isWaitingForReply ? <Button type="primary" icon={<PoweroffOutlined />} loading /> : <Button icon={<SendOutlined size={10} />} onClick={messageHandler} />}
 
         </>
     )

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Monaco } from "@monaco-editor/react";
 import { CodeEditorContext } from "@/context/CodeEditorContext";
 import ICodeEditorContext from "@/interfaces/ICodeContext";
@@ -10,7 +10,9 @@ const Editor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 const CodeEditor: React.FC = () => {
 
     const codeEditorCtx = useContext<ICodeEditorContext | null>(CodeEditorContext);
-    const { setSourceCodeHandler, languageValue, theme } = codeEditorCtx!;
+    const { setSourceCodeHandler, languageValue, theme, sourceCode } = codeEditorCtx!;
+
+    useEffect(() => { }, [sourceCode]);
 
     //* get current value of the editor
     function handleEditorChange(value: string | undefined, event: Object) {
@@ -47,7 +49,7 @@ const CodeEditor: React.FC = () => {
                 beforeMount={handleEditorWillMount}
                 onValidate={handleEditorValidation}
                 language={languageValue}
-
+                value={sourceCode}
             />
         </div>
     );

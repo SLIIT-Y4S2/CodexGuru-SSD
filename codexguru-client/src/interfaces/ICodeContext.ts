@@ -1,6 +1,8 @@
 import ICompileOutput from "./ICompileOutput";
 
 export default interface ICodeEditorContext {
+    sourceCode: string;
+    isWaitingForReply: boolean;
     isCompiling: boolean;
     languageId: number;
     languageName: string;
@@ -13,4 +15,5 @@ export default interface ICodeEditorContext {
     setThemeHandler: (isLight: boolean) => void;
     setStdinHandler: (stdin: string) => void;
     handleCompile: () => void;
+    onAICommentorButtonClick: () => void;
 }

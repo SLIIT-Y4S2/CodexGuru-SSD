@@ -11,7 +11,6 @@ const openAiApiHandler = async (messages) => {
         model: "gpt-3.5-turbo",
     });
 
-    console.log(await chatCompletion);
     return chatCompletion;
 }
 

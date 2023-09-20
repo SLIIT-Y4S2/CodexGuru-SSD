@@ -1,8 +1,9 @@
 import express from "express";
-import { getAiChatResponse } from "../controllers/aiChatController.js";
+import { getAICommentorRespose, getAiChatResponse } from "../controllers/aiChatController.js";
 
 const router = express.Router();
 
 router.post("/", getAiChatResponse);
+router.post("/commentor", getAICommentorRespose);
 
 export default router;
