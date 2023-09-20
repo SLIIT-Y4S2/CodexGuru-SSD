@@ -85,32 +85,7 @@ a {
   background: #555;
 }
 
-.chat-bubble {
-  overflow: auto;
-}
 
-/* width */
-.chat-bubble::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-/* Track */
-.chat-bubble::-webkit-scrollbar-track {
-  background: #848484;
-  border-radius: 5px;
-}
-
-/* Handle */
-.chat-bubble::-webkit-scrollbar-thumb {
-  background: #161616;
-  border-radius: 5px;
-}
-
-/* Handle on hover */
-.chat-bubble::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
 
 :root {
   --foreground-rgb: 0, 0, 0;

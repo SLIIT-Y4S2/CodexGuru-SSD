@@ -14,7 +14,6 @@ const getAiChatResponse = async (req, res) => {
 
     //* get the messages from the request body
     const { messages } = req.body;
-    console.log(messages);
     //* check if the messages length is greater than 0 and not null
     if (messages && messages.length > 0) {
         //* create a message list with the system prompt
@@ -31,16 +30,18 @@ const getAiChatResponse = async (req, res) => {
             }
         });
 
-        const responseFromOpenAi = await openAiApiHandler(messageList);
+        await openAiApiHandler(messageList).then((response) => {
+            const responseFromServer = {
+                currentTime: new Date().toISOString(),
+                isUser: false,
+                text: response.choices[0].message.content,
+            }
 
+            return res.status(HttpStatusCode.Created).send(responseFromServer);
+        }).catch((error) => {
+            return res.status(HttpStatusCode.TooManyRequests).send({ message: error.error })
+        });
 
-        const responseFromServer = {
-            currentTime: new Date().toISOString(),
-            isUser: false,
-            text: responseFromOpenAi.choices[0].message.content,
-        }
-
-        return res.status(HttpStatusCode.Created).send(responseFromServer);
     }
     else {
         return res.status(HttpStatusCode.BadRequest).send("Invalid Request");

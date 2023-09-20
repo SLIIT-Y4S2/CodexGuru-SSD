@@ -5,5 +5,7 @@ export default interface IAiChatContext {
     messageList: IMessage[];
     setMessageListHandler: (message: IMessage) => void;
     messageListLength: number;
+    isError: boolean;
+    errorMessage: string;
 }
 

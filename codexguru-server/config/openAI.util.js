@@ -6,14 +6,31 @@ const openAiApiHandler = async (messages) => {
         apiKey: APIKEYS.OPENAI_API_KEY,
     });
 
-    const chatCompletion = await openai.chat.completions.create({
-        messages: messages,
-        model: "gpt-3.5-turbo",
+    // try {
+    //     const chatCompletion = await openai.chat.completions.create({
+    //         messages: messages,
+    //         model: "gpt-3.5-turbo",
+    //     });
+
+    //     return chatCompletion;
+    // } catch (error) {
+    //     console.log(error);
+    // }
+
+
+    return new Promise((resolve, reject) => {
+        try {
+            const chatCompletion = openai.chat.completions.create({
+                messages: messages,
+                model: "gpt-3.5-turbo",
+            });
+
+            resolve(chatCompletion);
+        } catch (error) {
+            reject(error);
+            console.log(error);
+        }
     });
-
-    return chatCompletion;
 }
-
-
 
 export { openAiApiHandler };

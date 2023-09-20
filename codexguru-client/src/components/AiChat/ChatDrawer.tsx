@@ -30,7 +30,7 @@ const ChatDrawer: React.FC = () => {
           <div className="h-full grid grid-rows-3 grid-flow-col gap-4">
             <div className="row-span-3 h-5/6 chat">
               <Chat />
-              <div className="row-start-3 fixed  h-12 max-h-40 w-full mx-auto pt-6 pb-14 bg-white bottom-5">
+              <div className="row-start-3 fixed h-12 w-full mx-auto pt-6 pb-20 bg-white bottom-5 ">
                 <MessageInput />
               </div>
             </div>

@@ -13,9 +13,11 @@ export const AIChatContext = createContext<IAiChatContext | null>(null);
 //* Context Provider for AI Chat
 const AIChatContextProvider = ({ children }: IChildProps) => {
     //* State variables for AI Chat
-    const [messageList, setMessageList] = useState<IMessage[]>([]);
+    const [messageList, setMessageList] = useState<IMessage[]>(localStorage.getItem('aiChat') === null ? [] : JSON.parse(localStorage.getItem('aiChat')!));
     const [isWaitingForReply, setIsWaitingForReply] = useState<boolean>(false);
     const [messageListLength, setMessageListLength] = useState<number>(0);
+    const [isError, setIsError] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>('');
 
     const setIsWaitingForReplyHandler = () => {
         setIsWaitingForReply(prevState => !prevState);
@@ -23,8 +25,20 @@ const AIChatContextProvider = ({ children }: IChildProps) => {
 
     //* This function is used to set the message list and the length of the message list
     const setMessageListHandler = (message: IMessage) => {
-        setMessageList((prevState) => [...prevState, message]);
+
         setMessageListLength((prevState) => prevState + 1);
+
+        //* Set the message list in the local storage 
+        if (localStorage.getItem('aiChat') === null) {
+            localStorage.setItem('aiChat', JSON.stringify(messageList));
+
+            setMessageList((prevState) => [...prevState, message]);
+        } else {
+            const localStorageData = JSON.parse(localStorage.getItem('aiChat')!);
+            localStorageData.push(message);
+            localStorage.setItem('aiChat', JSON.stringify(localStorageData));
+            setMessageList((prevState) => [...prevState, message]);
+        }
     };
 
     //* This function is used to send the message to the backend
@@ -35,6 +49,7 @@ const AIChatContextProvider = ({ children }: IChildProps) => {
 
             //* set the current message
             setIsWaitingForReplyHandler();
+            setIsError(false);
 
 
             //* Request body for the AI Chat
@@ -58,16 +73,19 @@ const AIChatContextProvider = ({ children }: IChildProps) => {
                         timestamp: res.data.currentTime,
                         id: messageList.length + 1
                     }
-
                     setMessageListHandler(newMessage);
-
                 })
                 .catch((err) => {
-                    console.log(err);
+                    setIsError(true);
+                    setErrorMessage(err.response.data.message.code);
                 })
                 .finally(() => {
                     //* set the isWaitingForReply to false
                     setIsWaitingForReplyHandler();
+                    setTimeout(() => {
+                        setIsError(false);
+                        setErrorMessage('');
+                    }, 4000);
                 });
         };
 
@@ -78,7 +96,7 @@ const AIChatContextProvider = ({ children }: IChildProps) => {
 
 
     return (
-        <AIChatContext.Provider value={{ messageListLength, isWaitingForReply, messageList, setMessageListHandler }}>
+        <AIChatContext.Provider value={{ errorMessage, isError, messageListLength, isWaitingForReply, messageList, setMessageListHandler }}>
             {children}
         </AIChatContext.Provider>
     )
