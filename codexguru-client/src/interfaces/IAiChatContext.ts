@@ -8,4 +8,3 @@ export default interface IAiChatContext {
     isError: boolean;
     errorMessage: string;
 }
-

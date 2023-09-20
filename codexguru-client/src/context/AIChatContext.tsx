@@ -1,11 +1,10 @@
 'use client';
-import PATHS from "@/CONSTANTS/PATHS";
+import PATHS from "@/CONSTANTS/paths";
 import IAiChatContext from "@/interfaces/IAiChatContext";
 import IChildProps from "@/interfaces/IChildProps";
 import IMessage from "@/interfaces/IMessage";
 import axios from "axios";
-import { set } from "date-fns";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 
 //* Context for AI Chat
 export const AIChatContext = createContext<IAiChatContext | null>(null);

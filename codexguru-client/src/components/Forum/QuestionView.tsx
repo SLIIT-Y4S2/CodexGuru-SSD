@@ -14,8 +14,10 @@ import {
   DeleteFilled,
   MoreOutlined,
 } from "@ant-design/icons";
-import { Dropdown, MenuProps } from "antd";
+import { Avatar, Button, Divider, Dropdown, MenuProps, Radio } from "antd";
 import { formatRelative } from "date-fns";
+import VoteContainer from "./VoteContainer";
+import ForumAnswerRow from "./ForumAnswerRow";
 
 const QuestionView = () => {
   const {
@@ -35,102 +37,123 @@ const QuestionView = () => {
     return <div>not selected</div>;
   }
 
-  // const menuItems: MenuProps["items"] = [
-  //   {
-  //     key: "1",
-  //     label: <DeleteQuestion questionId={question._id} />,
-  //   },
-  //   {
-  //     key: "2",
-  //     label: <UpdateQuestion question={question} />,
-  //   },
-  // ];
   if (status === "loading" || !session?.user) return <>loading</>;
   return (
-    <div className="">
-      <div className="flex justify-between align-middle">
-        <button
-          className=" hover:bg-gray-100  font-bold py-2 px-4 rounded-full text-xl"
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center">
+        <div
           onClick={() => {
             setSelectedQuestionId(undefined);
           }}
-          title="Back to Questions"
+          className="flex items-center gap-2 cursor-pointer"
         >
-          <ArrowLeftOutlined />
-        </button>
-        {question.author._id == session.user.id.toString() && (
-          // <Dropdown
-          //   menu={{
-          //     items: menuItems,
-          //   }}
-          //   trigger={["click"]}
-          // >
-          //   <MoreOutlined />
-          // </Dropdown>
-          <div className="flex">
-            <DeleteQuestion questionId={question._id} />
-            <UpdateQuestion question={question} />
-          </div>
-        )}
+          <Button
+            type="text"
+            shape="circle"
+            icon={<ArrowLeftOutlined />}
+            title="Back to questions"
+          />
+          <p className="text-xl font-medium ml-2">Back to questions</p>
+        </div>
       </div>
-      <h3 className="text-4xl font-medium">{question.title}</h3>
-      <div className="flex gap-8">
-        <p>
-          <span className="text-gray-600">Asked</span>{" "}
-          {formatRelative(new Date(question.createdAt), new Date())}
-        </p>
-        <p>
-          <span className="text-gray-600">Modified</span>{" "}
-          {formatRelative(new Date(question.updatedAt), new Date())}
-        </p>
-        <p>
-          <span className="text-gray-600">Viewed</span> {question.views}
-        </p>
-      </div>
-
-      <div className="my-4" data-color-mode="light">
-        <MDEditor.Markdown source={question.description} />
-
-        {/* {question.description} */}
-      </div>
-      <div className="flex justify-end">
-        <span>
-          <span className="text-gray-600">Asked by</span>{" "}
-          {question.author?.firstName} {question?.author.lastName}
-        </span>
-      </div>
-      <div className="flex flex-col ">
-        <h4 className="text-2xl"> Answers ({question.answers.length})</h4>
-        <AddAnswer questionId={question._id} />
-        {question.answers.map((answer, index) => (
-          <div
-            className="flex flex-col border-2 my-1 p-2"
-            key={index}
-            data-color-mode="light"
-          >
-            {answer.author?._id == session.user.id.toString() && (
-              <div className="flex justify-end">
-                <DeleteAnswer questionId={question._id} answerId={answer._id} />
-                <UpdateAnswer questionId={question._id} answer={answer} />
-              </div>
-            )}
-            <div>
-              <MDEditor.Markdown source={answer.description} />
-              {/* {answer.description} */}
-            </div>
-            <div className="flex justify-between">
-              <div>
-                {answer.markedAsSolution && (
-                  <span className="text-green-500">Marked As Solution</span>
+      <div className="bg-white py-4 px-2 rounded-lg shadow-md flex gap-4 flex-col">
+        <div className="flex gap-4 w-full">
+          <VoteContainer
+            score={question.score}
+            votes={question.votes}
+            questionId={question._id}
+          />
+          <div className="flex flex-col w-full h-full gap-2 ">
+            <h3 className="text-2xl font-semibold underline">
+              {question.title}
+            </h3>
+            <Divider className="my-0 border-gray-300" />
+            <div className="flex flex-col">
+              <div className="flex justify-between">
+                <div>
+                  {/* <span className="text-gray-600">Asked by:</span>{" "} */}
+                  <Avatar
+                    className="mr-2"
+                    size="large"
+                    style={{ backgroundColor: "#fde3cf", color: "#f56a00" }}
+                  >
+                    {question.author?.firstName.slice(0, 1)}
+                    {question?.author.lastName.slice(0, 1)}
+                  </Avatar>
+                  <p className="inline-block font-semibold text-lg">
+                    {question.author?.firstName} {question?.author.lastName}
+                  </p>
+                  {question.author?._id == session.user.id && (
+                    <span className="text-gray-400"> (You)</span>
+                  )}
+                </div>
+                {question.author._id == session.user.id && (
+                  <div className="flex gap-2">
+                    <DeleteQuestion questionId={question._id} />
+                    <UpdateQuestion question={question} />
+                  </div>
                 )}
               </div>
-              <span>
-                {answer.author?.firstName} {answer.author?.lastName}
-              </span>
+
+              <div className="flex gap-4">
+                <p>
+                  <span className="text-gray-600">Asked</span>{" "}
+                  {formatRelative(new Date(question.createdAt), new Date())}
+                </p>
+                <p>
+                  <span className="text-gray-600">Modified</span>{" "}
+                  {formatRelative(new Date(question.updatedAt), new Date())}
+                </p>
+                <p>
+                  <span className="text-gray-600">Views</span> {question.views}
+                </p>
+              </div>
             </div>
           </div>
-        ))}
+        </div>
+        <Divider className="my-0 border-gray-300" />
+
+        <div data-color-mode="light">
+          <MDEditor.Markdown
+            className="code-color-change"
+            source={question.description}
+            style={{
+              padding: "0.5rem",
+            }}
+          />
+        </div>
       </div>
+      {question.answers.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-between">
+            <h4 className="text-2xl font-bold inline-block">
+              Answers ({question.answers.length})
+            </h4>
+            <Radio.Group
+              options={[
+                { label: "Sort by votes", value: "votes" },
+                { label: "Sort by date", value: "date" },
+              ]}
+              // onChange={onChange4}
+              // value={value4}
+              defaultValue={"votes"}
+              optionType="button"
+              buttonStyle="solid"
+            />
+          </div>
+          <div className="flex flex-col gap-4">
+            {question.answers.map((answer) => (
+              <ForumAnswerRow
+                key={answer._id}
+                answer={answer}
+                questionId={question._id}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      <AddAnswer questionId={question._id} />
     </div>
   );
 };

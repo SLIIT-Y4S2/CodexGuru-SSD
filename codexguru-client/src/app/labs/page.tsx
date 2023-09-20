@@ -8,7 +8,7 @@ const Lab = () => {
   const { labs } = useContext(LabContext) as LabContextType;
 
   return (
-    <div className="mx-auto max-w-screen-xl p-3 flex flex-col gap-4 h-screen">
+    <div className="mx-auto max-w-screen-xl p-3 flex flex-col gap-4 h-full">
       <h3 className="text-4xl">Lab Sessions</h3>
       <div className="flex">
         <ul className="flex flex-col gap-4 w-1/5">

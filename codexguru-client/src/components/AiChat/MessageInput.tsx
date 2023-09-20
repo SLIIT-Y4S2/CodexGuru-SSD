@@ -1,53 +1,62 @@
 import { useContext, useState } from "react";
-import { PoweroffOutlined, SendOutlined } from "@ant-design/icons";
-import { Alert, Button, Input, Tooltip } from "antd";
+import { SendOutlined } from "@ant-design/icons";
+import { Alert, Button, Form, Input, Tooltip, Row } from "antd";
 import { AIChatContext } from "@/context/AIChatContext";
 import IAiChatContext from "@/interfaces/IAiChatContext";
-import IMessage from "@/interfaces/IMessage";
 import TextArea from "antd/es/input/TextArea";
+import { useForm } from "antd/es/form/Form";
 const MessageInput: React.FC = () => {
     const [message, setMessage] = useState('');
     const aiChatCtx = useContext<IAiChatContext | null>(AIChatContext);
     const { isWaitingForReply, messageListLength, setMessageListHandler, isError, errorMessage } = aiChatCtx!;
 
+  const [form] = useForm();
 
-    const messageHandler = () => {
-        if (message.trim() === '') {
-            return;
-        }
-        const newMessage: IMessage = {
-            text: message,
+  return (
+    <Form
+      form={form}
+      onFinish={(values) => {
+        setMessageList((prev) => [
+          ...prev,
+          {
+            text: values.message,
             isUser: true,
             timestamp: new Date().toLocaleDateString(),
-            id: messageListLength + 1
-        }
-        setMessage('');
-        setMessageListHandler(newMessage);
-    }
-    return (
-        <>
-            <TextArea
-                placeholder="Enter your message here"
-                autoSize
-                className="w-160"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                maxLength={2500}
-            />
-            {/* <TextArea
-                rows={1}
-                className="w-160"
-                placeholder="Enter your message here"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                maxLength={2500}
-            /> */}
-            {isWaitingForReply ? <Button type="primary" icon={<PoweroffOutlined />} loading /> : <Button icon={<SendOutlined size={10} />} onClick={messageHandler} />}
-            {isError && <Alert message={errorMessage} type="error" showIcon closable />}
-
-
-        </>
-    )
+            id: messageList.length + 1,
+          },
+        ]);
+        form.resetFields();
+      }}
+    >
+      <div className="flex justify-between items-start mt-4 gap-4">
+        <Form.Item
+          name="message"
+          rules={[
+            {
+              required: true,
+              message: "Please input your message!",
+              max: 1000, //TODO change this to what ever the max length of the message is
+            },
+          ]}
+          className="w-full"
+        >
+          <TextArea
+            placeholder="Enter your message here"
+            className="w-full"
+            autoSize
+          />
+        </Form.Item>
+        <Form.Item>
+          <Button
+            icon={<SendOutlined size={10} />}
+            type="primary"
+            loading={isWaitingForReply}
+            htmlType="submit"
+          />
+        </Form.Item>
+      </div>
+    </Form>
+  );
 };
 
 export default MessageInput;

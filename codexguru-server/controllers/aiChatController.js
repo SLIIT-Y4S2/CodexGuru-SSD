@@ -18,19 +18,17 @@ const getAiChatResponse = async (req, res) => {
     if (messages && messages.length > 0) {
         //* create a message list with the system prompt
         const messageList = [{ role: "system", content: Common.SYSTEM_PROMPT }];
-
         //* push the messages to the message list
-        messages[0].map((message) => {
-
+        messages.map((message) => {
             if (message.isUser === true) {
                 messageList.push({ role: "user", content: message.text });
-            }
-            else {
+            } else {
                 messageList.push({ role: "assistant", content: message.text });
             }
         });
 
         await openAiApiHandler(messageList).then((response) => {
+            console.log(response);
             const responseFromServer = {
                 currentTime: new Date().toISOString(),
                 isUser: false,
@@ -39,6 +37,7 @@ const getAiChatResponse = async (req, res) => {
 
             return res.status(HttpStatusCode.Created).send(responseFromServer);
         }).catch((error) => {
+            console.log(error);
             return res.status(HttpStatusCode.TooManyRequests).send({ message: error.error })
         });
 
@@ -48,7 +47,6 @@ const getAiChatResponse = async (req, res) => {
     }
 
 };
-
 
 /**
  * @description This function is used to get the ai commentor response from openai api

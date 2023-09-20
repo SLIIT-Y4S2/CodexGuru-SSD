@@ -7,12 +7,16 @@ export interface Question {
   author: Author;
   answers: Answer[];
   views: number;
+  votes: Vote[];
+  score: number;
 }
 
 export interface Answer {
   _id: string;
   description: string;
   markedAsSolution: boolean;
+  votes: Vote[];
+  score: number;
   createdAt: string;
   updatedAt: string;
   author: Author;
@@ -22,6 +26,10 @@ export interface Author {
   _id: string;
   firstName: string;
   lastName: string;
+}
+export interface Vote {
+  user: string;
+  vote: number;
 }
 export interface ForumContextType {
   isLoading: boolean;
@@ -52,4 +60,12 @@ export interface ForumContextType {
     answer: { description: string }
   ) => Promise<void>;
   approveAnswer: (answerId: string, markedAsSolution: boolean) => Promise<void>;
+  voteQuestion: (
+    questionId: string,
+    vote: "upvote" | "downvote" | "unvote"
+  ) => Promise<void>;
+  voteAnswer: (
+    answerId: string,
+    vote: "upvote" | "downvote" | "unvote"
+  ) => Promise<void>;
 }

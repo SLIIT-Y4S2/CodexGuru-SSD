@@ -2,9 +2,9 @@ import OpenAI from "openai";
 import APIKEYS from "../CONSTANTS/APIKeys.js";
 
 const openAiApiHandler = async (messages) => {
-    const openai = new OpenAI({
-        apiKey: APIKEYS.OPENAI_API_KEY,
-    });
+  const openai = new OpenAI({
+    apiKey: APIKEYS.OPENAI_API_KEY,
+  });
 
     // try {
     //     const chatCompletion = await openai.chat.completions.create({

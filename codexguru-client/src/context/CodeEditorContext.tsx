@@ -1,6 +1,6 @@
-import COMMON from "@/CONSTANTS/Common";
-import PATHS from "@/CONSTANTS/PATHS";
-import supportedLanuages from "@/CONSTANTS/supportedLanuages";
+import COMMON from "@/constants/common";
+import PATHS from "@/constants/paths";
+import supportedLanguages from "@/constants/supportedLanguages";
 import IChildProps from "@/interfaces/IChildProps";
 import ICodeEditorContext from "@/interfaces/ICodeContext";
 import ICompileOutput from "@/interfaces/ICompileOutput";
@@ -26,26 +26,32 @@ const CodeEditorContextProvider = ({ children }: IChildProps) => {
         setIsCompiling(prevState => !prevState);
     };
 
-    //* set the language id
-    const setLanguageHandler = (languageId: number) => {
-        setLanguageName(supportedLanuages.filter((language) => language.id === languageId)[0].name);
-        setLanguageValue(supportedLanuages.filter((language) => language.id === languageId)[0].value);
-        setLanguageId(languageId);
-    };
+  //* set the language id
+  const setLanguageHandler = (languageId: number) => {
+    setLanguageName(
+      supportedLanguages.filter((language) => language.id === languageId)[0]
+        .name
+    );
+    setLanguageValue(
+      supportedLanguages.filter((language) => language.id === languageId)[0]
+        .value
+    );
+    setLanguageId(languageId);
+  };
 
-    //* set the source code
-    const setSourceCodeHandler = (sourceCode: string) => {
-        setSourceCode(sourceCode);
-    };
-    //* set the stdin
-    const setStdinHandler = (stdin: string) => {
-        setStdin(stdin);
-    };
+  //* set the source code
+  const setSourceCodeHandler = (sourceCode: string) => {
+    setSourceCode(sourceCode);
+  };
+  //* set the stdin
+  const setStdinHandler = (stdin: string) => {
+    setStdin(stdin);
+  };
 
-    //* set the theme
-    const setThemeHandler = (isLight: boolean) => {
-        isLight ? setTheme(COMMON.LIGHT_THEME) : setTheme(COMMON.DEFAULT_THEME);
-    };
+  //* set the theme
+  const setThemeHandler = (isLight: boolean) => {
+    isLight ? setTheme(COMMON.LIGHT_THEME) : setTheme(COMMON.DEFAULT_THEME);
+  };
 
     //* handle the compile request
     const handleCompile = () => {

@@ -1,18 +1,21 @@
 "use client";
 import { ForumContext } from "@/context/ForumProvider";
 import { ForumContextType } from "@/types/ForumTypes";
-import { Form, Input } from "antd";
+import { Button, Form, Input } from "antd";
 import React, { useContext } from "react";
 import MDEditor from "@uiw/react-md-editor";
 
 const AddAnswer = ({ questionId }: { questionId: string }) => {
   const { Item: FormItem } = Form;
-  const { postAnswer } = useContext(ForumContext) as ForumContextType;
+  const { postAnswer, isLoading } = useContext(
+    ForumContext
+  ) as ForumContextType;
   const [form] = Form.useForm();
 
   return (
     <div>
-      <div className="">
+      <div className="flex flex-col gap-4">
+        <h4 className="text-2xl font-bold">Add Your Answer</h4>
         <Form
           layout="vertical"
           form={form}
@@ -33,16 +36,19 @@ const AddAnswer = ({ questionId }: { questionId: string }) => {
             ]}
             data-color-mode="light"
           >
-            {/* <Input.TextArea /> */}
             <MDEditor height={200} preview="edit" />
           </FormItem>
           <FormItem>
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              type="submit"
+            <Button
+              type="primary"
+              disabled={isLoading && form.getFieldValue("answer")}
+              htmlType="submit"
+              style={{
+                width: "100%",
+              }}
             >
-              Submit
-            </button>
+              Post Your Answer
+            </Button>
           </FormItem>
         </Form>
       </div>

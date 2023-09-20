@@ -2,7 +2,7 @@
 import { ForumContext } from "@/context/ForumProvider";
 import { ForumContextType } from "@/types/ForumTypes";
 import { DeleteFilled } from "@ant-design/icons";
-import { Form, Input, Modal, Popconfirm } from "antd";
+import { Button, Form, Input, Modal, Popconfirm } from "antd";
 import React, { useContext, useState } from "react";
 
 const DeleteAnswer = ({
@@ -45,12 +45,11 @@ const DeleteAnswer = ({
       cancelText="No"
       okButtonProps={{ className: "bg-custom-site-color" }}
     >
-      <button
-        className=" hover:bg-gray-100 hover:text-red-500 text-gray-500 font-bold py-2 px-4 rounded-full text-xl"
-        title="Delete Answer"
-      >
-        <DeleteFilled />
-      </button>
+      <Button
+        type="text"
+        shape="circle"
+        icon={<DeleteFilled className=" hover:text-red-500 text-xl" />}
+      />
     </Popconfirm>
   );
 };
