@@ -1,41 +1,64 @@
 import { useContext, useState } from "react";
-import { PoweroffOutlined, SendOutlined } from "@ant-design/icons";
-import { Button, Input, Tooltip } from "antd";
+import { SendOutlined } from "@ant-design/icons";
+import { Alert, Button, Form, Input, Tooltip, Row } from "antd";
 import { AIChatContext } from "@/context/AIChatContext";
 import IAiChatContext from "@/interfaces/IAiChatContext";
-import IMessage from "@/interfaces/IMessage";
 import TextArea from "antd/es/input/TextArea";
+import { useForm } from "antd/es/form/Form";
+import IMessage from "@/interfaces/IMessage";
 const MessageInput: React.FC = () => {
-    const [message, setMessage] = useState('');
     const aiChatCtx = useContext<IAiChatContext | null>(AIChatContext);
-    const { isWaitingForReply, messageListLength, sendMessageHandler } = aiChatCtx!;
+    const { isWaitingForReply, messageListLength, setMessageListHandler, isError, errorMessage } = aiChatCtx!;
 
+    const [form] = useForm();
 
-    const messageHandler = (message: string) => {
-        if (message.trim() === '') return;
-        const newMessage: IMessage = {
-            text: message,
-            isUser: true,
-            timestamp: new Date().toLocaleDateString(),
-            id: messageListLength + 1
-        }
-        setMessage('');
-        sendMessageHandler(newMessage);
-    }
     return (
-        <>
-            <TextArea
-                rows={1}
-                className="w-160"
-                placeholder="Enter your message here"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                maxLength={2500}
-            />
-            {isWaitingForReply ? <Button type="primary" icon={<PoweroffOutlined />} loading /> : <Button icon={<SendOutlined size={10} />} onClick={() => messageHandler(message)} />}
+        <Form
+            form={form}
+            onFinish={(values) => {
+                if (values.message.trim() === '') {
+                    return;
+                }
+                const newMessage: IMessage = {
+                    text: values.message,
+                    isUser: true,
+                    timestamp: new Date().toLocaleDateString(),
+                    id: messageListLength + 1
+                }
+                setMessageListHandler(newMessage);
 
-        </>
-    )
+                form.resetFields();
+            }}
+        >
+            <div className="flex justify-between items-start mt-4 gap-4">
+                <Form.Item
+                    name="message"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input your message!",
+                            max: 1000, //TODO change this to what ever the max length of the message is
+                        },
+                    ]}
+                    className="w-full"
+                >
+                    <TextArea
+                        placeholder="Enter your message here"
+                        className="w-full"
+                        autoSize
+                    />
+                </Form.Item>
+                <Form.Item>
+                    <Button
+                        icon={<SendOutlined size={10} />}
+                        type="primary"
+                        loading={isWaitingForReply}
+                        htmlType="submit"
+                    />
+                </Form.Item>
+            </div>
+        </Form>
+    );
 };
 
 export default MessageInput;

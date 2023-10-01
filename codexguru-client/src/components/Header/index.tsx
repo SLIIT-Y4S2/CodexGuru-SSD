@@ -12,7 +12,7 @@ const Header = () => {
   const hideHeader = pathname === "/login";
   if (hideHeader) return null;
   return (
-    <div className="bg-black text-white flex justify-between items-center">
+    <div className="bg-black text-white flex justify-between items-center h-16">
       <Link
         href={
           session?.user.role == "admin"

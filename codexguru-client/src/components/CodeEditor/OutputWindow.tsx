@@ -49,7 +49,7 @@ const OutputWindow = () => {
             <h1 className="font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-custom-black to-custom-blue-unkown mb-2">
                 Output
             </h1>
-            <div className="w-full h-56 bg-custom-black rounded-md text-custom-light-gray font-normal text-sm overflow-y-auto">
+            <div className="w-full h-56 bg-custom-black rounded-md text-custom-light-gray font-normal text-base overflow-y-auto p-4 ">
                 {consoleOutput ? <>{consoleOutput}</> : null}
             </div>
         </>

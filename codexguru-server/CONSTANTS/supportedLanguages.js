@@ -1,6 +1,4 @@
-import { Language } from "@/types/LanguagesType";
-
-const supportedLanuages: Language[] = [
+const supportedLanuages = [
     {
         id: 63,
         name: "JavaScript (Node.js 12.14.0)",

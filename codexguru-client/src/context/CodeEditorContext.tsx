@@ -1,6 +1,6 @@
-import COMMON from "@/CONSTANTS/Common";
-import PATHS from "@/CONSTANTS/Paths";
-import supportedLanuages from "@/CONSTANTS/supportedLanguages";
+import COMMON from "@/constants/common";
+import PATHS from "@/constants/paths";
+import supportedLanguages from "@/constants/supportedLanguages";
 import IChildProps from "@/interfaces/IChildProps";
 import ICodeEditorContext from "@/interfaces/ICodeContext";
 import ICompileOutput from "@/interfaces/ICompileOutput";
@@ -13,21 +13,22 @@ export const CodeEditorContext = createContext<ICodeEditorContext | null>(null);
 const CodeEditorContextProvider = ({ children }: IChildProps) => {
     const [sourceCode, setSourceCode] = useState<string>("");
     const [languageId, setLanguageId] = useState<number>(COMMON.DEFAULT_LANGUAGE_ID);
-    const [languageName, setLanguageName] = useState<string>(supportedLanuages.filter((language) => language.id === languageId)[0].name);
-    const [languageValue, setLanguageValue] = useState<string>(supportedLanuages.filter((language) => language.id === languageId)[0].value);
+    const [languageName, setLanguageName] = useState<string>(supportedLanguages.filter((language) => language.id === languageId)[0].name);
+    const [languageValue, setLanguageValue] = useState<string>(supportedLanguages.filter((language) => language.id === languageId)[0].value);
     const [theme, setTheme] = useState<string>(COMMON.DEFAULT_THEME);
     const [stdin, setStdin] = useState<string>('');
     const [output, setOutput] = useState<ICompileOutput | null>(null);
     const [isCompiling, setIsCompiling] = useState<boolean>(false);
+    const [isWaitingForReply, setIsWaitingForReply] = useState<boolean>(false);
 
-    const setIsCompilingHandler = (isCompiling: boolean) => {
+    const setIsCompilingHandler = () => {
         setIsCompiling(prevState => !prevState);
     };
 
     //* set the language id
     const setLanguageHandler = (languageId: number) => {
-        setLanguageName(supportedLanuages.filter((language) => language.id === languageId)[0].name);
-        setLanguageValue(supportedLanuages.filter((language) => language.id === languageId)[0].value);
+        setLanguageName(supportedLanguages.filter((language) => language.id === languageId)[0].name);
+        setLanguageValue(supportedLanguages.filter((language) => language.id === languageId)[0].value);
         setLanguageId(languageId);
     };
 
@@ -49,7 +50,7 @@ const CodeEditorContextProvider = ({ children }: IChildProps) => {
     const handleCompile = () => {
         //* check if the source code is not empty and language id is not null
         if (sourceCode.trim() !== '' && languageId !== null) {
-            setIsCompilingHandler(true);
+            setIsCompilingHandler();
             //* set request body
             const bodyData: IReqBody = {
                 source_code: sourceCode,
@@ -65,15 +66,45 @@ const CodeEditorContextProvider = ({ children }: IChildProps) => {
                 .then(async (res) => {
                     setOutput(res.data);
                     console.log(res.data);
-                    setIsCompilingHandler(false);
+                    setIsCompilingHandler();
                 })
                 .catch((err) => {
                     console.log(err);
                 });
         }
     };
+
+    const onAICommentorButtonClick = () => {
+        if (sourceCode.trim() !== '' && languageId !== null) {
+            setIsWaitingForReply(prevState => !prevState);
+            //set request body
+            const bodyData = {
+                source_code: sourceCode,
+                language_id: languageId,
+            }
+
+            axios
+                .post(PATHS.AI_COMMENTOR_PATH,
+                    { ...bodyData },
+                )
+                .then((res) => {
+                    const sourceCode = res.data;
+                    setSourceCode(sourceCode);
+                    console.log(sourceCode);
+
+
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+                .finally(() => {
+                    //* set the isWaitingForReply to false
+                    setIsWaitingForReply(prevState => !prevState);
+                });
+        }
+    }
     return (
-        <CodeEditorContext.Provider value={{ isCompiling, theme, languageValue, languageName, languageId, stdin, output, setSourceCodeHandler, setLanguageHandler, setStdinHandler, setThemeHandler, handleCompile }}>
+        <CodeEditorContext.Provider value={{ sourceCode, isWaitingForReply, isCompiling, theme, languageValue, languageName, languageId, stdin, output, setSourceCodeHandler, setLanguageHandler, setStdinHandler, setThemeHandler, handleCompile, onAICommentorButtonClick }}>
             {children}
         </CodeEditorContext.Provider>
     )

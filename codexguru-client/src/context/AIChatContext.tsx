@@ -1,10 +1,10 @@
 'use client';
-import PATHS from "@/CONSTANTS/Paths";
+import PATHS from '@/constants/paths';
 import IAiChatContext from "@/interfaces/IAiChatContext";
 import IChildProps from "@/interfaces/IChildProps";
 import IMessage from "@/interfaces/IMessage";
 import axios from "axios";
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 
 //* Context for AI Chat
 export const AIChatContext = createContext<IAiChatContext | null>(null);
@@ -12,85 +12,91 @@ export const AIChatContext = createContext<IAiChatContext | null>(null);
 //* Context Provider for AI Chat
 const AIChatContextProvider = ({ children }: IChildProps) => {
     //* State variables for AI Chat
-    const [currentMessage, setCurrentMessage] = useState<IMessage>({ text: '', isUser: false, timestamp: '', id: 0 } as IMessage);
-    const [messageList, setMessageList] = useState<IMessage[]>([]);
-    const [messageListLength, setMessageListLength] = useState<number>(0);
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [messageList, setMessageList] = useState<IMessage[]>(localStorage.getItem('aiChat') === null ? [] : JSON.parse(localStorage.getItem('aiChat')!));
     const [isWaitingForReply, setIsWaitingForReply] = useState<boolean>(false);
+    const [messageListLength, setMessageListLength] = useState<number>(0);
+    const [isError, setIsError] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>('');
 
     const setIsWaitingForReplyHandler = () => {
-        console.log(isWaitingForReply);
         setIsWaitingForReply(prevState => !prevState);
-        console.log(isWaitingForReply);
-    };
-
-    //* Drawer functions
-    const showDrawer = () => {
-        setIsOpen(true);
-    };
-
-    const onClose = () => {
-        setIsOpen(false);
-    };
-
-    //* This function is used to set the current message
-    const setMessageHandler = (message: IMessage) => {
-        setCurrentMessage(message);
     };
 
     //* This function is used to set the message list and the length of the message list
     const setMessageListHandler = (message: IMessage) => {
-        setMessageHandler(message);
-        setMessageListLength(prevState => prevState + 1);
-        setMessageList((prevState) => [...prevState, message]);
+        console.log(message);
+
+
+        setMessageListLength((prevState) => prevState + 1);
+
+        //* Set the message list in the local storage 
+        if (localStorage.getItem('aiChat') === null) {
+            localStorage.setItem('aiChat', JSON.stringify(messageList));
+
+            setMessageList((prevState) => [...prevState, message]);
+        } else {
+            const localStorageData = JSON.parse(localStorage.getItem('aiChat')!);
+            localStorageData.push(message);
+            localStorage.setItem('aiChat', JSON.stringify(localStorageData));
+            setMessageList((prevState) => [...prevState, message]);
+        }
     };
 
     //* This function is used to send the message to the backend
-    const sendMessageHandler = (message: IMessage) => {
-
-        //* set the current message
-        setIsWaitingForReplyHandler();
-
-        //* add the current message to the message list
-        setMessageListHandler(message);
-
-        //* Request body for the AI Chat
-        const reqMessages = [messageList.map((message) => {
-            return ({
-                isUser: message.isUser,
-                text: message.text,
-            })
-        })];
 
 
-        //* Axios post request to the backend
-        axios
-            .post(PATHS.AI_CHAT_PATH,
-                { messages: reqMessages },
-            )
-            .then((res) => {
-                const newMessage: IMessage = {
-                    text: res.data.text,
-                    isUser: res.data.isUser,
-                    timestamp: res.data.currentTime,
-                    id: messageListLength + 1
-                }
+    useEffect(() => {
+        const sendMessageHandler = () => {
+            //* set the current message
+            setIsWaitingForReplyHandler();
+            setIsError(false);
 
-                setMessageListHandler(newMessage);
 
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-            .finally(() => {
-                //* set the isWaitingForReply to false
-                setIsWaitingForReplyHandler();
-            });
-    };
+            //* Request body for the AI Chat
+            const reqMessages = [messageList.map((message) => {
+                return ({
+                    isUser: message.isUser,
+                    text: message.text,
+                })
+            })];
+
+
+            //* Axios post request to the backend
+            axios
+                .post(PATHS.AI_CHAT_PATH,
+                    { messages: reqMessages },
+                )
+                .then((res) => {
+                    const newMessage: IMessage = {
+                        text: res.data.text,
+                        isUser: res.data.isUser,
+                        timestamp: res.data.currentTime,
+                        id: messageList.length + 1
+                    }
+                    setMessageListHandler(newMessage);
+                })
+                .catch((err) => {
+                    setIsError(true);
+                    setErrorMessage(err.response.data.message.code);
+                })
+                .finally(() => {
+                    //* set the isWaitingForReply to false
+                    setIsWaitingForReplyHandler();
+                    setTimeout(() => {
+                        setIsError(false);
+                        setErrorMessage('');
+                    }, 4000);
+                });
+        };
+
+        if (messageList.length > 0 && messageList[messageList.length - 1].isUser) {
+            sendMessageHandler();
+        }
+    }, [messageList])
 
 
     return (
-        <AIChatContext.Provider value={{ isWaitingForReply, isOpen, currentMessage, messageList, messageListLength, showDrawer, onClose, sendMessageHandler, setMessageHandler, setMessageListHandler }}>
+        <AIChatContext.Provider value={{ errorMessage, isError, messageListLength, isWaitingForReply, messageList, setMessageListHandler }}>
             {children}
         </AIChatContext.Provider>
     )

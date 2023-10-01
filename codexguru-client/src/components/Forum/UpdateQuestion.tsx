@@ -34,13 +34,12 @@ const UpdateQuestion = ({ question }: { question: Question }) => {
   };
   return (
     <div>
-      <button
-        className=" hover:bg-gray-100 hover:text-yellow-400 text-gray-500 font-bold py-2 px-4 rounded-full text-xl"
+      <Button
+        type="text"
+        shape="circle"
         onClick={showModal}
-        title="Edit Question"
-      >
-        <EditFilled />
-      </button>
+        icon={<EditFilled className=" hover:text-custom-site-color text-xl" />}
+      />
       {isModalOpen ? (
         <>
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">

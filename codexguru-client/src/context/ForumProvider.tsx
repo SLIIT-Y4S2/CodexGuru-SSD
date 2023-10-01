@@ -3,11 +3,14 @@ import React, { createContext, useCallback, useEffect } from "react";
 import { Answer, ForumContextType, Question } from "@/types/ForumTypes";
 import { forumService } from "@/services";
 import { useSession } from "next-auth/react";
+import { App } from "antd";
 
 const ForumContext = createContext<ForumContextType | null>(null);
 const { Provider } = ForumContext;
 
 const ForumProvider = ({ children }: { children: React.ReactNode }) => {
+  const { message, notification } = App.useApp();
+
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string | undefined>();
   const [questions, setQuestions] = React.useState<Question[]>([]);
@@ -39,8 +42,6 @@ const ForumProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     fetchForum();
   }, [fetchForum]);
-
-  if (status === "loading") return <>loading</>;
 
   const refreshForum = fetchForum; //TODO: for refresh button
 
@@ -215,6 +216,68 @@ const ForumProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const voteQuestion = async (
+    questionId: string,
+    vote: "upvote" | "downvote" | "unvote"
+  ) => {
+    if (session?.user.token === undefined) return;
+    try {
+      setIsLoading(true);
+      const response = await forumService(session.user.token).voteQuestion(
+        questionId,
+        vote
+      );
+      setQuestions((prev) =>
+        prev.map((question) => {
+          if (question._id === questionId) {
+            return response;
+          }
+          return question;
+        })
+      );
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      message.error("Error");
+      setIsLoading(false);
+    }
+  };
+
+  const voteAnswer = async (
+    answerId: string,
+    vote: "upvote" | "downvote" | "unvote"
+  ) => {
+    if (session?.user.token === undefined) return;
+    try {
+      setIsLoading(true);
+      const response = await forumService(session.user.token).voteAnswer(
+        answerId,
+        vote
+      );
+      setQuestions((prev) =>
+        prev.map((question) => {
+          if (question._id === selectedQuestionId) {
+            return {
+              ...question,
+              answers: question.answers.map((answer) => {
+                if (answer._id === answerId) {
+                  return response;
+                }
+                return answer;
+              }),
+            };
+          }
+          return question;
+        })
+      );
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      message.error("Error");
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Provider
       value={{
@@ -231,6 +294,8 @@ const ForumProvider = ({ children }: { children: React.ReactNode }) => {
         updateQuestion,
         updateAnswer,
         approveAnswer,
+        voteQuestion,
+        voteAnswer,
       }}
     >
       {children}

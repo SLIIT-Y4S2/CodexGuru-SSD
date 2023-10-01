@@ -32,13 +32,10 @@ const AddQuestion = () => {
     handleOk();
   };
   return (
-    <div>
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={showModal}
-      >
-        Add Question
-      </button>
+    <>
+      <Button type="primary" onClick={showModal}>
+        Ask a question
+      </Button>
       {isModalOpen ? (
         <>
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -116,7 +113,7 @@ const AddQuestion = () => {
           <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
         </>
       ) : null}
-    </div>
+    </>
   );
 };
 
