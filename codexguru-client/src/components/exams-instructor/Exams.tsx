@@ -94,7 +94,7 @@ const Exams: React.FC = () => {
           justifyContent: "center",
           marginLeft: "50px",
         }}
-        placeholder="Search..."
+        placeholder="Search by module code..."
         onChange={(e) => setSearchText(e.target.value)}
       />
       <Tabs
@@ -104,7 +104,12 @@ const Exams: React.FC = () => {
       <FloatButton
         icon={<PlusOutlined />}
         type="primary"
-        style={{ height: "50px", width: "50px" }}
+        style={{
+          height: "50px",
+          width: "50px",
+          marginRight: "20px",
+          position: "fixed",
+        }}
         href={"/exams/new"}
       />
     </>
