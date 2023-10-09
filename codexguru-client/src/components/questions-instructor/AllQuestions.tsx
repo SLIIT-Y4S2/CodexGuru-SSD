@@ -3,7 +3,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Button, Collapse, FloatButton } from "antd";
 import ConfirmModal from "./ConfirmModal";
-import Link from "next/link";
 import { ExamsContext } from "@/app/context/ExamsContext";
 import {
   CaretRightOutlined,
@@ -33,7 +32,7 @@ export default function AllQuestions() {
       key: questionsList.indexOf(q).toString(),
       label: questionsList.indexOf(q) + 1 + ". " + q.name,
       children: (
-        <ul>
+        <ul style={{ listStyleType: "none" }}>
           {q.list.map((choice) => (
             <li>
               <CaretRightOutlined />
@@ -73,7 +72,7 @@ export default function AllQuestions() {
         <FloatButton
           icon={<PlusOutlined />}
           type="primary"
-          style={{ height: "50px", width: "50px" }}
+          style={{ height: "50px", width: "50px", marginRight: "20px" }}
           href={`/exam-questions/new/${window.location.pathname.split("/")[2]}`}
         />
       </div>
