@@ -1,24 +1,32 @@
 "use client";
 import Uploader from "@/components/Uploader";
-import { Button, Form, Input, Select } from "antd";
-import React from "react";
+import { Button, Checkbox, Form, Input, Select } from "antd";
+import React, { useState } from "react";
 const { Item: FormItem } = Form;
 const CreateLab = () => {
   const [form] = Form.useForm();
+  const [isTimeLimited, setIsTimeLimited] = useState<boolean>(false);
   return (
     <div>
-      CreateLab
       <Form
         onFinish={(values) => {
           console.log(values);
         }}
         layout="vertical"
         form={form}
-        initialValues={{
-          labName: "s",
-          labDescription: "s",
-          labSheet:
-            "https://firebasestorage.googleapis.com/v0/b/sliit-y3s2.appspot.com/o/images%2FTutorial01.pdf-2023-10-10%2002%3A43%3A37?alt=media&token=c11f0f4b-45ad-4042-b377-b34258669764",
+        requiredMark={false}
+        // initialValues={{
+        //   labName: "s",
+        //   labDescription: "s",
+        //   labSheet:
+        //     "https://firebasestorage.googleapis.com/v0/b/sliit-y3s2.appspot.com/o/images%2FTutorial01.pdf-2023-10-10%2002%3A43%3A37?alt=media&token=c11f0f4b-45ad-4042-b377-b34258669764",
+        // }}
+        style={{
+          width: "50%",
+          margin: "auto",
+          marginTop: "10px",
+          padding: "10px",
+          minWidth: "400px",
         }}
       >
         <FormItem label="Lab Name" name="labName" required>
@@ -27,6 +35,7 @@ const CreateLab = () => {
         <FormItem label="Lab Description" name="labDescription" required>
           <Input />
         </FormItem>
+
         <FormItem label="Year" name="year" required>
           <Select>
             <Select.Option value="1">Year 1</Select.Option>
@@ -43,10 +52,10 @@ const CreateLab = () => {
         </FormItem>
         <FormItem label="Module" name="module" required>
           <Select>
-            <Select.Option value="1">Module 1</Select.Option>
-            <Select.Option value="2">Module 2</Select.Option>
-            <Select.Option value="3">Module 3</Select.Option>
-            <Select.Option value="4">Module 4</Select.Option>
+            <Select.Option value="SPM">Module 1</Select.Option>
+            <Select.Option value="DS">Module 2</Select.Option>
+            <Select.Option value="CSSE">Module 3</Select.Option>
+            <Select.Option value="UEE">Module 4</Select.Option>
           </Select>
         </FormItem>
         <FormItem label="Password" name="password" required>
@@ -55,6 +64,28 @@ const CreateLab = () => {
         <FormItem label="Lab Sheet PDF" name="labSheet" required>
           <Uploader />
         </FormItem>
+        {/* time limited */}
+        <FormItem>
+          <Checkbox
+            checked={isTimeLimited}
+            onChange={(e) => setIsTimeLimited(e.target.checked)}
+          >
+            Time Limited
+          </Checkbox>
+        </FormItem>
+        {isTimeLimited ? (
+          <>
+            <FormItem label="Date" name="startDate" required>
+              <Input type="date" />
+            </FormItem>
+            <FormItem label="Time" name="startTime" required>
+              <Input type="time" />
+            </FormItem>
+            <FormItem label="Duration" name="duration" required>
+              <Input type="number" />
+            </FormItem>
+          </>
+        ) : null}
         <FormItem>
           <Button type="primary" htmlType="submit">
             Create Lab

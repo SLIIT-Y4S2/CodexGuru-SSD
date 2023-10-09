@@ -28,15 +28,11 @@ export const getLabSessions = async (req, res) => {
 /* @route   POST /api/lab */
 export const createLabSession = async (req, res) => {
   try {
-    const { labSessionName, labSessionEndDateTime, year, semester, password } =
-      req.body;
+    const { password } = req.body;
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, salt);
     const newLabSession = new LabSession({
-      labSessionName,
-      labSessionEndDateTime,
-      year,
-      semester,
+      ...req.body,
       password: passwordHash,
     });
     const savedLabSession = await newLabSession.save();

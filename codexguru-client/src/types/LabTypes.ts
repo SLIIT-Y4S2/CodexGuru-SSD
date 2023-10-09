@@ -1,6 +1,6 @@
 export interface Lab {
   _id: string;
-  labSessionName: string;
+  name: string;
   labSessionEndDateTime: string;
   year: number;
   semester: number;
