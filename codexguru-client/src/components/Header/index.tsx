@@ -3,16 +3,34 @@ import React from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Button } from "antd";
-
+import { Avatar, Button, Dropdown } from "antd";
+import Image from "next/image";
+import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
+import type { MenuProps } from "antd";
 const Header = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const pathname = usePathname();
 
   const hideHeader = pathname === "/login";
+
   if (hideHeader) return null;
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: <Link href="/profile">Profile</Link>,
+      icon: <UserOutlined />,
+    },
+
+    {
+      key: "4",
+      danger: true,
+      label: "Log Out",
+      onClick: () => signOut,
+      icon: <LogoutOutlined />,
+    },
+  ];
   return (
-    <div className="bg-black text-white flex justify-between items-center h-16">
+    <div className="bg-black text-white flex justify-between items-center h-16 px-8">
       <Link
         href={
           session?.user.role == "admin"
@@ -22,20 +40,40 @@ const Header = () => {
             : "/"
         }
       >
-        <h1 className=" text-4xl font-bold p-2 cursor-pointer">CodexGuru</h1>
+        <Image
+          src="/codexguru-text-logo.svg"
+          width={200}
+          height={70}
+          alt="CodexGuru Logo"
+        />
       </Link>
       <div className="flex justify-center items-center gap-2">
-        <p className="text-yellow-50">
-          {session?.user?.firstName} {session?.user?.lastName}
-        </p>
-        {!session && (
-          <Link href="login">
-            <Button type="primary">Sign in</Button>
-          </Link>
+        {status != "loading" && session?.user && (
+          <>
+            <p className="text-yellow-50">
+              {session?.user?.firstName} {session?.user?.lastName}
+            </p>
+            <Dropdown menu={{ items }}>
+              <Avatar
+                size="large"
+                style={{
+                  backgroundColor: "var(--primary-color)",
+                }}
+              >
+                {session?.user?.firstName.charAt(0)}{" "}
+                {session?.user?.lastName.charAt(0)}
+              </Avatar>
+            </Dropdown>
+          </>
         )}
-        <Button type="primary" onClick={() => signOut()}>
-          Sign out
-        </Button>
+
+        {status != "loading" && !session && (
+          <>
+            <Link href="login">
+              <Button type="primary">Sign in</Button>
+            </Link>
+          </>
+        )}
       </div>
     </div>
   );
