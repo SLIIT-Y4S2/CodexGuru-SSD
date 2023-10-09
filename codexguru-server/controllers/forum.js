@@ -1,6 +1,7 @@
 import Forum from "../models/ForumModels/Forum.js";
 import ForumQuestion from "../models/ForumModels/ForumQuestion.js";
 import ForumAnswer from "../models/ForumModels/ForumAnswer.js";
+import { broadcastUpdate } from "../utils/websocket.js";
 
 /**
  * @route   GET /api/forum/:labId
@@ -74,6 +75,7 @@ export const addQuestion = async (req, res) => {
       select: "firstName lastName",
     });
 
+    broadcastUpdate();
     res.status(201).json(populatedQuestion);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -107,6 +109,7 @@ export const addAnswer = async (req, res) => {
       path: "author",
       select: "firstName lastName",
     });
+    broadcastUpdate();
     res.status(201).json(populatedAnswer);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -135,6 +138,7 @@ export const deleteQuestion = async (req, res) => {
       await ForumAnswer.findByIdAndDelete(answer);
     });
 
+    broadcastUpdate();
     res.status(200).json(question);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -161,6 +165,7 @@ export const deleteAnswer = async (req, res) => {
     await ForumQuestion.findById(req.params.questionId).then((question) => {
       question.deleteAnswer(answer);
     });
+    broadcastUpdate();
     res.status(200).json(answer);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -198,6 +203,7 @@ export const updateQuestion = async (req, res) => {
           select: "firstName lastName",
         },
       });
+    broadcastUpdate();
     res.status(200).json(populatedQuestion);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -227,6 +233,7 @@ export const updateAnswer = async (req, res) => {
       select: "firstName lastName",
     });
 
+    broadcastUpdate();
     res.status(200).json(populatedAnswer);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -256,6 +263,7 @@ export const approveAnswer = async (req, res) => {
       select: "firstName lastName",
     });
 
+    broadcastUpdate();
     res.status(200).json(populatedAnswer);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -282,6 +290,7 @@ export const upvoteQuestion = async (req, res) => {
   try {
     const question = await ForumQuestion.findById(req.params.questionId);
     await question.vote(req.user, 1);
+    broadcastUpdate();
     res.status(200).json(question);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -300,6 +309,7 @@ export const downvoteQuestion = async (req, res) => {
   try {
     const question = await ForumQuestion.findById(req.params.questionId);
     await question.vote(req.user, -1);
+    broadcastUpdate();
     res.status(200).json(question);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -318,6 +328,7 @@ export const unvoteQuestion = async (req, res) => {
   try {
     const question = await ForumQuestion.findById(req.params.questionId);
     await question.vote(req.user, 0);
+    broadcastUpdate();
     res.status(200).json(question);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -336,6 +347,7 @@ export const upvoteAnswer = async (req, res) => {
   try {
     const answer = await ForumAnswer.findById(req.params.answerId);
     await answer.vote(req.user, 1);
+    broadcastUpdate();
     res.status(200).json(answer);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -355,6 +367,7 @@ export const downvoteAnswer = async (req, res) => {
   try {
     const answer = await ForumAnswer.findById(req.params.answerId);
     await answer.vote(req.user, -1);
+    broadcastUpdate();
     res.status(200).json(answer);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -374,6 +387,7 @@ export const unvoteAnswer = async (req, res) => {
   try {
     const answer = await ForumAnswer.findById(req.params.answerId);
     await answer.vote(req.user, 0);
+    broadcastUpdate();
     res.status(200).json(answer);
   } catch (err) {
     res.status(500).json({ error: err.message });

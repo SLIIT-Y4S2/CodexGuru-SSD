@@ -13,9 +13,9 @@ const { Header, Content, Footer, Sider } = Layout;
 type MenuItem = Required<MenuProps>["items"][number];
 
 function getItem(
+  key: React.Key,
   label: React.ReactNode,
   link?: string,
-  key: React.Key,
   icon?: React.ReactNode,
   children?: MenuItem[]
 ): MenuItem {
@@ -30,16 +30,16 @@ function getItem(
 const items: MenuItem[] = [
   // getItem("Option 1", "/instructor/labs", "1", <UserOutlined />),
   // getItem("Option 2", "/instructor/labs", "2", <UserOutlined />),
-  getItem("Dashboard", "/instructor", "1", <HomeOutlined />),
-  getItem("Lab Sessions", "", "sub1", <CodeOutlined />, [
-    getItem("All Labs", "/instructor/labs", "2"),
-    getItem("Create", "/instructor/labs/create", "3"),
-    getItem("Report", "/instructor/labs/reports", "4"),
+  getItem("1", "Dashboard", "/instructor", <HomeOutlined />),
+  getItem("sub1", "Lab Sessions", "", <CodeOutlined />, [
+    getItem("2", "All Labs", "/instructor/labs"),
+    getItem("3", "Create", "/instructor/labs/create"),
+    getItem("4", "Report", "/instructor/labs/reports"),
   ]),
-  getItem("Exams", "", "sub2", <CalculatorOutlined />, [
-    getItem("All Exams", "/instructor/exams", "6"),
-    getItem("Create", "/instructor/exams/create", "8"),
-    getItem("Report", "/instructor/exams/reports", "9"),
+  getItem("sub2", "Exams", "", <CalculatorOutlined />, [
+    getItem("6", "All Exams", "/instructor/exams"),
+    getItem("8", "Create", "/instructor/exams/create"),
+    getItem("9", "Report", "/instructor/exams/reports"),
   ]),
 ];
 
@@ -53,7 +53,7 @@ export default function RootLayout({
   } = theme.useToken();
 
   return (
-    <Layout className="h-[93.9vh]">
+    <Layout className="h-full ">
       <Sider breakpoint="lg" collapsedWidth="100">
         <Menu
           theme="dark"
@@ -64,21 +64,19 @@ export default function RootLayout({
         />
       </Sider>
       <Layout>
-        <Content style={{ margin: "24px 16px 0" }} className="bg-red-600">
+        <Content
+          style={{ padding: "24px 16px", height: "100%", overflow: "auto" }}
+        >
           <div
             style={{
               padding: 24,
               minHeight: 360,
               background: colorBgContainer,
             }}
-            className="overflow-y-auto h-full"
           >
             {children}
           </div>
         </Content>
-        <Footer style={{ textAlign: "center" }}>
-          Codexguru ©2023 Created by group 73
-        </Footer>
       </Layout>
     </Layout>
   );

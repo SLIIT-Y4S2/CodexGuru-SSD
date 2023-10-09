@@ -1,4 +1,4 @@
-import StyledComponentsRegistry from "@/lib/AntRegistry";
+import StyledComponentsRegistry from "@/lib/AntdRegistry";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -9,7 +9,7 @@ import AuthProvider from "./AuthProvider";
 import { LabProvider } from "@/context/LabProvider";
 import { ExamsProvider } from "./context/ExamsContext";
 import { ExamQuestionsProvider } from "./context/ExamQuestionsContext";
-import { App, ConfigProvider } from "antd";
+import { App, ConfigProvider, theme as antdTheme } from "antd";
 import theme from "@/theme/themeConfig";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,7 +27,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <StyledComponentsRegistry>
-          <ConfigProvider theme={theme}>
+          <ConfigProvider
+            theme={{ algorithm: antdTheme.defaultAlgorithm, ...theme }}
+          >
             <App>
               <AuthProvider>
                 <LabProvider>

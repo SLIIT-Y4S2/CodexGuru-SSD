@@ -10,7 +10,6 @@ import React, { useContext } from "react";
 const Session = ({ params }: { params: { session: string } }) => {
   return (
     <div className="relative h-full overflow-auto">
-      <h1>Lab Session</h1>
       <CodeEditor />
       <AiChatBot />
       <Forum labId={params.session} />

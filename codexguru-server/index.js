@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import cors from "cors";
-import multer from "multer";
 import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
@@ -21,10 +20,8 @@ import examResultRoutes from "./routes/ExamResultRoutes.js";
 import compilationRoutes from "./routes/compilationRoutes.js";
 import userRoutes from "./routes/UserRoutes.js";
 import aiChatRoutes from "./routes/aiChatRoutes.js";
+import { setupWebSocketServer } from "./utils/websocket.js";
 
-/* CONFIGURATIONS */
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 dotenv.config();
 const app = express();
 app.use(express.json());
@@ -34,19 +31,6 @@ app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
-app.use("/assets", express.static(path.join(__dirname, "public/assets")));
-
-/* FILE STORAGE */
-// TODO: change this to upload to firebase
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/assets");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-const upload = multer({ storage });
 
 /* ROUTES */
 app.use("/api/auth", authRoutes);
@@ -77,6 +61,9 @@ mongoose // eslint-disable-next-line no-undef
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.listen(PORT, () => console.log(`Server running on port: ${PORT}`));
+    const server = app.listen(PORT, () =>
+      console.log(`Server running on port: ${PORT}`)
+    );
+    setupWebSocketServer(server);
   })
   .catch((error) => console.log(`${error} did not connect`));

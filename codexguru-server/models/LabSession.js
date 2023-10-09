@@ -2,21 +2,21 @@ import mongoose from "mongoose";
 
 const LabSessionSchema = new mongoose.Schema(
   {
-    labSessionName: {
+    name: {
       type: String,
+      unique: true,
       required: true,
       max: 20,
-      unique: true,
     },
-
-    labSessionStartDateTime: {
+    description: {
+      type: String,
+    },
+    startDate: {
       type: Date,
       default: Date.now,
     },
-    labSessionEndDateTime: {
-      type: Date,
-      required: true,
-      default: Date.now,
+    duration: {
+      type: Number,
     },
     year: {
       type: Number,
@@ -30,10 +30,17 @@ const LabSessionSchema = new mongoose.Schema(
       min: 1,
       max: 2,
     },
+    module: {
+      type: String,
+      required: true,
+    },
     password: {
       type: String,
       required: true,
       min: 5,
+    },
+    pdfUrl: {
+      type: String,
     },
   },
   {

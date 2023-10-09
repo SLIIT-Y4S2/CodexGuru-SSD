@@ -10,7 +10,6 @@ const { Provider } = ForumContext;
 
 const ForumProvider = ({ children }: { children: React.ReactNode }) => {
   const { message, notification } = App.useApp();
-
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string | undefined>();
   const [questions, setQuestions] = React.useState<Question[]>([]);
@@ -20,7 +19,52 @@ const ForumProvider = ({ children }: { children: React.ReactNode }) => {
   const [labId, setLabId] = React.useState<string | undefined>();
   const { data: session, status } = useSession();
 
-  // fetch forum fuctnion
+  const [ws, setWs] = React.useState<WebSocket | undefined>();
+  //connect to websocket after labId is set
+  useEffect(() => {
+    if (session?.user.token === undefined) return;
+    if (labId === undefined) return;
+    const connectToWebsocket = () => {
+      const ws = new WebSocket(
+        `ws://localhost:5000/ws?token=${session?.user.token}`
+      );
+      setWs(ws);
+      ws.addEventListener("message", handleWsMessage);
+      ws.addEventListener("close", () => {
+        setTimeout(() => {
+          console.log("Disconnected. Trying to reconnect.");
+          connectToWebsocket();
+        }, 1000);
+      });
+      ws.onerror = (error) => {
+        console.log("WebSocket error " + error);
+      };
+    };
+    const handleWsMessage = (event: MessageEvent) => {
+      const message = event.data;
+      if ("refresh_forum" == message) {
+        fetchForumWithoutLoading();
+      }
+    };
+    const fetchForumWithoutLoading = async () => {
+      //fetch forum without loading state
+      if (session?.user.token === undefined) return;
+      if (labId === undefined) return;
+      try {
+        const response = await forumService(session?.user.token).getForum(
+          labId
+        );
+        setQuestions(response);
+        setError(undefined);
+      } catch (err: any) {
+        console.log(err.message);
+        setError(err.message);
+      }
+    };
+    connectToWebsocket();
+  }, [session?.user.token, labId]);
+
+  // fetch forum function
   const fetchForum = useCallback(async () => {
     if (status === "loading") return; // Do nothing while loading
     if (session?.user.token === undefined) return;
@@ -42,8 +86,6 @@ const ForumProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     fetchForum();
   }, [fetchForum]);
-
-  const refreshForum = fetchForum; //TODO: for refresh button
 
   const addQuestion = async (question: {
     title: string;

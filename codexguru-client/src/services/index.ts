@@ -1,8 +1,7 @@
 import { TestServices } from "./test.service";
 import { ForumServices } from "./forum.service";
 import { LabServices } from "./lab.service";
-const backendURL =
-  process.env.REACT_APP_BACKEND_URL || "http://localhost:5000/api";
+const backendURL = process.env.BACKEND_URL || "http://localhost:5000/api";
 
 export const testService = (token: string) =>
   new TestServices(backendURL, token);

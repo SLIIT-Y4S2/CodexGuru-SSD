@@ -23,7 +23,7 @@ const Login = () => {
       else if (session.user.role === "instructor") router.push("/instructor");
       else router.push("/");
     }
-  }, []);
+  }, [router, session]);
 
   const onFinish = async (values: any) => {
     try {
