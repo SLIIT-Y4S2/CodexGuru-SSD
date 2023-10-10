@@ -9,6 +9,7 @@ import { validateQuesForm } from "@/app/utils/OnlineExamUtil";
 import { ExamsContext } from "@/app/context/ExamsContext";
 import BreadCrumbs from "../common/BreadCrumbs";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 export default function NewQuestion() {
   const [form] = Form.useForm();
@@ -17,17 +18,17 @@ export default function NewQuestion() {
 
   const [examData, setExamData] = useState("");
 
-  console.log(examData);
+  const params = useParams();
 
   useEffect(() => {
     async function fetchExamData() {
-      const data = await getExam(window.location.pathname.split("/")[3]);
+      const data = await getExam(params?.id);
 
       setExamData(data);
     }
 
     fetchExamData();
-  }, []);
+  }, [params]);
 
   return (
     <>
@@ -38,7 +39,7 @@ export default function NewQuestion() {
               title: <Link href="#">Dashboard</Link>,
             },
             {
-              title: <Link href={`/exams`}>{examData.title}</Link>,
+              title: <Link href={`/instructor/exams`}>{examData.title}</Link>,
             },
             {
               title: "Questions",
@@ -51,7 +52,8 @@ export default function NewQuestion() {
         onFinish={function () {
           if (validateQuesForm(form.getFieldsValue())) {
             addQuestions(
-              window.location.pathname.split("/")[3],
+              // window.location.pathname.split("/")[3],
+              params?.id,
               form.getFieldsValue()
             );
           } else {

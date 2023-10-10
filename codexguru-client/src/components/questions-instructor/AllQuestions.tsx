@@ -10,13 +10,16 @@ import {
   PlusOutlined,
 } from "@ant-design/icons";
 
+import { useParams } from "next/navigation";
+
 export default function AllQuestions() {
   const { getExam } = useContext(ExamsContext);
   const [questionsList, setQuestionsList] = useState([]);
+  const params = useParams();
 
   useEffect(() => {
     async function fetchData() {
-      const foundExam = await getExam(window.location.pathname.split("/")[2]);
+      const foundExam = await getExam(params?.id);
       const relevantQuestions = await foundExam.questionsList;
 
       setQuestionsList(relevantQuestions);
@@ -33,8 +36,8 @@ export default function AllQuestions() {
       label: questionsList.indexOf(q) + 1 + ". " + q.name,
       children: (
         <ul style={{ listStyleType: "none" }}>
-          {q.list.map((choice) => (
-            <li>
+          {q.list.map((choice: any, index: number) => (
+            <li key={index}>
               <CaretRightOutlined />
               {choice.option + (choice.correctness === "true" ? " ✔" : "")}
             </li>
@@ -49,10 +52,7 @@ export default function AllQuestions() {
             EDIT
           </Button>{" "}
           &nbsp;&nbsp;&nbsp;
-          <ConfirmModal
-            examID={window.location.pathname.split("/")[2]}
-            questionID={questions.indexOf(q)}
-          />
+          <ConfirmModal examID={params?.id} questionID={questions.indexOf(q)} />
         </ul>
       ),
     });
@@ -73,7 +73,7 @@ export default function AllQuestions() {
           icon={<PlusOutlined />}
           type="primary"
           style={{ height: "50px", width: "50px", marginRight: "20px" }}
-          href={`/exam-questions/new/${window.location.pathname.split("/")[2]}`}
+          href={`/instructor/exam-questions/new/${params?.id}`}
         />
       </div>
     </>

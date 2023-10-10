@@ -22,11 +22,11 @@ export default function ExamsPageLayout() {
 
   return (
     <Layout>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
+      {/* <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical" />
 
         <InstructorSideBar />
-      </Sider>
+      </Sider> */}
 
       <Layout>
         <Header

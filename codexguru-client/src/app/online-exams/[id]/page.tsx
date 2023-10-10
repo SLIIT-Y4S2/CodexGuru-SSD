@@ -6,6 +6,7 @@ import Card from "antd/es/card/Card";
 import { ExamsContext } from "@/app/context/ExamsContext";
 import { verifyPassword } from "../../utils/OnlineExamUtil";
 import ExamTemplate from "@/components/exams-students/ExamTemplate";
+import { useParams } from "next/navigation";
 
 export async function getStaticPaths() {
   let examPaths = [];
@@ -31,6 +32,7 @@ export async function getStaticPaths() {
 }
 
 export default function StartExamPage() {
+  const params = useParams();
   const { getExam } = useContext(ExamsContext);
   const [pwd, setPwd] = useState("");
   const [title, setTitle] = useState("");
@@ -48,7 +50,7 @@ export default function StartExamPage() {
 
   useEffect(() => {
     async function fetchData() {
-      exam = await getExam(window.location.pathname.split("/")[2]);
+      exam = await getExam(params?.id);
 
       setTitle(exam.title);
       setDescription(exam.description);

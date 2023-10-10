@@ -64,7 +64,7 @@ export default function EditExamPage() {
               title: <Link href="#">Dashboard</Link>,
             },
             {
-              title: <Link href="/exams">Exams</Link>,
+              title: <Link href="/instructor/exams">Exams</Link>,
             },
             {
               title: "Edit Exam",

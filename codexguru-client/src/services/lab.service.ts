@@ -23,4 +23,8 @@ export class LabServices {
     this.instance.get(`/labs/${id}`, this.headerObj).then((res) => {
       return res.data;
     });
+  createLab = (data: any) =>
+    this.instance.post(`/labs`, data, this.headerObj).then((res) => {
+      return res.data;
+    });
 }

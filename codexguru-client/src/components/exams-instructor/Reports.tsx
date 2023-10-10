@@ -38,8 +38,12 @@ export default function Reports() {
               ? item
               : item.code.toLowerCase().includes(searchText.toLowerCase());
           })
-          .map((exam) => (
-            <Link href={`/exam-reports/${exam.id}`} target="_blank">
+          .map((exam: any, index: number) => (
+            <Link
+              href={`/instructor/exam-reports/${exam.id}`}
+              target="_blank"
+              key={index}
+            >
               {" "}
               <Card.Grid style={gridStyle}>
                 <h1 style={{ fontWeight: "bold" }}>{exam.code}</h1>
