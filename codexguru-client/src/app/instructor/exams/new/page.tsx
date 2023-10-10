@@ -16,7 +16,7 @@ const NewExamPage: React.FC = () => {
               title: <Link href="#">Dashboard</Link>,
             },
             {
-              title: <Link href="/exams">Exams</Link>,
+              title: <Link href="/instructor/exams">Exams</Link>,
             },
             {
               title: "New Exam",

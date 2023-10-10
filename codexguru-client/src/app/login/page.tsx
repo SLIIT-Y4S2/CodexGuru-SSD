@@ -38,7 +38,7 @@ const Login = () => {
   };
   return (
     <div className="flex flex-col justify-center items-center  h-screen">
-      <h1 className="text-fuchsia-500 text-lg mb-5">Temp Login</h1>
+      <h1 className=" text-5xl mb-5">Login</h1>
       <Form
         name="basic"
         layout="vertical"

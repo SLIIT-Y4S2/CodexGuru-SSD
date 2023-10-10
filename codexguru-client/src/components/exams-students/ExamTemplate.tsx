@@ -5,19 +5,24 @@ import { formatQuestions } from "@/app/utils/OnlineExamUtil";
 import ExamSubmitModal from "./ExamSubmitModal";
 import { Alert, Button, List, Spin } from "antd";
 import { ExamsContext } from "@/app/context/ExamsContext";
+import { useParams, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 function ExamTemplate({ examQuestions, examDuration }) {
   // Function to insert result
+  const { data: session, status } = useSession();
+  const params = useParams();
   async function insertResult() {
     try {
       const res = await fetch("http://localhost:5000/api/v1/results", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user.token}`,
         },
         body: JSON.stringify({
-          examID: window.location.pathname.split("/")[2],
-          studentID: 12,
+          examID: params?.id,
+          // studentID: 12,
           questionsAttempted: userAnswers.length,
           marks: score,
           grade: "DUMMY",
@@ -26,7 +31,8 @@ function ExamTemplate({ examQuestions, examDuration }) {
       });
 
       if (res.ok) {
-        window.location.replace("/online-exams");
+        // window.location.replace("/online-exams");
+        router.push("/online-exams");
       } else {
         alert("There was an error");
       }
@@ -41,8 +47,9 @@ function ExamTemplate({ examQuestions, examDuration }) {
 
   // State variable to hold data of the particular exam
   const { getExam } = useContext(ExamsContext);
+  const router = useRouter();
 
-  const examData = getExam(window.location.pathname.split("/")[2]);
+  const examData = getExam(params?.id);
 
   // Invoke formatQuestions function
   const quizData = formatQuestions(examQuestions);
@@ -122,10 +129,13 @@ function ExamTemplate({ examQuestions, examDuration }) {
     return () => clearInterval(timer);
   }, [time, quizCompleted]);
 
-  if (quizCompleted) {
-    // TODO - Record the result in database
-    insertResult();
+  useEffect(() => {
+    if (quizCompleted) {
+      insertResult();
+    }
+  }, [quizCompleted]);
 
+  if (quizCompleted) {
     return (
       // <center>
       //   <div className="quiz" style={{ marginTop: "50px" }}>

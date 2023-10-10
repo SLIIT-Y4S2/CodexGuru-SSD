@@ -25,7 +25,10 @@ const Header = () => {
       key: "4",
       danger: true,
       label: "Log Out",
-      onClick: () => signOut,
+      onClick: () => {
+        console.log("signOut");
+        signOut();
+      },
       icon: <LogoutOutlined />,
     },
   ];

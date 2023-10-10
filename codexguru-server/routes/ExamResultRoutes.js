@@ -3,6 +3,7 @@
  */
 import express from "express";
 import examResultController from "../controllers/ExamResultController.js";
+import { verifyToken } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.get("/", examResultController.getResults);
 router.get("/:id", examResultController.getResult);
 
 // Handle POST request at "/" URI
-router.post("/", examResultController.addResult);
+router.post("/", verifyToken, examResultController.addResult);
 
 // Handle PUT request at "/:id" URI
 router.put("/:id", examResultController.updateResult);

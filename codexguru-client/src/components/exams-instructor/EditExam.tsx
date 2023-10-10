@@ -17,14 +17,17 @@ import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
+import { useParams } from "next/navigation";
+
 dayjs.extend(customParseFormat);
 
 export default function EditExam() {
   const { getExam, updateExam } = useContext(ExamsContext);
+  const params = useParams();
 
   useEffect(() => {
     async function fetchData() {
-      const exam = await getExam(window.location.pathname.split("/")[3]);
+      const exam = await getExam(params?.id);
 
       setModuleCode(exam.code);
       setExamTitle(exam.title);
@@ -59,7 +62,7 @@ export default function EditExam() {
       >
         <Form
           onFinish={() =>
-            updateExam(Number(window.location.pathname.split("/")[3]), {
+            updateExam(Number(params?.id), {
               code: moduleCode,
               title: examTitle,
               description: description,

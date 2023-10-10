@@ -25,12 +25,12 @@ export default function InstructorSideBar() {
         {
           key: "2",
           icon: <ReadOutlined />,
-          label: <Link href="/exams">Exams</Link>,
+          label: <Link href="/instructor/exams">Exams</Link>,
         },
         {
           key: "3",
           icon: <FileOutlined />,
-          label: <Link href="/exam-reports">Reports</Link>,
+          label: <Link href="/instructor/exam-reports">Reports</Link>,
         },
         {
           key: "4",

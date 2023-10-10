@@ -63,7 +63,7 @@ const Exams: React.FC = () => {
                       <div>{exam.title}</div>
                       <ExamModal examData={exam} />
 
-                      <Link href={`/exams/edit/${exam.id}`}>
+                      <Link href={`/instructor/exams/edit/${exam.id}`}>
                         {" "}
                         <Button type="primary" ghost icon={<EditFilled />}>
                           Edit
@@ -110,7 +110,7 @@ const Exams: React.FC = () => {
           marginRight: "20px",
           position: "fixed",
         }}
-        href={"/exams/new"}
+        href={"/instructor/exams/new"}
       />
     </>
   );

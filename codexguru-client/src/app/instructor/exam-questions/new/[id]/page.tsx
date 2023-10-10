@@ -13,7 +13,7 @@ export async function getStaticPaths() {
     for (let exam of exams) {
       examPaths.push({ params: { id: exam.id.toString() } });
     }
-  } catch (err) {
+  } catch (err: any) {
     console.log(err.message);
   }
 

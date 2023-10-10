@@ -7,6 +7,7 @@ import {
 } from "@ant-design/icons";
 import { Layout, Menu, MenuProps, theme } from "antd";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -37,9 +38,8 @@ const items: MenuItem[] = [
     getItem("4", "Report", "/instructor/labs/reports"),
   ]),
   getItem("sub2", "Exams", "", <CalculatorOutlined />, [
-    getItem("6", "All Exams", "/instructor/exams"),
-    getItem("8", "Create", "/instructor/exams/create"),
-    getItem("9", "Report", "/instructor/exams/reports"),
+    getItem("6", "Exams", "/instructor/exams"),
+    getItem("9", "Reports", "/instructor/exam-reports"),
   ]),
 ];
 
@@ -52,9 +52,14 @@ export default function RootLayout({
     token: { colorBgContainer },
   } = theme.useToken();
 
+  const pathname = usePathname();
   return (
     <Layout className="h-full ">
-      <Sider breakpoint="lg" collapsedWidth="100">
+      <Sider
+        breakpoint="lg"
+        collapsedWidth="100"
+        hidden={pathname?.startsWith("/instructor/exam-reports/")}
+      >
         <Menu
           theme="dark"
           mode="inline"

@@ -19,7 +19,7 @@ export async function getStaticPaths() {
     for (let exam of exams) {
       examPaths.push({ params: { id: exam.id.toString() } });
     }
-  } catch (err) {
+  } catch (err: any) {
     console.log(err.message);
   }
 
@@ -39,7 +39,7 @@ export default function ExamQuestionsPage() {
               title: <Link href="#">Dashboard</Link>,
             },
             {
-              title: <Link href="/exams">Exams</Link>,
+              title: <Link href="/instructor/exams">Exams</Link>,
             },
             {
               title: " Questions",

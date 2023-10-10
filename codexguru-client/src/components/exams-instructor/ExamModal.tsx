@@ -94,7 +94,7 @@ export default function ExamModal({ examData }) {
                   icon={<ArrowRightOutlined />}
                   type="primary"
                   ghost
-                  href={`/exam-questions/${examData.id}`}
+                  href={`/instructor/exam-questions/${examData.id}`}
                 >
                   See Questions
                 </Button>
