@@ -1,16 +1,35 @@
 "use client";
 import Uploader from "@/components/Uploader";
+import { LabContext } from "@/context/LabProvider";
+import { LabContextType } from "@/types/LabTypes";
 import { Button, Checkbox, Form, Input, Select } from "antd";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 const { Item: FormItem } = Form;
 const CreateLab = () => {
+  const { createLabSession } = useContext(LabContext) as LabContextType;
   const [form] = Form.useForm();
   const [isTimeLimited, setIsTimeLimited] = useState<boolean>(false);
   return (
     <div>
       <Form
-        onFinish={(values) => {
+        onFinish={async (values) => {
           console.log(values);
+          try {
+            await createLabSession({
+              name: values.labName,
+              description: values.labDescription,
+              year: values.year,
+              semester: values.semester,
+              module: values.module,
+              password: values.password,
+              startDate: values.startDate,
+              duration: values.duration,
+              pdfUrl: values.labSheet,
+            });
+            form.resetFields();
+          } catch (e) {
+            console.log(e);
+          }
         }}
         layout="vertical"
         form={form}
@@ -21,6 +40,7 @@ const CreateLab = () => {
         //   labSheet:
         //     "https://firebasestorage.googleapis.com/v0/b/sliit-y3s2.appspot.com/o/images%2FTutorial01.pdf-2023-10-10%2002%3A43%3A37?alt=media&token=c11f0f4b-45ad-4042-b377-b34258669764",
         // }}
+
         style={{
           width: "50%",
           margin: "auto",

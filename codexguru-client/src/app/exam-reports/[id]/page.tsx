@@ -3,7 +3,7 @@
  */
 
 "use client";
-
+// import dynamic from "next/dynamic";
 import { ExamsContext } from "@/app/context/ExamsContext";
 import StudentReportDetails from "@/components/exams-instructor/StudentReportDetails";
 import { FilePdfOutlined } from "@ant-design/icons";
@@ -11,8 +11,16 @@ import { Button, Card } from "antd";
 import { useContext, useEffect, useState } from "react";
 
 import html2PDF from "jspdf-html2canvas";
+
 import ExamDescription from "@/components/exams-instructor/ExamDescription";
 import ReportStatistics from "@/components/exams-instructor/ReportStatistics";
+
+// const html2PDF = dynamic(
+//   () => {
+//     return import("jspdf-html2canvas").then((mod) => mod.default);
+//   },
+//   { ssr: false }
+// );
 
 let examId;
 
@@ -31,12 +39,12 @@ export default function ExamReportOverview() {
     }
 
     fetchData();
-  }, []);
+  }, [getExam]);
 
   // Function to download as pdf
   async function downloadPDF() {
     const pages = document.getElementById("page-content");
-
+    if (!pages) return;
     await html2PDF(pages, {
       jsPDF: {
         format: "a4",
