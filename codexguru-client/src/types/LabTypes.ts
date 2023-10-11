@@ -10,6 +10,7 @@ export interface Lab {
   pdfUrl?: string;
   createdAt: string;
   updatedAt: string;
+  enrolledStudents: string[];
 }
 
 export interface InputLab extends Omit<Lab, "_id" | "createdAt" | "updatedAt"> {
@@ -20,4 +21,5 @@ export interface LabContextType {
   labs: Lab[];
   loading: boolean;
   createLabSession: (lab: InputLab) => void;
+  enrollStudent: (labId: string, password: string) => Promise<boolean>;
 }

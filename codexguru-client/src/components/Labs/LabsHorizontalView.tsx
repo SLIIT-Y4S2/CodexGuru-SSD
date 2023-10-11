@@ -10,9 +10,9 @@ const LabsHorizontalView = () => {
 
   return (
     <div className="my-4">
-      <div className="flex flex-between justify-between align-middle mb-4">
+      <div className="flex flex-between justify-between items-center mb-4">
         <Link href="/labs">
-          <h3 className="text-xl font-semibold">Join a lab session</h3>
+          <h3 className="text-3xl font-semibold">Join a lab session</h3>
         </Link>
         <Link
           href="/labs"

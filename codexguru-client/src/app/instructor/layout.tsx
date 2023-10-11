@@ -59,6 +59,9 @@ export default function RootLayout({
         breakpoint="lg"
         collapsedWidth="100"
         hidden={pathname?.startsWith("/instructor/exam-reports/")}
+        style={{
+          minHeight: "800px",
+        }}
       >
         <Menu
           theme="dark"

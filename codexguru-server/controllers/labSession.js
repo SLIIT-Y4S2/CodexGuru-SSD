@@ -45,3 +45,34 @@ export const createLabSession = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+/* Function to enroll a student to a lab session */
+/* @route   POST /api/lab/:labId/enroll */
+
+export const enrollStudent = async (req, res) => {
+  try {
+    const { labId } = req.params;
+    const { password } = req.body;
+    const studentId = req.user;
+    const labSession = await LabSession.findById(labId);
+    if (labSession) {
+      const studentAlreadyEnrolled = labSession.enrolledStudents.find(
+        (student) => student.toString() === studentId
+      );
+      if (studentAlreadyEnrolled) {
+        return res.status(400).json({ error: "Student already enrolled" });
+      }
+      const isMatch = await bcrypt.compare(password, labSession.password);
+      if (!isMatch) {
+        return res.status(400).json({ error: "Invalid password" });
+      }
+      labSession.enrolledStudents.push(studentId);
+      const updatedLabSession = await labSession.save();
+      res.status(201).json(updatedLabSession);
+    } else {
+      res.status(404).json({ error: "Lab session not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

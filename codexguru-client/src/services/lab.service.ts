@@ -27,4 +27,11 @@ export class LabServices {
     this.instance.post(`/labs`, data, this.headerObj).then((res) => {
       return res.data;
     });
+
+  enrollStudent = (id: string, password: string) =>
+    this.instance
+      .post(`/labs/${id}/enroll`, { password }, this.headerObj)
+      .then((res) => {
+        return res.data;
+      });
 }
