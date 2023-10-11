@@ -1,24 +1,24 @@
 "use client";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { ForumContext } from "@/context/ForumProvider";
 import { ForumContextType } from "@/types/ForumTypes";
-import AddAnswer from "./AddAnswer";
+import AddAnswer from "@/components/Forum/AddAnswer";
 import { useSession } from "next-auth/react";
-// import DeleteQuestion from "./DeleteQuestion";
-// import DeleteAnswer from "./DeleteAnswer";
-// import UpdateQuestion from "./UpdateQuestion";
-// import UpdateAnswer from "./UpdateAnswer";
+import DeleteQuestion from "@/components/Forum/DeleteQuestion";
+import UpdateQuestion from "@/components/Forum/UpdateQuestion";
+import VoteContainer from "@/components/Forum/VoteContainer";
+import ForumAnswerRow from "@/components/ForumInstructor/ForumAnswerRow";
 import MDEditor from "@uiw/react-md-editor";
 import {
   ArrowLeftOutlined,
   DeleteFilled,
   MoreOutlined,
 } from "@ant-design/icons";
-import { Dropdown, MenuProps } from "antd";
+import { Avatar, Button, Divider, Dropdown, MenuProps, Radio } from "antd";
 import { formatRelative } from "date-fns";
-import { tr } from "date-fns/locale";
 
 const QuestionView = () => {
+  const [isFilterByVotes, setIsFilterByVotes] = useState(true);
   const {
     questions,
     selectedQuestionId,
@@ -36,96 +36,136 @@ const QuestionView = () => {
     return <div>not selected</div>;
   }
 
-  // const menuItems: MenuProps["items"] = [
-  //   {
-  //     key: "1",
-  //     label: <DeleteQuestion questionId={question._id} />,
-  //   },
-  //   {
-  //     key: "2",
-  //     label: <UpdateQuestion question={question} />,
-  //   },
-  // ];
   if (status === "loading" || !session?.user) return <>loading</>;
   return (
-    <div className="">
-      <div className="flex justify-between align-middle">
-        <button
-          className=" hover:bg-gray-100  font-bold py-2 px-4 rounded-full text-xl"
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center">
+        <div
           onClick={() => {
             setSelectedQuestionId(undefined);
           }}
-          title="Back to Questions"
+          className="flex items-center gap-2 cursor-pointer"
         >
-          <ArrowLeftOutlined />
-        </button>
+          <Button
+            type="text"
+            shape="circle"
+            icon={<ArrowLeftOutlined />}
+            title="Back to questions"
+          />
+          <p className="text-xl font-medium ml-2">Back to questions</p>
+        </div>
       </div>
-      <h3 className="text-4xl font-medium">{question.title}</h3>
-      <div className="flex gap-8">
-        <p>
-          <span className="text-gray-600">Asked</span>{" "}
-          {formatRelative(new Date(question.createdAt), new Date())}
-        </p>
-        <p>
-          <span className="text-gray-600">Modified</span>{" "}
-          {formatRelative(new Date(question.updatedAt), new Date())}
-        </p>
-        <p>
-          <span className="text-gray-600">Viewed</span> {question.views.length}
-        </p>
-      </div>
+      <div className="bg-white py-4 px-2 rounded-lg shadow-md flex gap-4 flex-col">
+        <div className="flex gap-4 w-full">
+          <VoteContainer
+            score={question.score}
+            votes={question.votes}
+            questionId={question._id}
+          />
+          <div className="flex flex-col w-full h-full gap-2 ">
+            <h3 className="text-2xl font-semibold underline">
+              {question.title}
+            </h3>
+            <Divider className="my-0 border-gray-300" />
+            <div className="flex flex-col">
+              <div className="flex justify-between">
+                <div>
+                  <Avatar
+                    className="mr-2"
+                    size="large"
+                    style={{ backgroundColor: "#fde3cf", color: "#f56a00" }}
+                  >
+                    {question.author?.firstName.slice(0, 1)}
+                    {question?.author.lastName.slice(0, 1)}
+                  </Avatar>
+                  <p className="inline-block font-semibold text-lg">
+                    {question.author?.firstName} {question?.author.lastName}
+                  </p>
+                  {question.author?._id == session.user.id && (
+                    <span className="text-gray-400"> (You)</span>
+                  )}
+                </div>
 
-      <div className="my-4" data-color-mode="light">
-        <MDEditor.Markdown source={question.description} />
+                {question.author._id == session.user.id && (
+                  <div className="flex gap-2">
+                    <DeleteQuestion questionId={question._id} />
+                    <UpdateQuestion question={question} />
+                  </div>
+                )}
+              </div>
 
-        {/* {question.description} */}
-      </div>
-      <div className="flex justify-end">
-        <span>
-          <span className="text-gray-600">Asked by</span>{" "}
-          {question.author?.firstName} {question?.author.lastName}
-        </span>
-      </div>
-      <div className="flex flex-col ">
-        <h4 className="text-2xl"> Answers ({question.answers.length})</h4>
-        <AddAnswer questionId={question._id} />
-        {question.answers.map((answer, index) => (
-          <div
-            key={index}
-            className="flex flex-col border-2 my-1 p-2"
-            data-color-mode="light"
-          >
-            {answer.markedAsSolution ? (
-              <button
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-1 rounded w-48"
-                onClick={() => {
-                  approveAnswer(answer._id, true);
-                }}
-              >
-                Remove Approve
-              </button>
-            ) : (
-              <button
-                className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-1 rounded w-48"
-                onClick={() => {
-                  approveAnswer(answer._id, false);
-                }}
-              >
-                Approve
-              </button>
-            )}
-            <div>
-              <MDEditor.Markdown source={answer.description} />
-              {/* {answer.description} */}
-            </div>
-            <div className="flex justify-end">
-              <span>
-                {answer.author?.firstName} {answer.author?.lastName}
-              </span>
+              <div className="flex gap-4">
+                <p>
+                  <span className="text-gray-600">Asked</span>{" "}
+                  {formatRelative(new Date(question.createdAt), new Date())}
+                </p>
+                <p>
+                  <span className="text-gray-600">Modified</span>{" "}
+                  {formatRelative(new Date(question.updatedAt), new Date())}
+                </p>
+                <p>
+                  <span className="text-gray-600">Views</span>{" "}
+                  {question.views.length}
+                </p>
+              </div>
             </div>
           </div>
-        ))}
+        </div>
+        <Divider className="my-0 border-gray-300" />
+
+        <div data-color-mode="light">
+          <MDEditor.Markdown
+            className="code-color-change"
+            source={question.description}
+            style={{
+              padding: "0.5rem",
+            }}
+          />
+        </div>
       </div>
+      {question.answers.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-between">
+            <h4 className="text-2xl font-bold inline-block">
+              Answers ({question.answers.length})
+            </h4>
+            <Radio.Group
+              options={[
+                { label: "Sort by votes", value: true },
+                { label: "Sort by date", value: false },
+              ]}
+              onChange={(e) => setIsFilterByVotes(e.target.value)}
+              value={isFilterByVotes}
+              defaultValue={true}
+              optionType="button"
+              buttonStyle="solid"
+            />
+          </div>
+          <div className="flex flex-col gap-4">
+            {question.answers
+              .sort((a, b) => {
+                if (isFilterByVotes) {
+                  return b.score - a.score;
+                } else {
+                  return (
+                    new Date(b.createdAt).getTime() -
+                    new Date(a.createdAt).getTime()
+                  );
+                }
+              })
+              .map((answer) => (
+                <ForumAnswerRow
+                  key={answer._id}
+                  answer={answer}
+                  questionId={question._id}
+                  approveAnswer={approveAnswer}
+                />
+              ))}
+          </div>
+        </div>
+      )}
+
+      <AddAnswer questionId={question._id} />
     </div>
   );
 };

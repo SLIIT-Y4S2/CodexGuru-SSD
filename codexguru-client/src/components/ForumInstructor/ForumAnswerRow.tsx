@@ -2,29 +2,53 @@
 import { Answer } from "@/types/ForumTypes";
 import { formatRelative } from "date-fns";
 import React from "react";
-import DeleteAnswer from "./DeleteAnswer";
-import UpdateAnswer from "./UpdateAnswer";
+import DeleteAnswer from "@/components/Forum/DeleteAnswer";
+import UpdateAnswer from "@/components/Forum/UpdateAnswer";
 import MDEditor from "@uiw/react-md-editor";
 import { useSession } from "next-auth/react";
-import VoteContainer from "./VoteContainer";
-import { Avatar } from "antd";
+import VoteContainer from "@/components/Forum/VoteContainer";
+import { Avatar, Button } from "antd";
 import { CheckCircleTwoTone } from "@ant-design/icons";
 
 interface Props {
   answer: Answer;
   questionId: string;
+  approveAnswer: (answerId: string, remove: boolean) => void;
 }
 
-const ForumAnswerRow = ({ answer, questionId }: Props) => {
+const ForumAnswerRow = ({ answer, questionId, approveAnswer }: Props) => {
   const { data: session, status } = useSession();
   if (status === "loading" || !session?.user) return <>loading</>;
 
   return (
     <div
-      className="flex gap-2 bg-white py-4 px-3 rounded-lg shadow-md"
+      className="flex gap-2 bg-white py-4 px-2 rounded-lg shadow-md"
       key={answer._id}
       data-color-mode="light"
     >
+      <div className="w-24 flex justify-center items-center">
+        <Button
+          type="text"
+          shape="circle"
+          size="large"
+          onClick={() => {
+            approveAnswer(answer._id, answer.markedAsSolution);
+          }}
+          style={{
+            height: "auto",
+            width: "auto",
+          }}
+          icon={
+            <CheckCircleTwoTone
+              twoToneColor={answer.markedAsSolution ? "green" : ""}
+              style={{
+                fontSize: "3rem",
+              }}
+            />
+          }
+          title="Mark as solution"
+        />
+      </div>
       <VoteContainer
         answerId={answer._id}
         votes={answer.votes}
@@ -57,21 +81,12 @@ const ForumAnswerRow = ({ answer, questionId }: Props) => {
               </div>
             </div>
           </div>
-          {answer.author?._id == session.user.id.toString() &&
-            !answer.markedAsSolution && (
-              <div className="flex justify-end">
-                <DeleteAnswer questionId={questionId} answerId={answer._id} />
-                <UpdateAnswer questionId={questionId} answer={answer} />
-              </div>
-            )}
-          {answer.markedAsSolution && (
-            <span>
-              <CheckCircleTwoTone
-                twoToneColor="green"
-                className="text-3xl"
-                title="Marked As A Solution"
-              />
-            </span>
+
+          {answer.author?._id == session.user.id.toString() && (
+            <div className="flex justify-end">
+              <DeleteAnswer questionId={questionId} answerId={answer._id} />
+              <UpdateAnswer questionId={questionId} answer={answer} />
+            </div>
           )}
         </div>
         <MDEditor.Markdown

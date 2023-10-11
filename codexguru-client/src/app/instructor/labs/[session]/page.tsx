@@ -4,7 +4,8 @@ import CodeEditor from "@/components/CodeEditor";
 import ForumInstructor from "@/components/ForumInstructor";
 import { LabContext } from "@/context/LabProvider";
 import { LabContextType } from "@/types/LabTypes";
-import { Tabs, TabsProps } from "antd";
+import { FilePdfOutlined } from "@ant-design/icons";
+import { Button, Tabs, TabsProps } from "antd";
 import Link from "next/link";
 import React, { useContext } from "react";
 
@@ -19,14 +20,22 @@ const Session = ({ params }: { params: { session: string } }) => {
     {
       key: "2",
       label: "Discussion Forum",
-      children: <ForumInstructor labId={params.session} />,
+      children: (
+        <>
+          <div className="flex justify-end -translate-y-16 -mb-8 z-0">
+            <Link href={`/instructor/labs/${params.session}/report`}>
+              <Button type="primary" icon={<FilePdfOutlined />}>
+                View Lab Report
+              </Button>
+            </Link>
+          </div>
+          <ForumInstructor labId={params.session} />
+        </>
+      ),
     },
   ];
   return (
     <div>
-      <Link href={`/instructor/labs/${params.session}/report`}>
-        View Report
-      </Link>
       <Tabs defaultActiveKey="1" items={items} />
     </div>
   );

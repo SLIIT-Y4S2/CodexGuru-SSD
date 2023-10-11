@@ -54,14 +54,14 @@ export default function RootLayout({
 
   const pathname = usePathname();
   return (
-    <Layout className="h-full ">
+    <Layout className="h-full">
       <Sider
         breakpoint="lg"
         collapsedWidth="100"
         hidden={pathname?.startsWith("/instructor/exam-reports/")}
-        style={{
-          minHeight: "800px",
-        }}
+        // style={{
+        //   minHeight: "800px",
+        // }}
       >
         <Menu
           theme="dark"

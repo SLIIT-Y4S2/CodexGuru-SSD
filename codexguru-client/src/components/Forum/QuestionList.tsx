@@ -1,9 +1,8 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import ForumQuestionRow from "./ForumQuestionRow";
-import { ForumContextType, Question } from "@/types/ForumTypes";
+import { Question } from "@/types/ForumTypes";
 import AddQuestion from "./AddQuestion";
-import { ForumContext } from "@/context/ForumProvider";
 import Search from "antd/es/input/Search";
 
 const QuestionList = ({ questions }: { questions: Question[] }) => {
@@ -20,7 +19,7 @@ const QuestionList = ({ questions }: { questions: Question[] }) => {
       <div className="flex justify-between items-center gap-2">
         <Search
           placeholder="Have a question? Search here"
-          className="w-2/3"
+          className="w-full"
           onChange={(e) => setSearch(e.target.value)}
         />
         <AddQuestion />

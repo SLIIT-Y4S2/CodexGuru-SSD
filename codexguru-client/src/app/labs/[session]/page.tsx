@@ -80,17 +80,16 @@ const Session = ({ params }: { params: { session: string } }) => {
     );
 
   return (
-    <div className="relative h-full overflow-auto">
-      <div className="flex justify-between">
-        <h1 className="text-4xl font-bold">
-          {lab.name} | Y {lab.semester} | S {lab.year}
-        </h1>
+    <div className="relative h-full overflow-auto px-8 pr-16">
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-end">
+          <h1 className="text-4xl font-bold">{lab.name}</h1>
+          <span>
+            Module {lab.module}, Year {lab.semester} Semester {lab.year}
+          </span>
+        </div>
         <a href={lab.pdfUrl} target="_blank" rel="noreferrer">
-          <Button
-            type="primary"
-            icon={<FilePdfOutlined />}
-            style={{ marginRight: "25px" }}
-          >
+          <Button type="primary" icon={<FilePdfOutlined />}>
             Lab Sheet
           </Button>
         </a>
