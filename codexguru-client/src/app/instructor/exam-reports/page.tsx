@@ -22,12 +22,6 @@ export default function ExamsPageLayout() {
 
   return (
     <Layout>
-      {/* <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="demo-logo-vertical" />
-
-        <InstructorSideBar />
-      </Sider> */}
-
       <Layout>
         <Header
           style={{

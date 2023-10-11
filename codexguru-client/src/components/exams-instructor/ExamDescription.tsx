@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Badge, Descriptions } from "antd";
 
 export default function ExamDescription({ examData }) {
-  console.log(examData);
   const items = [
     {
       key: "1",
