@@ -19,7 +19,7 @@ const ForumProvider = ({ children }: { children: React.ReactNode }) => {
   const [labId, setLabId] = React.useState<string | undefined>();
   const { data: session, status } = useSession();
 
-  const [ws, setWs] = React.useState<WebSocket | undefined>();
+  // const [ws, setWs] = React.useState<WebSocket | undefined>();
   //connect to websocket after labId is set
   useEffect(() => {
     if (session?.user.token === undefined) return;
@@ -28,7 +28,7 @@ const ForumProvider = ({ children }: { children: React.ReactNode }) => {
       const ws = new WebSocket(
         `ws://localhost:5000/ws?token=${session?.user.token}`
       );
-      setWs(ws);
+      // setWs(ws);
       ws.addEventListener("message", handleWsMessage);
       ws.addEventListener("close", () => {
         setTimeout(() => {
@@ -65,27 +65,50 @@ const ForumProvider = ({ children }: { children: React.ReactNode }) => {
   }, [session?.user.token, labId]);
 
   // fetch forum function
-  const fetchForum = useCallback(async () => {
-    if (status === "loading") return; // Do nothing while loading
-    if (session?.user.token === undefined) return;
-    if (labId === undefined) return;
-    try {
-      setIsLoading(true);
-      const response = await forumService(session.user.token).getForum(labId);
-      setQuestions(response);
-      setIsLoading(false);
-      setError(undefined);
-    } catch (err: any) {
-      console.log(err.message);
-      setIsLoading(false);
-      setError(err.message);
-    }
-  }, [session, status, labId]);
 
   // fetch forum on mount
   useEffect(() => {
+    const fetchForum = async () => {
+      if (status === "loading") return; // Do nothing while loading
+      if (session?.user.token === undefined) return;
+      if (labId === undefined) return;
+      try {
+        setIsLoading(true);
+        const response = await forumService(session.user.token).getForum(labId);
+        setQuestions(response);
+        setIsLoading(false);
+        setError(undefined);
+      } catch (err: any) {
+        console.log(err.message);
+        setIsLoading(false);
+        setError(err.message);
+      }
+    };
     fetchForum();
-  }, [fetchForum]);
+  }, [session, status, labId]);
+
+  // add view when selectedQuestionId changes
+  useEffect(() => {
+    if (selectedQuestionId) {
+      const addView = async () => {
+        if (session?.user.token === undefined) return;
+
+        // if question is already viewed by the user, don't add view
+        const alreadyViewed = questions
+          .find((question) => question._id === selectedQuestionId)
+          ?.views?.includes(session?.user.id);
+
+        if (alreadyViewed) return;
+
+        try {
+          await forumService(session.user.token).addView(selectedQuestionId);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      addView();
+    }
+  }, [questions, selectedQuestionId, session?.user.id, session?.user.token]);
 
   const addQuestion = async (question: {
     title: string;

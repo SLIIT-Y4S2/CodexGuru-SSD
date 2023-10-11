@@ -14,7 +14,9 @@ import {
   upvoteAnswer,
   downvoteAnswer,
   unvoteAnswer,
+  addView,
 } from "../controllers/forum.js";
+import { getForumReport } from "../controllers/forumReport.js";
 
 const router = express.Router();
 
@@ -35,5 +37,11 @@ router.put("/questions/:questionId/unVote", unvoteQuestion);
 router.put("/answers/:answerId/upVote", upvoteAnswer);
 router.put("/answers/:answerId/downVote", downvoteAnswer);
 router.put("/answers/:answerId/unVote", unvoteAnswer);
+
+// views
+router.put("/questions/:questionId/add-view", addView);
+
+//report
+router.get("/report/:labId", getForumReport);
 
 export default router;

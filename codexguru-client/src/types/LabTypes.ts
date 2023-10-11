@@ -1,7 +1,7 @@
 export interface Lab {
   _id: string;
   name: string;
-  description: string;
+  description?: string;
   startDate?: string;
   duration?: number;
   year: number;
@@ -13,7 +13,8 @@ export interface Lab {
   enrolledStudents: string[];
 }
 
-export interface InputLab extends Omit<Lab, "_id" | "createdAt" | "updatedAt"> {
+export interface InputLab
+  extends Omit<Lab, "_id" | "createdAt" | "updatedAt" | "enrolledStudents"> {
   password: string;
 }
 
