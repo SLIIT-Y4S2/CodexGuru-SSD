@@ -9,9 +9,24 @@ import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 function ExamTemplate({ examQuestions, examDuration }) {
+  // State variable to hold data of the particular exam
+  const [examData, setExamData] = useState("");
+
+  useEffect(() => {
+    async function fetchExamData() {
+      const data = await getExam(params?.id);
+
+      setExamData(data);
+    }
+
+    fetchExamData();
+  }, []);
   // Function to insert result
   const { data: session, status } = useSession();
   const params = useParams();
+
+  const { getExam } = useContext(ExamsContext);
+
   async function insertResult() {
     try {
       const res = await fetch("http://localhost:5000/api/v1/results", {
@@ -25,8 +40,8 @@ function ExamTemplate({ examQuestions, examDuration }) {
           // studentID: 12,
           questionsAttempted: userAnswers.length,
           marks: score,
-          grade: "DUMMY",
-          status: score >= examData.passMark ? "Pass" : "Fail",
+          status:
+            score >= Math.floor(examData.noOfQuestions / 2) ? "Pass" : "Fail",
         }),
       });
 
@@ -45,11 +60,7 @@ function ExamTemplate({ examQuestions, examDuration }) {
   const [score, setScore] = useState(0);
   const [time, setTime] = useState(examDuration); // 5-minute timer in seconds
 
-  // State variable to hold data of the particular exam
-  const { getExam } = useContext(ExamsContext);
   const router = useRouter();
-
-  const examData = getExam(params?.id);
 
   // Invoke formatQuestions function
   const quizData = formatQuestions(examQuestions);
@@ -95,7 +106,7 @@ function ExamTemplate({ examQuestions, examDuration }) {
     let correctAnswers = 0;
     for (let i = 0; i < quizData.length; i++) {
       if (userAnswers[i] == quizData[i].correctAnswer) {
-        correctAnswers++;
+        correctAnswers += examData.passMark / examData.noOfQuestions;
       }
     }
     setScore(correctAnswers);

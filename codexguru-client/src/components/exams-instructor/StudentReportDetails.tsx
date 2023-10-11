@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import { Table } from "antd";
 
 const columns = [
@@ -6,14 +8,6 @@ const columns = [
     title: "Student Number",
     dataIndex: "studentNumber",
   },
-  //   {
-  //     title: "Chinese Score",
-  //     dataIndex: "chinese",
-  //     sorter: {
-  //       compare: (a, b) => a.chinese - b.chinese,
-  //       multiple: 3,
-  //     },
-  //   },
   {
     title: "Marks",
     dataIndex: "score",
@@ -22,23 +16,53 @@ const columns = [
       multiple: 2,
     },
   },
-];
-const data = [
   {
-    key: "1",
-    studentNumber: "John Brown",
-    chinese: 98,
-    math: 60,
-    english: 70,
+    title: "Status",
+    dataIndex: "status",
+    sorter: {
+      compare: (a, b) => a.status - b.status,
+      multiple: 4,
+    },
   },
 ];
 
 // const onChange = (filters, sorter, extra) => {};
 export default function StudentReportDetails() {
+  const [studentData, setStudentData] = useState([]);
+
+  useEffect(() => {
+    // Function to fetch all exam results
+    async function getStudentResults() {
+      try {
+        const res = await fetch("http://localhost:5000/api/v1/results");
+        const sData = await res.json();
+
+        console.log("sData", sData.results);
+
+        let data = [];
+
+        for (let obj of sData.results) {
+          if (obj.examID == window.location.pathname.split("/")[3])
+            data.push({
+              studentNumber: obj.studentID.userRegNo,
+              score: obj.marks,
+              status: obj.status,
+            });
+        }
+
+        setStudentData(data);
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
+
+    getStudentResults();
+  }, []);
+
   return (
     <Table
       columns={columns}
-      dataSource={data}
+      dataSource={studentData}
       bordered={true}
       pagination={false}
     />
