@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext } from "react";
-import QuestionList from "./QuestionList";
-import QuestionView from "./QuestionView";
+import QuestionList from "@/components/Forum/QuestionList";
+import QuestionView from "@/components/ForumInstructor/QuestionView";
 import { ForumContext } from "@/context/ForumProvider";
 import { ForumContextType } from "@/types/ForumTypes";
 
@@ -13,7 +13,7 @@ const ForumInstructor = ({ labId }: { labId: string }) => {
     setLabId(labId);
   }, [labId, setLabId]);
 
-  if (isLoading) return <div>loading</div>;
+  if (isLoading && questions.length < 1) return <div>loading</div>;
   if (error) return <div>{JSON.stringify(error)}</div>;
 
   return (

@@ -6,6 +6,7 @@ import { Form, Input, Button, Checkbox } from "antd";
 import { ForumContext } from "@/context/ForumProvider";
 import { ForumContextType, Question } from "@/types/ForumTypes";
 import MDEditor from "@uiw/react-md-editor";
+import { PlusOutlined } from "@ant-design/icons";
 
 const AddQuestion = () => {
   const { Item: FormItem } = Form;
@@ -33,7 +34,7 @@ const AddQuestion = () => {
   };
   return (
     <>
-      <Button type="primary" onClick={showModal}>
+      <Button type="primary" onClick={showModal} icon={<PlusOutlined />}>
         Ask a question
       </Button>
       {isModalOpen ? (

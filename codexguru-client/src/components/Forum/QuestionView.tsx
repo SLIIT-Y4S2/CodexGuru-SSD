@@ -1,25 +1,20 @@
 "use client";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { ForumContext } from "@/context/ForumProvider";
 import { ForumContextType } from "@/types/ForumTypes";
 import AddAnswer from "./AddAnswer";
 import { useSession } from "next-auth/react";
 import DeleteQuestion from "./DeleteQuestion";
-import DeleteAnswer from "./DeleteAnswer";
 import UpdateQuestion from "./UpdateQuestion";
-import UpdateAnswer from "./UpdateAnswer";
 import MDEditor from "@uiw/react-md-editor";
-import {
-  ArrowLeftOutlined,
-  DeleteFilled,
-  MoreOutlined,
-} from "@ant-design/icons";
-import { Avatar, Button, Divider, Dropdown, MenuProps, Radio } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import { Avatar, Button, Divider, Radio } from "antd";
 import { formatRelative } from "date-fns";
 import VoteContainer from "./VoteContainer";
 import ForumAnswerRow from "./ForumAnswerRow";
 
 const QuestionView = () => {
+  const [isFilterByVotes, setIsFilterByVotes] = useState(true);
   const {
     questions,
     selectedQuestionId,
@@ -105,7 +100,8 @@ const QuestionView = () => {
                   {formatRelative(new Date(question.updatedAt), new Date())}
                 </p>
                 <p>
-                  <span className="text-gray-600">Views</span> {question.views.length}
+                  <span className="text-gray-600">Views</span>{" "}
+                  {question.views.length}
                 </p>
               </div>
             </div>
@@ -131,24 +127,35 @@ const QuestionView = () => {
             </h4>
             <Radio.Group
               options={[
-                { label: "Sort by votes", value: "votes" },
-                { label: "Sort by date", value: "date" },
+                { label: "Sort by votes", value: true },
+                { label: "Sort by date", value: false },
               ]}
-              // onChange={onChange4}
-              // value={value4}
-              defaultValue={"votes"}
+              onChange={(e) => setIsFilterByVotes(e.target.value)}
+              value={isFilterByVotes}
+              defaultValue={true}
               optionType="button"
               buttonStyle="solid"
             />
           </div>
           <div className="flex flex-col gap-4">
-            {question.answers.map((answer) => (
-              <ForumAnswerRow
-                key={answer._id}
-                answer={answer}
-                questionId={question._id}
-              />
-            ))}
+            {question.answers
+              .sort((a, b) => {
+                if (isFilterByVotes) {
+                  return b.score - a.score;
+                } else {
+                  return (
+                    new Date(b.createdAt).getTime() -
+                    new Date(a.createdAt).getTime()
+                  );
+                }
+              })
+              .map((answer) => (
+                <ForumAnswerRow
+                  key={answer._id}
+                  answer={answer}
+                  questionId={question._id}
+                />
+              ))}
           </div>
         </div>
       )}

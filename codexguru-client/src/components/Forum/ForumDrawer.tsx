@@ -38,7 +38,7 @@ const ForumDrawer = ({ labId }: { labId: string }) => {
           style={{
             height: "100%",
             borderRadius: "1rem 0 0 1rem",
-            backgroundColor: "#00B2BD",
+            backgroundColor: "var(--custom-blue-unkown)",
           }}
           icon={<CommentOutlined />}
         />

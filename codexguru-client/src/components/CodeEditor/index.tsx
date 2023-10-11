@@ -10,7 +10,7 @@ import AICommentorButton from "./AICommentorButton";
 const CodeEditorWindow: React.FC = () => {
   return (
     <CodeEditorContextProvider>
-      <div className="mx-auto w-11/12 p-4">
+      <div className="mx-auto">
         <div className="grid grid-row-3 grid-flow-col gap-4">
           <div className="row-span-2">
             <div className="grid grid-cols-4 gap-3 mb-5">
