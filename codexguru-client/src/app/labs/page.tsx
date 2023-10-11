@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import { LabContext } from "@/context/LabProvider";
 import { LabContextType } from "@/types/LabTypes";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 const Lab = () => {
   const { labs } = useContext(LabContext) as LabContextType;

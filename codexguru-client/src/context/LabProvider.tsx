@@ -27,7 +27,7 @@ const LabProvider = ({ children }: { children: React.ReactNode }) => {
       setLoading(false);
       message.error("Something went wrong");
     }
-  }, [session, status]);
+  }, [message, session?.user.token, status]);
 
   useEffect(() => {
     fetchLab();
@@ -48,6 +48,27 @@ const LabProvider = ({ children }: { children: React.ReactNode }) => {
       setLoading(false);
     }
   };
+  const enrollStudent = async (labId: string, password: string) => {
+    if (status === "loading") return false;
+    if (session?.user.token === undefined) return false;
+
+    try {
+      setLoading(true);
+      const response = await labService(session.user.token).enrollStudent(
+        labId,
+        password
+      );
+      setLabs([...labs, response]);
+      message.success("successfully enrolled");
+      setLoading(false);
+      return true;
+    } catch (error: any) {
+      console.log(error.message);
+      message.error(error.response.data.error);
+      setLoading(false);
+      return false;
+    }
+  };
 
   return (
     <Provider
@@ -55,6 +76,7 @@ const LabProvider = ({ children }: { children: React.ReactNode }) => {
         labs,
         loading,
         createLabSession,
+        enrollStudent,
       }}
     >
       {children}

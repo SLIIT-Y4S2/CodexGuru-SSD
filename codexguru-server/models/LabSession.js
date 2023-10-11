@@ -42,6 +42,12 @@ const LabSessionSchema = new mongoose.Schema(
     pdfUrl: {
       type: String,
     },
+    enrolledStudents: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Student",
+      },
+    ],
   },
   {
     timestamps: true,
