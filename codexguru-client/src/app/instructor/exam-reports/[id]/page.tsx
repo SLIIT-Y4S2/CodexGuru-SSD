@@ -15,23 +15,13 @@ import html2PDF from "jspdf-html2canvas";
 import ExamDescription from "@/components/exams-instructor/ExamDescription";
 import ReportStatistics from "@/components/exams-instructor/ReportStatistics";
 import { useParams } from "next/navigation";
-// const html2PDF = dynamic(
-//   () => {
-//     return import("jspdf-html2canvas").then((mod) => mod.default);
-//   },
-//   { ssr: false }
-// );
-
-// let examId;
-
-// if (typeof window !== "undefined") {
-//   examId = window.location.pathname.split("/")[2];
-// }
 
 export default function ExamReportOverview() {
   const { getExam } = useContext(ExamsContext);
   const [examData, setExamData] = useState("");
+
   const params = useParams();
+
   useEffect(() => {
     async function fetchData() {
       const data = await getExam(params?.id);

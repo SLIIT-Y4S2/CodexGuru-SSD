@@ -32,10 +32,10 @@ const ExamResultSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
-  grade: {
-    type: String,
-    required: true,
-  },
+  // grade: {
+  //   type: String,
+  //   required: true,
+  // },
   status: {
     type: String,
     required: true,
