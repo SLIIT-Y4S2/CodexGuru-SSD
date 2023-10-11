@@ -57,6 +57,9 @@ export const getForumQuestions = async (req, res) => {
 export const addQuestion = async (req, res) => {
   try {
     const { title, description } = req.body;
+    const forum = await Forum.findOne({ labSession: req.params.labId });
+    if (!forum) throw new Error("No forum found for this lab session");
+
     const newQuestion = new ForumQuestion({
       title,
       description,
@@ -64,19 +67,10 @@ export const addQuestion = async (req, res) => {
     });
     const savedQuestion = await newQuestion.save();
 
-    const forum = await Forum.findOne({ labSession: req.params.labId });
-    if (!forum) throw new Error("No forum found for this lab session");
-
     await forum.addQuestion(savedQuestion);
-    const populatedQuestion = await ForumQuestion.findById(
-      savedQuestion._id
-    ).populate({
-      path: "author",
-      select: "firstName lastName",
-    });
 
     broadcastUpdate();
-    res.status(201).json(populatedQuestion);
+    res.status(201).json(savedQuestion);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -190,21 +184,9 @@ export const updateQuestion = async (req, res) => {
       throw new Error("You are not authorized to update this question");
     question.title = title;
     question.description = description;
-    await question.save();
-    const populatedQuestion = await ForumQuestion.findById(question._id)
-      .populate({
-        path: "author",
-        select: "firstName lastName",
-      })
-      .populate({
-        path: "answers",
-        populate: {
-          path: "author",
-          select: "firstName lastName",
-        },
-      });
+    const savedQuestion = await question.save();
     broadcastUpdate();
-    res.status(200).json(populatedQuestion);
+    res.status(200).json(savedQuestion);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -240,6 +222,8 @@ export const updateAnswer = async (req, res) => {
   }
 };
 
+// ------------------ INSTRUCTOR ONLY ------------------
+
 /**
  * @route   PUT /api/forum/answers/:answerId/approveAnswer
  * @desc    Approve an answer
@@ -269,6 +253,8 @@ export const approveAnswer = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// ------------------ VOTING ------------------
 
 /**
  * @route   PUT /api/forum/questions/:questionId/upvote
@@ -389,6 +375,27 @@ export const unvoteAnswer = async (req, res) => {
     await answer.vote(req.user, 0);
     broadcastUpdate();
     res.status(200).json(answer);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// ------------------ VIEWS ------------------
+
+/**
+ * @route   PUT /api/forum/questions/:questionId/add-view
+ * @desc    View a question
+ * @access  Private
+ * @param   questionId
+ * @return  {Object} question
+ */
+
+export const addView = async (req, res) => {
+  try {
+    const question = await ForumQuestion.findById(req.params.questionId);
+    await question.addViews(req.user);
+    broadcastUpdate();
+    res.status(200).json(question);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

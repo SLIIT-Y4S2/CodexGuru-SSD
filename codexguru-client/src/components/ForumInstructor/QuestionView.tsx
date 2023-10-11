@@ -71,7 +71,7 @@ const QuestionView = () => {
           {formatRelative(new Date(question.updatedAt), new Date())}
         </p>
         <p>
-          <span className="text-gray-600">Viewed</span> {question.views}
+          <span className="text-gray-600">Viewed</span> {question.views.length}
         </p>
       </div>
 

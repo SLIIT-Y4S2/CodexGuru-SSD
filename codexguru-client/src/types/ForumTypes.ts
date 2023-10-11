@@ -6,7 +6,7 @@ export interface Question {
   updatedAt: string;
   author: Author;
   answers: Answer[];
-  views: number;
+  views: string[];
   votes: Vote[];
   score: number;
 }

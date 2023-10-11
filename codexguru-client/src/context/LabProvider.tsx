@@ -58,7 +58,15 @@ const LabProvider = ({ children }: { children: React.ReactNode }) => {
         labId,
         password
       );
-      setLabs([...labs, response]);
+      // replace the lab with the new one
+      setLabs((prev) =>
+        prev.map((lab) => {
+          if (lab._id === labId) {
+            return response;
+          }
+          return lab;
+        })
+      );
       message.success("successfully enrolled");
       setLoading(false);
       return true;

@@ -9,7 +9,6 @@ import { FilePdfOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Spin } from "antd";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import React, { useContext, useEffect } from "react";
 
 const Session = ({ params }: { params: { session: string } }) => {
@@ -59,8 +58,12 @@ const Session = ({ params }: { params: { session: string } }) => {
         </>
         <Form
           layout="vertical"
-          onFinish={(values) => {
-            enrollStudent(params.session, values.password);
+          onFinish={async (values) => {
+            const success: boolean = await enrollStudent(
+              params.session,
+              values.password
+            );
+            if (success) setUserValidated(true);
           }}
           className="flex flex-col"
         >

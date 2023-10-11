@@ -16,7 +16,7 @@ const ForumQuestionSchema = mongoose.Schema(
     },
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     answers: [{ type: Schema.Types.ObjectId, ref: "ForumAnswer" }],
-    views: { type: Number, default: 0 },
+    views: [{ type: Schema.Types.ObjectId, ref: "User" }],
     score: { type: Number, default: 0 },
     votes: [Vote.schema],
   },
@@ -53,6 +53,12 @@ ForumQuestionSchema.methods.addAnswer = function (answer) {
 
 ForumQuestionSchema.methods.deleteAnswer = function (answerId) {
   this.answers.pull(answerId);
+  return this.save();
+};
+
+ForumQuestionSchema.methods.addViews = function (user) {
+  if (this.views.find((v) => v._id.equals(user))) return this.save();
+  this.views.push(user);
   return this.save();
 };
 

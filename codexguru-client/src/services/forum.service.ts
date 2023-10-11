@@ -107,4 +107,23 @@ export class ForumServices {
         throw new Error(err.message);
       });
   };
+
+  // /api/forum/questions/:questionId/add-view
+  addView = (questionId: string) => {
+    return this.instance
+      .put(`/forum/questions/${questionId}/add-view`, {}, this.headerObj)
+      .then((res) => res.data)
+      .catch((err) => {
+        throw new Error(err.message);
+      });
+  };
+
+  getReport = (labId: string) => {
+    return this.instance
+      .get(`/forum/report/${labId}`, this.headerObj)
+      .then((res) => res.data)
+      .catch((err) => {
+        throw new Error(err.message);
+      });
+  };
 }

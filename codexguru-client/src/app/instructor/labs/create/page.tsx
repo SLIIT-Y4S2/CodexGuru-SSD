@@ -53,7 +53,7 @@ const CreateLab = () => {
           <Input />
         </FormItem>
         <FormItem label="Lab Description" name="labDescription" required>
-          <Input />
+          <Input.TextArea rows={3} />
         </FormItem>
 
         <FormItem label="Year" name="year" required>
@@ -71,12 +71,7 @@ const CreateLab = () => {
           </Select>
         </FormItem>
         <FormItem label="Module" name="module" required>
-          <Select>
-            <Select.Option value="SPM">Module 1</Select.Option>
-            <Select.Option value="DS">Module 2</Select.Option>
-            <Select.Option value="CSSE">Module 3</Select.Option>
-            <Select.Option value="UEE">Module 4</Select.Option>
-          </Select>
+          <Input />
         </FormItem>
         <FormItem label="Password" name="password" required>
           <Input />
