@@ -7,6 +7,7 @@ const { Option } = Select;
 const AccountCreationForm = () => {
   const [loading, setLoading] = useState(false);
   const [registrationNumberExists, setRegistrationNumberExists] = useState(false);
+  const [passwordMatchError, setPasswordMatchError] = useState(false);
 
   const [form] = useForm();
 
@@ -14,7 +15,9 @@ const AccountCreationForm = () => {
     userRegNo: '',
     firstName: '',
     lastName: '',
+    email: '',
     password: '',
+    confirmPassword: '',
     role: '',
   });
 
@@ -26,6 +29,16 @@ const AccountCreationForm = () => {
       notification.error({
         message: 'Registration Number Not Checked',
         description: 'Please check the registration number before submitting the form.',
+      });
+      setLoading(false);
+      return;
+    }
+
+    // Check if passwords match
+    if (values.password !== values.confirmPassword) {
+      notification.error({
+        message: 'Password Mismatch',
+        description: 'Passwords do not match. Please re-enter your password and confirmation.',
       });
       setLoading(false);
       return;
@@ -93,6 +106,17 @@ const AccountCreationForm = () => {
     return Promise.resolve();
   };
 
+  // Validate that passwords match
+  const validatePasswordMatch = async (_, value) => {
+    if (value !== form.getFieldValue('password')) {
+      setPasswordMatchError(true);
+      return Promise.reject('Passwords do not match');
+    } else {
+      setPasswordMatchError(false);
+      return Promise.resolve();
+    }
+  };
+
   // Update form values when input fields change
   const handleInputChange = (name, value) => {
     setFormValues({
@@ -107,7 +131,7 @@ const AccountCreationForm = () => {
       onFinish={onFinish}
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 16 }}
-      style={{ height: 450 }}
+      style={{ height: 500 }}
       form={form}
     >
       <Form.Item
@@ -123,7 +147,10 @@ const AccountCreationForm = () => {
           },
         ]}
       >
-        <Input value={formValues.userRegNo} onChange={(e) => handleInputChange('userRegNo', e.target.value)} />
+        <Input
+          value={formValues.userRegNo}
+          onChange={(e) => handleInputChange('userRegNo', e.target.value)}
+        />
       </Form.Item>
       <Form.Item
         name="firstName"
@@ -135,7 +162,10 @@ const AccountCreationForm = () => {
           },
         ]}
       >
-        <Input value={formValues.firstName} onChange={(e) => handleInputChange('firstName', e.target.value)} />
+        <Input
+          value={formValues.firstName}
+          onChange={(e) => handleInputChange('firstName', e.target.value)}
+        />
       </Form.Item>
       <Form.Item
         name="lastName"
@@ -147,7 +177,26 @@ const AccountCreationForm = () => {
           },
         ]}
       >
-        <Input value={formValues.lastName} onChange={(e) => handleInputChange('lastName', e.target.value)} />
+        <Input
+          value={formValues.lastName}
+          onChange={(e) => handleInputChange('lastName', e.target.value)}
+        />
+      </Form.Item>
+      <Form.Item
+        name="email"
+        label="Email"
+        rules={[
+          {
+            required: true,
+            message: 'Please enter your email address!',
+            type: 'email',
+          },
+        ]}
+      >
+        <Input
+          value={formValues.email}
+          onChange={(e) => handleInputChange('email', e.target.value)}
+        />
       </Form.Item>
       <Form.Item
         name="password"
@@ -163,7 +212,28 @@ const AccountCreationForm = () => {
           },
         ]}
       >
-        <Input.Password value={formValues.password} onChange={(e) => handleInputChange('password', e.target.value)} />
+        <Input.Password
+          value={formValues.password}
+          onChange={(e) => handleInputChange('password', e.target.value)}
+        />
+      </Form.Item>
+      <Form.Item
+        name="confirmPassword"
+        label="Confirm Password"
+        rules={[
+          {
+            required: true,
+            message: 'Please confirm your password!',
+          },
+          {
+            validator: validatePasswordMatch,
+          },
+        ]}
+      >
+        <Input.Password
+          value={formValues.confirmPassword}
+          onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+        />
       </Form.Item>
       <Form.Item
         name="role"
@@ -193,4 +263,4 @@ const AccountCreationForm = () => {
   );
 };
 
-export default AccountCreationForm;
+export default AccountCreationForm

@@ -10,7 +10,7 @@ export interface Lab {
   pdfUrl?: string;
   createdAt: string;
   updatedAt: string;
-  enrolledStudents: string[];
+  enrolledStudents: {user:string}[];
 }
 
 export interface InputLab

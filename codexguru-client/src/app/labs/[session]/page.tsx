@@ -22,10 +22,11 @@ const Session = ({ params }: { params: { session: string } }) => {
     if (labs.length > 0) {
       const lab = labs.find((lab) => lab._id === params.session);
       if (lab) {
+        // is user already enrolled
         const valid: boolean =
-          lab?.enrolledStudents.filter(
-            (studentId) => studentId === session?.user?.id
-          ).length > 0;
+          lab?.enrolledStudents.find(
+            (student) => student.user === session?.user?.id
+          ) != undefined;
         setUserValidated(valid);
       }
     }
@@ -33,7 +34,7 @@ const Session = ({ params }: { params: { session: string } }) => {
 
   if (!params.session) return <div>404</div>;
 
-  const lab = labs.find((lab) => lab._id === params.session);
+
 
   if (loading || authStatus === "loading")
     return (
@@ -42,8 +43,11 @@ const Session = ({ params }: { params: { session: string } }) => {
       </div>
     );
 
+    
+
+    const lab = labs.find((lab) => lab._id === params.session);
   if (!lab)
-    return <div className="flex justify-center items-center h-screen">404</div>;
+    return <div className="flex justify-center items-center h-screen">404- lab not found</div>;
 
   if (!userValidated)
     return (

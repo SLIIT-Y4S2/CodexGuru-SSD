@@ -1,5 +1,20 @@
 import mongoose from "mongoose";
 
+const attendanceSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      require: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const Attendance = mongoose.model("Attendance", attendanceSchema);
+
 const LabSessionSchema = new mongoose.Schema(
   {
     name: {
@@ -42,17 +57,17 @@ const LabSessionSchema = new mongoose.Schema(
     pdfUrl: {
       type: String,
     },
-    enrolledStudents: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Student",
-      },
-    ],
+    enrolledStudents: [Attendance.schema],
   },
   {
     timestamps: true,
   }
 );
+
+LabSessionSchema.methods.markAttendance = function (user) {
+  this.enrolledStudents.push({user});
+  return this.save();
+};
 
 const LabSession = mongoose.model("LabSession", LabSessionSchema);
 export default LabSession;
