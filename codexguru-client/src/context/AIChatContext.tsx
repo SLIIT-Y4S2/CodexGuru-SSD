@@ -61,14 +61,14 @@ const AIChatContextProvider = ({ children }: IChildProps) => {
       setIsError(false);
 
       //* Request body for the AI Chat
-      const reqMessages = [
+      const reqMessages =
         messageList.map((message) => {
           return {
             isUser: message.isUser,
             text: message.text,
           };
-        }),
-      ];
+        });
+
 
       //* Axios post request to the backend
       axios

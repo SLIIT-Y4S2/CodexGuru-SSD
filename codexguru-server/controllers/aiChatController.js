@@ -14,21 +14,22 @@ const getAiChatResponse = async (req, res) => {
 
     //* get the messages from the request body
     const { messages } = req.body;
+
     //* check if the messages length is greater than 0 and not null
     if (messages && messages.length > 0) {
         //* create a message list with the system prompt
         const messageList = [{ role: "system", content: Common.SYSTEM_PROMPT }];
         //* push the messages to the message list
-        messages.map((message) => {
-            if (message.isUser === true) {
-                messageList.push({ role: "user", content: message.text });
-            } else {
-                messageList.push({ role: "assistant", content: message.text });
-            }
-        });
+        for (const messageIndex in messages) {
 
-        await openAiApiHandler(messageList).then((response) => {
-            console.log(response);
+            if (messages[messageIndex].isUser === true) {
+                messageList.push({ role: "user", content: messages[messageIndex].text });
+            } else {
+                messageList.push({ role: "assistant", content: messages[messageIndex].text });
+            }
+        }
+
+        openAiApiHandler(messageList).then((response) => {
             const responseFromServer = {
                 currentTime: new Date().toISOString(),
                 isUser: false,
@@ -36,7 +37,8 @@ const getAiChatResponse = async (req, res) => {
             }
 
             return res.status(HttpStatusCode.Created).send(responseFromServer);
-        }).catch((error) => {
+        }
+        ).catch((error) => {
             console.log(error);
             return res.status(HttpStatusCode.TooManyRequests).send({ message: error.error })
         });
