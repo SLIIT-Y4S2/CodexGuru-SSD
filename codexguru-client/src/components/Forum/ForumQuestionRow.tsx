@@ -46,7 +46,7 @@ const ForumQuestionRow = ({ question }: Params) => {
       </div>
       <div className="flex flex-col w-full">
         <h3 className="text-2xl underline  font-semibold">{question.title}</h3>
-        <p className="h-16">{question.description.slice(0, 80)}</p>
+        <p className="line-clamp-2">{question.description}</p>
         <div className="flex justify-end">
           <div className="flex flex-col items-end">
             <span className="flex gap-2">

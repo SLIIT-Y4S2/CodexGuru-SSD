@@ -19,13 +19,13 @@ const Session = ({ params }: { params: { session: string } }) => {
     },
     {
       key: "2",
-      label: "Discussion Forum",
+      label: "Q&A Forum",
       children: (
         <>
           <div className="flex justify-end -translate-y-16 -mb-8 z-0">
             <Link href={`/instructor/labs/${params.session}/report`}>
               <Button type="primary" icon={<FilePdfOutlined />}>
-                View Lab Report
+                Q&A Forum Report
               </Button>
             </Link>
           </div>

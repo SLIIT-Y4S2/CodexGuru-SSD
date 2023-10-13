@@ -21,6 +21,7 @@ import compilationRoutes from "./routes/compilationRoutes.js";
 import userRoutes from "./routes/UserRoutes.js";
 import aiChatRoutes from "./routes/aiChatRoutes.js";
 import { setupWebSocketServer } from "./utils/websocket.js";
+import labattendanceRoutes from "./routes/LabAttendanceRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -45,6 +46,8 @@ app.use("/api/v1/compilations", compilationRoutes);
 app.use("/api/v1/ai-chat-responses", aiChatRoutes);
 
 //TODO: testing routes
+
+app.use("/api/v1/admin", labattendanceRoutes);
 
 app.get("/api/student", verifyToken, (req, res) => {
   res.json({

@@ -4,7 +4,6 @@ import type { InputProps, UploadFile, UploadProps } from "antd";
 import { message, Upload } from "antd";
 import { customRequest } from "@/lib/Firebase/upload.service";
 import { UploadChangeParam } from "antd/es/upload";
-import { set } from "date-fns";
 
 const { Dragger } = Upload;
 

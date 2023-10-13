@@ -57,7 +57,7 @@ export const enrollStudent = async (req, res) => {
     const labSession = await LabSession.findById(labId);
     if (labSession) {
       const studentAlreadyEnrolled = labSession.enrolledStudents.find(
-        (student) => student.toString() === studentId
+        (student) => student._id.toString() === studentId
       );
       if (studentAlreadyEnrolled) {
         return res.status(400).json({ error: "Student already enrolled" });
@@ -66,9 +66,12 @@ export const enrollStudent = async (req, res) => {
       if (!isMatch) {
         return res.status(400).json({ error: "Invalid password" });
       }
-      labSession.enrolledStudents.push(studentId);
-      const updatedLabSession = await labSession.save();
+      // labSession.enrolledStudents.push(studentId);
+      const updatedLabSession = await labSession.markAttendance(studentId);
+  
       res.status(201).json(updatedLabSession);
+
+
     } else {
       res.status(404).json({ error: "Lab session not found" });
     }

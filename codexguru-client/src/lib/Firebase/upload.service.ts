@@ -11,7 +11,10 @@ export const customRequest: UploadProps["customRequest"] = ({
 }) => {
   const storageRef = ref(
     storage,
-    `images/${(file as Blob).name}-${formatDate(new Date())}`
+    `files/${(file as Blob).name
+      .split(".")
+      .slice(0, -1)
+      .join(".")}-${formatDate(new Date())}`
   );
 
   const uploadTask = uploadBytesResumable(storageRef, file as Blob);
