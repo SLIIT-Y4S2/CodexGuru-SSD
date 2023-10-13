@@ -7,7 +7,13 @@ import { Button, Modal } from "antd";
 const { confirm } = Modal;
 import { ExamsContext } from "@/app/context/ExamsContext";
 
-export default function ConfirmModal({ examID, questionID }) {
+export default function ConfirmModal({
+  examID,
+  questionID,
+}: {
+  examID: any;
+  questionID: any;
+}) {
   const { removeQuestion } = useContext(ExamsContext);
 
   const showDeleteConfirm = () => {

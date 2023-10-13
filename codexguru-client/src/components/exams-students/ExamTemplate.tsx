@@ -8,9 +8,15 @@ import { ExamsContext } from "@/app/context/ExamsContext";
 import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-function ExamTemplate({ examQuestions, examDuration }) {
+function ExamTemplate({
+  examQuestions,
+  examDuration,
+}: {
+  examQuestions: any;
+  examDuration: any;
+}) {
   // State variable to hold data of the particular exam
-  const [examData, setExamData] = useState("");
+  const [examData, setExamData] = useState<any>("");
 
   useEffect(() => {
     async function fetchExamData() {
@@ -51,7 +57,7 @@ function ExamTemplate({ examQuestions, examDuration }) {
       } else {
         alert("There was an error");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log("Error : " + error.message);
     }
   }
@@ -73,7 +79,7 @@ function ExamTemplate({ examQuestions, examDuration }) {
   const [selectedChoice, setSelectedChoice] = useState(null); // Track selected choice
 
   // Function to handle user's answer selection
-  const handleAnswerSelect = (selectedAnswer) => {
+  const handleAnswerSelect = (selectedAnswer: any) => {
     setSelectedChoice(selectedAnswer);
     setUserAnswers((prevAnswers) => {
       const newAnswers = [...prevAnswers];
@@ -115,7 +121,7 @@ function ExamTemplate({ examQuestions, examDuration }) {
   };
 
   // Function to format time as "mm:ss"
-  const formatTime = (seconds) => {
+  const formatTime = (seconds: any) => {
     const hrs = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
@@ -198,7 +204,7 @@ function ExamTemplate({ examQuestions, examDuration }) {
         style={{
           marginLeft: "50px",
           padding: "20px",
-          maxWidth: "50px",
+          // maxWidth: "50px",
           border: "1px solid #faad14",
           borderRadius: "10px",
           maxWidth: "900px",

@@ -96,10 +96,10 @@ export default function EditExam() {
             <Form.Item className="w-[205px]">
               <TimePicker
                 value={dayjs(duration, "HH:mm:ss")}
-                onChange={(e) => {
-                  const hrs = e.$H ? e.$H : "00";
-                  const mins = e.$m ? e.$m : "00";
-                  const secs = e.$s ? e.$s : "00";
+                onChange={(e: any) => {
+                  const hrs = e?.$H ? e?.$H : "00";
+                  const mins = e?.$m ? e?.$m : "00";
+                  const secs = e?.$s ? e?.$s : "00";
 
                   setDuration(`${hrs}:${mins}:${secs}`);
                 }}

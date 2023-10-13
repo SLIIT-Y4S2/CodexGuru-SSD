@@ -33,7 +33,7 @@ export default function Reports() {
 
       {data &&
         data
-          .filter((item) => {
+          .filter((item: any) => {
             return searchText.toLowerCase() === ""
               ? item
               : item.code.toLowerCase().includes(searchText.toLowerCase());

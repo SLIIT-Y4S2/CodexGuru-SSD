@@ -90,7 +90,7 @@ const NewExam: React.FC = () => {
               <Form.Item className="w-[205px]">
                 <TimePicker
                   defaultValue={dayjs("00:00:00", "HH:mm:ss")}
-                  onChange={(e) => {
+                  onChange={(e: any) => {
                     const hrs = e.$H ? e.$H : "00";
                     const mins = e.$m ? e.$m : "00";
                     const secs = e.$s ? e.$s : "00";
