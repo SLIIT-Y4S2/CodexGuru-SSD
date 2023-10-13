@@ -2,21 +2,9 @@ import OpenAI from "openai";
 import APIKEYS from "../CONSTANTS/APIKeys.js";
 
 const openAiApiHandler = async (messages) => {
-  const openai = new OpenAI({
-    apiKey: APIKEYS.OPENAI_API_KEY,
-  });
-
-    // try {
-    //     const chatCompletion = await openai.chat.completions.create({
-    //         messages: messages,
-    //         model: "gpt-3.5-turbo",
-    //     });
-
-    //     return chatCompletion;
-    // } catch (error) {
-    //     console.log(error);
-    // }
-
+    const openai = new OpenAI({
+        apiKey: APIKEYS.OPENAI_API_KEY,
+    });
 
     return new Promise((resolve, reject) => {
         try {
@@ -24,7 +12,7 @@ const openAiApiHandler = async (messages) => {
                 messages: messages,
                 model: "gpt-3.5-turbo",
             });
-
+            console.log(chatCompletion);
             resolve(chatCompletion);
         } catch (error) {
             reject(error);
