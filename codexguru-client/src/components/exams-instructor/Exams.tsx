@@ -30,7 +30,7 @@ const Exams: React.FC = () => {
       children:
         filteredExams.length !== 0 ? (
           filteredExams
-            .filter((item) => {
+            .filter((item: any) => {
               return searchText.toLowerCase() === ""
                 ? item
                 : item.code.toLowerCase().includes(searchText.toLowerCase());

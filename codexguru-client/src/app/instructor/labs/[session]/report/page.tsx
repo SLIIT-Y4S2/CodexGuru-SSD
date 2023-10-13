@@ -4,12 +4,17 @@ import { useParams } from "next/navigation";
 import { forumService } from "@/services";
 import { useSession } from "next-auth/react";
 import { Button, Card, Col, Row } from "antd";
-import html2PDF from "jspdf-html2canvas";
 import { FilePdfOutlined } from "@ant-design/icons";
 import { format } from "date-fns";
 import ForumAnalytics from "./ForumAnalytics";
 import LeaderBoard from "./LeaderBoard";
 import QuestionListView from "./QuestionListView";
+import html2PDF from "jspdf-html2canvas";
+// import dynamic from "next/dynamic";
+
+// const html2PDF = dynamic(() => import("jspdf-html2canvas"), {
+//   ssr: false,
+// });
 const LabReports = () => {
   const params = useParams();
   const [reportData, setReportData] = useState<any>(null);

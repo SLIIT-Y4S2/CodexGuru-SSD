@@ -12,7 +12,7 @@ import { useContext, useEffect, useState } from "react";
 export default function ExamsDashboard() {
   const { data, getAllExams } = useContext(ExamsContext);
 
-  const activeExams = data.filter((exam) => exam.isActive === true);
+  const activeExams = data.filter((exam: any) => exam.isActive === true);
 
   useEffect(() => {
     async function fetchData() {

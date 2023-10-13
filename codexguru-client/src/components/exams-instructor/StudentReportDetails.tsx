@@ -12,7 +12,7 @@ const columns = [
     title: "Marks",
     dataIndex: "score",
     sorter: {
-      compare: (a, b) => a.score - b.score,
+      compare: (a: any, b: any) => a.score - b.score,
       multiple: 2,
     },
   },
@@ -20,7 +20,7 @@ const columns = [
     title: "Status",
     dataIndex: "status",
     sorter: {
-      compare: (a, b) => a.status - b.status,
+      compare: (a: any, b: any) => a.status - b.status,
       multiple: 4,
     },
   },
@@ -28,7 +28,7 @@ const columns = [
 
 // const onChange = (filters, sorter, extra) => {};
 export default function StudentReportDetails() {
-  const [studentData, setStudentData] = useState([]);
+  const [studentData, setStudentData] = useState<any>([]);
 
   useEffect(() => {
     // Function to fetch all exam results
@@ -51,7 +51,7 @@ export default function StudentReportDetails() {
         }
 
         setStudentData(data);
-      } catch (err) {
+      } catch (err: any) {
         console.log(err.message);
       }
     }
