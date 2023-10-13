@@ -58,14 +58,9 @@ export const getForumReport = async (req, res) => {
         (acc, question) => acc + question.answers.length,
         0
       ),
-      percentageOfQuestionsAnswered: (
-        (forum.questions.reduce(
-          (acc, question) => acc + question.answers.length,
-          0
-        ) /
-          forum.questions.length) *
-        100
-      ).toFixed(2),
+      percentageOfQuestionsAnswered: calculateThePercentageOfQuestionsAnswered(
+        forum.questions
+      ),
 
       mostViewQuestions: [],
       mostAnsweredQuestions: [],
@@ -133,6 +128,14 @@ export const getForumReport = async (req, res) => {
   }
 };
 
+function calculateThePercentageOfQuestionsAnswered(questions) {
+  const answeredQuestions = questions.filter((question) => {
+    return question.answers.length > 0;
+  });
+  return ((answeredQuestions.length / questions.length) * 100).toFixed(2);
+}
+
+//TODO: rewrite this function
 function calculateLeaderboard(data) {
   const userScores = {};
 

@@ -54,7 +54,12 @@ const Header = () => {
         {status != "loading" && session?.user && (
           <>
             <p className="text-yellow-50">
-              {session?.user?.firstName} {session?.user?.lastName}
+              {session?.user?.firstName} {session?.user?.lastName}{" "}
+              {session?.user.role == "admin"
+                ? "(Admin)"
+                : session?.user.role == "instructor"
+                ? "(Instructor)"
+                : ""}
             </p>
             <Dropdown menu={{ items }}>
               <Avatar
