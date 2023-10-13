@@ -37,7 +37,7 @@ const Header = () => {
       <Link
         href={
           session?.user.role == "admin"
-            ? "/admin"
+            ? "/admin/dashboard"
             : session?.user.role == "instructor"
             ? "/instructor"
             : "/"

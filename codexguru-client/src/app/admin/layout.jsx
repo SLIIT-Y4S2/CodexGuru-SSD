@@ -55,24 +55,24 @@ export default function DashboardLayout({ children }) {
 
     switch (key) {
       case '1':
-        router.push('/admin1/dashboard');
+        router.push('/admin/dashboard');
         setBreadcrumb("Dashboard");
         break;
       case '2':
-        router.push('/admin1/createAccount');
+        router.push('/admin/createAccount');
         setBreadcrumb("Create Account");
         break;
       case '3':
-        router.push('/admin1/users/student');
+        router.push('/admin/users/student');
         setBreadcrumb("Students");
         break;
       case '4':
-        router.push('/admin1/users/instructor');
+        router.push('/admin/users/instructor');
         setBreadcrumb("Instructors");
         break;
       case '6':
-        router.push('/admin1/reports/labattendance');
-        setBreadcrumb("Admin");
+        router.push('/admin/reports/labattendance');
+        setBreadcrumb("Lab Attendance");
         break;
       default:
         console.log(key);

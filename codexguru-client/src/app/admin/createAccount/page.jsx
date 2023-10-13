@@ -131,9 +131,10 @@ const AccountCreationForm = () => {
       onFinish={onFinish}
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 16 }}
-      style={{ height: 500 }}
+      style={{ height: 580 }}
       form={form}
     >
+      <h1 style={{fontSize:"30px",marginBottom:"30px"}}>Account creation for : {formValues.role}</h1>
       <Form.Item
         name="userRegNo"
         label="Registration Number"
@@ -255,7 +256,7 @@ const AccountCreationForm = () => {
         </Select>
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-        <Button style={{ marginTop: 50 }} className='bg-custom-site-color' type="primary" htmlType="submit" loading={loading}>
+        <Button style={{ marginTop: 50}} className='bg-custom-site-color' type="primary" htmlType="submit" loading={loading}>
           Create Account
         </Button>
       </Form.Item>
