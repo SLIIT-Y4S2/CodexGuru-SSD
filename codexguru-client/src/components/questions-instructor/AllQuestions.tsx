@@ -14,7 +14,7 @@ import { useParams } from "next/navigation";
 
 export default function AllQuestions() {
   const { getExam } = useContext(ExamsContext);
-  const [questionsList, setQuestionsList] = useState([]);
+  const [questionsList, setQuestionsList] = useState<any>([]);
   const params = useParams();
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function AllQuestions() {
     }
 
     fetchData();
-  }, []);
+  }, [getExam, params?.id]);
 
   let questions = [];
 

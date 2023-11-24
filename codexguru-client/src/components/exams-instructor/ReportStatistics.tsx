@@ -45,7 +45,7 @@ const ReportStatistics = () => {
         setTotMarks(totMarks);
         setPassed(passedCount);
         setFailed(failedCount);
-      } catch (err) {
+      } catch (err: any) {
         console.log(err.message);
       }
     }

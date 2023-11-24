@@ -12,7 +12,7 @@ import {
 import { ExamsContext } from "@/app/context/ExamsContext";
 import Link from "next/link";
 
-export default function ExamModal({ examData }) {
+export default function ExamModal({ examData }: { examData: any }) {
   const caption = examData.code + " - " + examData.title;
 
   const { updateExamStatus } = useContext(ExamsContext);

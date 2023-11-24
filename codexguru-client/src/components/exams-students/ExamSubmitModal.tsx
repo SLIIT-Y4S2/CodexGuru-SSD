@@ -2,8 +2,12 @@
 import React, { useState } from "react";
 import { Button, Modal } from "antd";
 
-export default function ExamSubmitModal({ examSubmission }) {
-  console.log(examSubmission);
+export default function ExamSubmitModal({
+  examSubmission,
+}: {
+  examSubmission: any;
+}) {
+  // console.log(examSubmission);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);

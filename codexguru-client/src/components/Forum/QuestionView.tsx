@@ -73,7 +73,7 @@ const QuestionView = () => {
                     style={{ backgroundColor: "#fde3cf", color: "#f56a00" }}
                   >
                     {question.author?.firstName.slice(0, 1)}
-                    {question?.author.lastName.slice(0, 1)}
+                    {question?.author?.lastName.slice(0, 1)}
                   </Avatar>
                   <p className="inline-block font-semibold text-lg">
                     {question.author?.firstName} {question?.author.lastName}
