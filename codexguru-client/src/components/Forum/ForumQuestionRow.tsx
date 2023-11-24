@@ -51,15 +51,15 @@ const ForumQuestionRow = ({ question }: Params) => {
           <div className="flex flex-col items-end">
             <span className="flex gap-2">
               <p className="inline-block font-semibold ">
-                {question.author?.firstName} {question?.author.lastName}
+                {question.author?.firstName} {question?.author?.lastName}
               </p>
               <Avatar
                 className="mr-2"
                 size="small"
                 style={{ backgroundColor: "#fde3cf", color: "#f56a00" }}
               >
-                {question.author?.firstName.slice(0, 1)}
-                {question?.author.lastName.slice(0, 1)}
+                {question.author?.firstName?.slice(0, 1)}
+                {question?.author?.lastName?.slice(0, 1)}
               </Avatar>
             </span>
             <p>
